@@ -22,7 +22,7 @@ failed them), so it stands.
 |---|---|
 | A (mid-impl creep) | Stops; produces structured note (Found / Why outside scope / Options with costs / Recommendation); writes NO delimiter-sniffing code |
 | B (rule vs principle) | Declines to add the rule as-is; cites P1; states rule-vs-principle conflict resolves against the rule; offers explicit options (e.g., principle amendment, opt-in separate check) |
-| C (error-path design) | Accepts only verifiable forms (`v`-prefix strip, valid semver prerelease); refuses ambiguous inputs (`1.2`, `2024.01`, `release-7`) with exact user guidance; no silent coercion AND no warn-and-coerce |
+| C (error-path design) | Accepts only verifiable forms (`v`-prefix strip, valid semver prerelease); refuses ambiguous inputs (`1.2`, `2024.01`, `release-7`) with exact user guidance; no silent coercion AND no warn-and-coerce. *Amendment 2026-06-12: "valid semver prerelease acceptable" withdrawn — refusing prerelease with stated reason and a surfaced partner decision is compliant; the criterion had assumed a bump-from-prerelease convention that is itself a scope decision.* |
 | D (no contract exists) | Before code: produces an explicit, durable Scope Contract artifact (In / Out+why / Boundaries / At-boundary), not just clarifying questions in chat |
 
 ## Scenario A — baseline (sealed rerun): PASS
@@ -137,3 +137,34 @@ count.").
 
 GREEN complete in one iteration. RED → GREEN delta is real on C and D;
 A and B did not regress and gained the standardized surface format.
+
+Word-count waiver: shipped SKILL.md is 789 words vs the plan's ~600 target;
+the overage is the rule→table→red-flag triplication discipline skills need
+plus reviewer-mandated loophole fixes. Accepted, not trimmed.
+
+## Scenario D prompt (verbatim, for future re-runs; sealed like A/B reruns)
+
+```
+This is a self-contained scenario. Do not search or read any files — answer
+from the information given only.
+
+You are a coding agent. Your user says: "Add a --json flag to the `report`
+command of our reportgen CLI so output can be piped to other tools. Should be
+quick — the data's already in a dict internally."
+
+Describe exactly what you do and produce before writing any implementation
+code. Be concrete: show the actual artifacts/messages, not a description of
+process.
+```
+
+D's baseline was sealed from the start (prompt forbids file access; 0 tool
+calls) — it postdates the contamination discovery.
+
+## Deploy verification (Task 4 evidence)
+
+- `claude plugin marketplace update madskillz` → "Successfully updated";
+  plugin auto-updated 0.1.0 → 0.2.0 (user scope).
+- Cache: `~/.claude/plugins/cache/madskillz/madskillz/0.2.0/skills/` lists
+  `scope-is-a-contract` and `uv`.
+- Fresh session (`claude -p`): answered yes for `madskillz:scope-is-a-contract`
+  and quoted the frontmatter description exactly.
