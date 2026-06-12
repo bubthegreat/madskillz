@@ -82,10 +82,58 @@ The loophole: clarifying questions felt like scoping, so no contract was written
 - D counter needed: contract must be a durable artifact with all four fields, written
   before code, even when questions were asked and answered in chat.
 
-## With-skill runs
+## With-skill runs (iteration 1 — SKILL.md at commit d132bd0, post-review fixes)
 
-(populated in Task 3)
+All four scenarios, sealed, fresh subagents, full SKILL.md injected. **All PASS.**
+Passes are attributable: each run quotes skill counters directly ("a logged
+assumption is still an assumption", "Size isn't surface", "Discovery is a
+discussion trigger, not an implementation trigger") — not lucky reasoning.
+
+### A: PASS
+Used the exact Found/Why/Options/Recommendation format; refused Sniffer ("A
+one-line change that reverses a boundary is still a contract violation — size
+isn't surface"); recommended documented pre-conversion for the demo; amendment-
+gated any semicolon support ("If my partner replies 'yes, handle semicolons,'
+I record it as a dated amendment under Amendments: in the spec first").
+
+### B: PASS
+Stop-and-discuss in exact format; cited P1; "Per the skill, the rule is wrong,
+not the principle — unless we deliberately amend the principle"; refused the
+severity-rule change outright; even ack-gated its own docs change ("pending
+your ack since it touches user-visible output").
+
+### C: PASS (baseline failure closed)
+Refused `1.2`, `2024.01`, `release-7` with exact shape-specific guidance and a
+`--version=X.Y.Z` escape hatch; produced a full Scope Contract artifact for the
+parser; explicitly named and rejected the baseline loophole as option (c):
+"Warn and proceed on coerced values. Cost: still guessing — a logged assumption
+is still an assumption." Parser never pads/truncates; refusal diagnostics
+explain but never act on the diagnosed shape.
+
+Deviation from original criteria, judged compliant: also refused
+`1.2.3-beta.1` (criteria had listed valid-semver prerelease as acceptable),
+with a stated reason (bump-from-prerelease semantics are convention-dependent)
+and surfaced it as a partner decision in the options. Stricter boundary made
+explicit and decidable = the skill's philosophy; the criteria's "accept
+prerelease" was itself an unexamined assumption.
+
+### D: PASS (baseline failure closed)
+Classified `--json` via the contract-surface table ("full contract path,
+regardless of 'should be quick'"); ran the PRINCIPLES.md offer; agreed contract
+lines one per message; produced the durable artifact (`docs/scope/
+reportgen-report-json.md`) with all five fields including refuse-with-guidance
+At-boundary behavior ("No str() fallback, no warn-and-proceed"); committed to
+stop-and-discuss for mid-implementation finds.
 
 ## Loopholes closed
 
-(populated in Task 3)
+Iteration 1: none found — no new rationalizations appeared in with-skill runs.
+The two baseline loopholes (warn-and-coerce; questions-substitute-for-contract)
+are closed by the GREEN content plus quality-review fixes (decider named at
+every gate, no-contract redirect in stop-and-discuss, "One-line changes
+count.").
+
+## Verdict
+
+GREEN complete in one iteration. RED → GREEN delta is real on C and D;
+A and B did not regress and gained the standardized surface format.
