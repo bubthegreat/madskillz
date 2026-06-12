@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "madskillz",
+  "description": "Bub's personal Claude Code skills, plugins, and rules",
+  "owner": { "name": "Bub Taylor" },
+  "plugins": [
+    {
+      "name": "madskillz",
+      "description": "Personal skills bundle",
+      "source": "./plugins/madskillz",
+      "category": "productivity"
+    }
+  ]
+}
