@@ -127,13 +127,15 @@ Create `plugins/madskillz/skills/semverer-setup/scripts/setup.sh`:
 # semverer-setup: idempotently wire semverer into a uv-managed Python project.
 # Usage: setup.sh [PROJECT_DIR]   (default: current directory)
 #
-# Does steps 1-5 of setup (semverer dev-dep, pre-commit auto-bump hook,
-# baseline, project-local usage skill). CI wiring is left to the agent
+# Performs the local wiring (each step idempotent): adds semverer as a uv
+# dev-dep, ensures a pre-commit auto-bump hook, snapshots the baseline, and
+# installs the project-local usage skill. CI wiring is left to the agent
 # (see SKILL.md) because workflow files vary too much to edit safely here.
-# Exit codes: 0 = done (or nothing to do), 2 = cannot proceed.
+# Exit codes: 0 = done (or nothing to do), 1 = a wiring command failed,
+# 2 = cannot proceed (no pyproject.toml, or uv not installed).
 #
 # Preflight (pyproject + uv checks) uses shell builtins only, so it behaves
-# even with an empty PATH.
+# even under a minimal PATH.
 set -u
 
 DIR="${1:-.}"
@@ -150,6 +152,9 @@ if ! command -v uv >/dev/null 2>&1; then
   exit 2
 fi
 
+# Run a wiring command, announcing it; abort (don't report success) if it fails.
+run() { echo "==> $*"; "$@" || { echo "ERROR: '$*' failed — setup incomplete."; exit 1; }; }
+
 HOOK_BLOCK='  - repo: local
     hooks:
       - id: semverer
@@ -162,13 +167,11 @@ HOOK_BLOCK='  - repo: local
 needs_manual_hook=0
 
 # 1. semverer as a dev dependency (uv add is idempotent)
-echo "==> uv add --dev semverer"
-uv add --dev semverer
+run uv add --dev semverer
 
 # 2 & 3. pre-commit config + the auto-bump hook
 if [ ! -f .pre-commit-config.yaml ]; then
   echo "==> creating .pre-commit-config.yaml with the semverer hook"
-  uv add --dev pre-commit
   printf 'repos:\n%s\n' "$HOOK_BLOCK" > .pre-commit-config.yaml
 elif ! grep -q 'id: semverer' .pre-commit-config.yaml; then
   echo "MANUAL: .pre-commit-config.yaml exists but has no 'id: semverer' hook."
@@ -178,21 +181,19 @@ else
   echo "==> semverer hook already present in .pre-commit-config.yaml"
 fi
 
-# 4. activate the git hook
-echo "==> uv run pre-commit install"
-uv run pre-commit install
+# 4. ensure pre-commit is available, then activate the git hook
+run uv add --dev pre-commit
+run uv run pre-commit install
 
 # 5. baseline (only if not already snapshotted)
 if grep -q 'tool.semverer.baseline' pyproject.toml; then
   echo "==> baseline already present — skipping semverer init"
 else
-  echo "==> uv run semverer init"
-  uv run semverer init
+  run uv run semverer init
 fi
 
 # 6. project-local usage skill (overwrite is fine — idempotent)
-echo "==> uv run semverer skill install --project"
-uv run semverer skill install --project
+run uv run semverer skill install --project
 
 echo
 echo "semverer setup complete for '$DIR'."
