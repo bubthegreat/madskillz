@@ -1,0 +1,25 @@
+{
+  "description": "madskillz sound cues: tada when Claude finishes, Alarm01 when Claude needs you",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/play-sound.sh\" tada.wav"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/play-sound.sh\" Alarm01.wav"
+          }
+        ]
+      }
+    ]
+  }
+}
