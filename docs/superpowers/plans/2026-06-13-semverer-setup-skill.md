@@ -102,8 +102,12 @@ mkdir -p "$TMP/empty"
 PATH="$BIN:$PATH" bash "$SUT" "$TMP/empty" >/dev/null 2>&1
 [ "$?" -eq 2 ] || fail "expected exit 2 for a dir with no pyproject.toml"
 
-# --- Test 4: uv missing -> exit 2 (preflight uses builtins only) ---
-PATH= bash "$SUT" "$PROJ" >/dev/null 2>&1
+# --- Test 4: uv missing -> exit 2. Use a PATH dir holding only bash (the
+#     preflight uses builtins only), so uv is unfindable but bash still runs.
+#     (An empty PATH would also stop bash itself from launching.) ---
+mkdir -p "$TMP/none"
+ln -s "$(command -v bash)" "$TMP/none/bash"
+PATH="$TMP/none" bash "$SUT" "$PROJ" >/dev/null 2>&1
 [ "$?" -eq 2 ] || fail "expected exit 2 when uv is absent"
 
 echo "PASS"
