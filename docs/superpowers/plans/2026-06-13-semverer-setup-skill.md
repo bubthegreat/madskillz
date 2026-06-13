@@ -185,15 +185,19 @@ fi
 run uv add --dev pre-commit
 run uv run pre-commit install
 
-# 5. baseline (only if not already snapshotted)
+# 5. project-local usage skill — installed BEFORE the baseline so init captures
+#    it; otherwise the new SKILL.md looks like a pending change and `semverer
+#    check` would demand a bump the instant setup finishes.
+run uv run semverer skill install --project
+
+# 6. baseline, taken LAST so it snapshots the fully-wired tree (hook config +
+#    usage skill) and `semverer check` is clean right after setup.
+#    Only if not already snapshotted.
 if grep -q 'tool.semverer.baseline' pyproject.toml; then
   echo "==> baseline already present — skipping semverer init"
 else
   run uv run semverer init
 fi
-
-# 6. project-local usage skill (overwrite is fine — idempotent)
-run uv run semverer skill install --project
 
 echo
 echo "semverer setup complete for '$DIR'."
@@ -285,8 +289,10 @@ It does, each step guarded so re-runs are safe:
    `.pre-commit-config.yaml` carrying the semverer `local` hook)
 3. ensure the auto-bump hook is registered
 4. `uv run pre-commit install`
-5. `uv run semverer init` (only if there is no baseline yet)
-6. `uv run semverer skill install --project`
+5. `uv run semverer skill install --project`
+6. `uv run semverer init` — taken last so the baseline captures the hook config
+   and the usage skill, leaving `semverer check` clean (only if there is no
+   baseline yet)
 
 Read its output:
 

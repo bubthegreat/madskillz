@@ -52,8 +52,10 @@ It does, each step guarded so re-runs are safe:
    `.pre-commit-config.yaml` carrying the semverer `local` hook)
 3. ensure the auto-bump hook is registered
 4. `uv run pre-commit install`
-5. `uv run semverer init` (only if there is no baseline yet)
-6. `uv run semverer skill install --project`
+5. `uv run semverer skill install --project`
+6. `uv run semverer init` — taken last so the baseline captures the hook config
+   and the usage skill, leaving `semverer check` clean (only if there is no
+   baseline yet)
 
 Read its output:
 
