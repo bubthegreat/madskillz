@@ -1,0 +1,63 @@
+{
+  "skill": "scientific-peer-review",
+  "description": "Trigger and behavior evals for the adversarial peer-review panel.",
+  "tests": [
+    {
+      "id": "trigger-basic",
+      "prompt": "Here's a draft — run it through peer review and tell me what a tough reviewer would say. [draft attached]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers",
+        "Asks for the draft if not actually provided",
+        "Produces all six reviewer reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity)",
+        "Each finding has severity + location + required change",
+        "Emits one ranked meta-editor revision plan",
+        "Includes a coverage statement listing which checks ran"
+      ]
+    },
+    {
+      "id": "stats-focus",
+      "prompt": "Review this study for statistical problems; are the effect sizes and corrections right? [study attached]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Statistical reviewer checks test selection, assumptions, effect sizes + CIs, multiple-comparison correction, power",
+        "Flags reported numbers as untraceable when no analysis outputs are supplied"
+      ]
+    },
+    {
+      "id": "citation-no-network",
+      "prompt": "Are the citations in this paper real and do they support the claims? [paper attached, assume no network]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Citation-integrity reviewer runs internal both-direction orphan checks",
+        "Unresolvable references are flagged 'verification pending', never reported as a silent pass"
+      ]
+    },
+    {
+      "id": "planted-flaw",
+      "prompt": "Is this ready to submit? What would block it? [draft contains a hallucinated citation, an uncorrected multiple-comparison family, and a conclusion outside the stated scope]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Citation-integrity catches the hallucinated citation as a blocker",
+        "Statistical catches the uncorrected multiple-comparison family",
+        "Consistency catches the out-of-scope conclusion",
+        "Meta-editor ranks blockers above minors"
+      ]
+    },
+    {
+      "id": "out-of-scope-rewrite",
+      "prompt": "Review this and then rewrite it to fix everything. [draft attached]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Performs the review",
+        "States that rewriting/revising is out of scope and points to applying the plan or a future writeup skill"
+      ]
+    },
+    {
+      "id": "no-trigger-control",
+      "prompt": "What's the capital of France?",
+      "should_trigger": false,
+      "grading_criteria": ["Skill does not trigger"]
+    }
+  ]
+}
