@@ -31,7 +31,8 @@ All paths under `plugins/madskillz/skills/scientific-peer-review/`:
 | `references/reviewers/meta-editor.md` | Meta-editor adjudication rubric |
 | `evals/evals.json` | Trigger + behavior eval prompts and grading criteria |
 
-Plus one edit outside the skill dir:
+Plus files outside the skill dir:
+- `plugins/madskillz/commands/research.md` — `/research` umbrella command (thin launcher → invokes the skill)
 - `plugins/madskillz/.claude-plugin/plugin.json` — version bump `0.4.0` → `0.5.0`
 
 Skills are auto-discovered; no registration entry is needed. Minimal skills in this plugin ship just their content files (no LICENSE/README/VERSION), so this skill does the same.
@@ -701,7 +702,58 @@ git commit -m "feat: add scientific-peer-review SKILL.md orchestrator"
 
 ---
 
-## Task 8: Bump plugin version
+## Task 8: Create the `/research` umbrella command
+
+**Files:**
+- Create: `plugins/madskillz/commands/research.md`
+
+A plugin slash command (a thin launcher), not skill logic. It is the explicit, intentional
+entry point to the `scientific-*` family; today it launches the only built member,
+`scientific-peer-review`. The skill still auto-triggers as well. Build it after Task 7 so the
+skill it launches exists.
+
+- [ ] **Step 1: Write `plugins/madskillz/commands/research.md`**
+
+````markdown
+---
+description: Entry point to the scientific research family — runs the adversarial peer-review panel on a draft (more research phases coming).
+argument-hint: [path to draft, or what you want reviewed]
+---
+
+You are the entry point to the `scientific-*` research skill family. The built
+capability today is **peer review**; study design, write-up, analysis, and
+reproducibility packaging will be routed from here as they are added.
+
+Invoke the `scientific-peer-review` skill to run the adversarial multi-reviewer
+panel.
+
+What to review: $ARGUMENTS
+
+If no draft (or path to one) was provided above, ask the user for the draft
+before proceeding — never review from memory or a verbal description.
+````
+
+- [ ] **Step 2: Verify the command file exists with valid frontmatter**
+
+Run:
+```bash
+f=plugins/madskillz/commands/research.md
+test -f "$f" && head -1 "$f" | grep -q '^---$' \
+  && grep -q "scientific-peer-review" "$f" \
+  && grep -q 'ARGUMENTS' "$f" && echo PASS || echo FAIL
+```
+Expected: `PASS`
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add plugins/madskillz/commands/research.md
+git commit -m "feat: add /research umbrella command launching scientific-peer-review"
+```
+
+---
+
+## Task 9: Bump plugin version
 
 **Files:**
 - Modify: `plugins/madskillz/.claude-plugin/plugin.json`
@@ -723,12 +775,12 @@ Expected: `version 0.5.0`
 
 ```bash
 git add plugins/madskillz/.claude-plugin/plugin.json
-git commit -m "chore: bump madskillz plugin to 0.5.0 (adds scientific-peer-review skill)"
+git commit -m "chore: bump madskillz plugin to 0.5.0 (adds scientific-peer-review skill + /research command)"
 ```
 
 ---
 
-## Task 9: End-to-end eval validation (turn the acceptance test green)
+## Task 10: End-to-end eval validation (turn the acceptance test green)
 
 **Files:**
 - Read: `plugins/madskillz/skills/scientific-peer-review/evals/evals.json`
@@ -742,6 +794,9 @@ triggering is wrong, refine the `description:` in `SKILL.md` (follow
 `superpowers:writing-skills` for description tuning) and re-test.
 
 Expected: triggers on `trigger-basic`, does not trigger on `no-trigger-control`.
+
+Also confirm `/research <draft>` (the umbrella command) launches the panel by invoking the
+`scientific-peer-review` skill. Expected: the command runs the review on the given draft.
 
 - [ ] **Step 2: Behavior check with a planted-flaw draft**
 
@@ -794,7 +849,8 @@ git commit -m "fix: address scientific-peer-review eval gaps"
 - Output shapes + coverage statement (§8) → Task 2.
 - File structure (§9) → all tasks; directory created in Task 1.
 - Edge cases (§10) → SKILL.md Edge cases (Task 7).
-- Evals (§11) → Task 1 + Task 9.
+- Evals (§11) → Task 1 + Task 10.
+- Slash command /research umbrella (§13) → Task 8.
 - Out-of-scope items (loop, revision, stats engine, provenance lint) → correctly absent.
 
 **Placeholder scan** — no TBD/TODO; every file step contains the full file content; every

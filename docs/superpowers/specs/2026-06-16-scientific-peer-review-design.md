@@ -75,7 +75,9 @@ At boundary (refuse with guidance, never best-effort guess):
       - Asked to also revise/rewrite → state that's out of scope here and point to
         applying the plan manually (or the future scientific-writeup skill).
 
-Amendments: <dated, partner-approved scope changes>
+Amendments:
+      - 2026-06-16: added a /research umbrella slash command as an explicit entry point to
+        this skill and the future family (§13). The skill keeps auto-triggering too.
 ```
 
 ---
@@ -292,6 +294,24 @@ skipped checks; no fabricated verdicts.
 - Precise wording of the `deep-research` hand-off for citation resolution.
 - Whether `research-integrity` is extracted to a shared reference now or when skill #2 lands
   (recommendation: defer until skill #2 needs it).
+
+---
+
+## 13. Slash-command entry point — `/research` (amendment 2026-06-16)
+
+`/research` is the explicit, intentional entry point to the `scientific-*` research family.
+It is a plugin command at `plugins/madskillz/commands/research.md` — a thin launcher, not a
+second copy of the logic.
+
+- **Scope:** umbrella for the whole family. Today the only built capability is peer review, so
+  `/research` launches the `scientific-peer-review` skill. As design / writeup / analysis /
+  repro land, they are routed from here.
+- **Behavior:** the command tells the model to invoke `scientific-peer-review` on `$ARGUMENTS`
+  (a draft path or description). No draft supplied → ask for one; never review from memory
+  (same boundary as §1.1).
+- **Coexists with auto-triggering:** the skill keeps its pushy description (§2) and still fires
+  on review-y phrasing; the command adds a deliberate entry. Both, not either/or.
+- **Single source of truth:** all reviewing logic stays in the skill; the command only launches it.
 
 ---
 
