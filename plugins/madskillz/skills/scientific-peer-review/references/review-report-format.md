@@ -29,7 +29,7 @@ Severity scale (shared across reviewers):
 # Peer-review summary
 
 ## Coverage
-Reviewers run: <list> (tier: correctness-only | + communication)
+Reviewers run: <list> (v1 tier: correctness-only)
 Inputs available: <list>
 Checks not performed: <list, with the missing input that blocked each>
 Review independence: parallel subagents | sequential (weaker independence)
@@ -38,7 +38,7 @@ Review independence: parallel subagents | sequential (weaker independence)
 <one line per reviewer: role → recommendation>
 
 ## Disagreements
-<material conflicts stated explicitly, e.g. "Adversary: reject vs Domain: accept — author
+<material conflicts stated explicitly, e.g. "Adversarial: reject vs Statistical: minor — author
 adjudicates". If none: "none">
 
 ## Revision plan (ranked)
