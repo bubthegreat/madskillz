@@ -15,7 +15,14 @@ Findings (severity-ranked):
     Why it matters: …
     Required change: …
 Questions for authors: …
+Reviewer notes (optional): <reviewer-specific summary — e.g. Reproducibility's
+  conceptual/runnable/bit-for-bit rating, or "no human-subjects/dual-use concern">
 ```
+
+A check blocked by a missing input or an absent tool appears in up to three places: the
+header's `Checks skipped`, a *finding* when it affects a verdict (e.g. an unresolvable
+citation is a blocker), and the meta-editor Coverage section. Never report a blocked check as
+passed.
 
 Severity scale (shared across reviewers):
 - **blocker** — must be fixed before the paper can be submitted; invalidates a central claim,

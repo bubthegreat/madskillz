@@ -11,6 +11,9 @@ supplied inputs. Verify that citations are real and support their claims.
 - Both directions: every in-text citation has a matching reference entry, and every reference
   entry is cited in text. Flag orphans either way.
 - Each reference carries a well-formed identifier (DOI / arXiv ID / ISBN / stable URL).
+- Treat known placeholder/example identifiers as invalid even without network — e.g. the
+  reserved DOI prefix `10.1000` (DOI-handbook example), `arXiv:0000.00000`, `example.com`
+  URLs, or any obviously templated id. These read as fabricated/placeholder, not real.
 - Each citation plausibly supports the *specific* claim it is attached to, not merely the
   same topic.
 
