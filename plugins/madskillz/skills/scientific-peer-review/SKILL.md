@@ -86,7 +86,12 @@ revision plan plus the overall call and the coverage statement.
 
 Present the reviewer reports and the meta-editor deliverable. Stop. Do not revise
 the paper. If asked to also rewrite, say that is out of scope here and point to
-applying the plan manually (or the future `scientific-writeup` skill).
+applying the plan manually.
+
+This skill is the review **engine**. To draft a study, drive it through this panel
+in a revise→re-review loop, and publish the result as a PR to `jmresearch/research`,
+use the `scientific-study` skill — it owns the writing, the loop, and publishing;
+this skill stays review-only.
 
 ## Edge cases
 
