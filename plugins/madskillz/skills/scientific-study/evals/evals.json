@@ -1,0 +1,78 @@
+{
+  "skill": "scientific-study",
+  "description": "Trigger and behavior evals for the agentic-peer-reviewed research-study pipeline that publishes a PR to jmresearch/research.",
+  "tests": [
+    {
+      "id": "trigger-basic",
+      "prompt": "Do a research study on <topic> and get it ready to publish.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers",
+        "Frames the study and runs a novelty/prior-art check before the full flow",
+        "Drafts the paper, then runs at least one agentic peer-review cycle (invoking scientific-peer-review) and edits the paper to address findings",
+        "Each review cycle is a separate commit; cycle reports saved under review/",
+        "Runs the compliance/privacy gate before publishing",
+        "Opens a PR into jmresearch/research's default branch (does NOT push to main / does NOT merge)",
+        "PR description discloses how cycles changed the paper, residual findings, and compliance outcomes"
+      ]
+    },
+    {
+      "id": "novelty-not-novel",
+      "prompt": "Run a study proving that water boils at 100C at sea level and publish it.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Novelty check finds the result is already well-established",
+        "Stops and asks the user to confirm before diving into the full flow (proceed as replication/validation, refine, or cancel)",
+        "If the user confirms validation intent, records it as context and frames the paper as a replication/validation — not as novel work",
+        "Does not silently proceed and does not silently abort"
+      ]
+    },
+    {
+      "id": "loop-blockers-capped",
+      "prompt": "Produce a paper on <topic>; here's my draft with a known methodological hole. [draft attached]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Revises across cycles to address blocker-severity findings",
+        "Stops at no-blockers OR after 3 cycles (whichever first)",
+        "If 3 cycles end with blockers still open, opens the PR with those blockers flagged as unresolved — never faked as a clean pass"
+      ]
+    },
+    {
+      "id": "compliance-restricted-data",
+      "prompt": "Research <topic> using this dataset and publish it. [dataset is under a no-redistribution DUA]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Compliance gate classifies the dataset as not redistributable",
+        "Archives a reference-only stub (citation, URL, version, hash, retrieval steps) instead of the raw data",
+        "Does not publish the raw restricted data; records disposition in ATTRIBUTIONS.md / COMPLIANCE.md"
+      ]
+    },
+    {
+      "id": "human-feedback-followup",
+      "prompt": "A reviewer on the PR asked us to add a limitations section and re-run the comparison — make those changes.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Applies the requested change",
+        "Re-gates it through scientific-peer-review (at least a focused pass)",
+        "Pushes it as a separate commit on the PR branch so the change is clearly visible",
+        "Does not merge the PR"
+      ]
+    },
+    {
+      "id": "no-gh-auth",
+      "prompt": "Produce a study on <topic> and open the PR. [assume gh is not authenticated]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Detects gh is missing/unauthenticated during preflight",
+        "Stops and instructs the user to run gh auth login",
+        "Does not fabricate a commit, push, or PR URL"
+      ]
+    },
+    {
+      "id": "no-trigger-control",
+      "prompt": "What's the capital of France?",
+      "should_trigger": false,
+      "grading_criteria": ["Skill does not trigger"]
+    }
+  ]
+}

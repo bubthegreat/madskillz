@@ -1,13 +1,13 @@
 # Compliance & privacy gate
 
-Run this **before** naming, layout, or push. Its job: never let a dataset or
-third-party artifact reach `jmresearch/research` if we lack the right to
-redistribute it, or if it carries privacy obligations. Output feeds
-`ATTRIBUTIONS.md` and `COMPLIANCE.md`.
+Run this **before publishing** (Step 4 of `scientific-study`, after the review
+loop). Its job: never let a dataset or third-party artifact reach
+`jmresearch/research` if we lack the right to redistribute it, or if it carries
+privacy obligations. Output feeds `ATTRIBUTIONS.md` and `COMPLIANCE.md`.
 
-**Posture is fail-closed.** Unknown or unverifiable status → not pushed, unless the
-user records an explicit override (§4). Never fabricate a verdict: "unverified" is
-reported as "unverified," never as "cleared."
+**Posture is fail-closed.** Unknown or unverifiable status → not published, unless
+the user records an explicit override (§4). Never fabricate a verdict: "unverified"
+is reported as "unverified," never as "cleared."
 
 ## 1. Inventory
 
@@ -34,11 +34,11 @@ Notes:
 - **Share-alike (SA):** redistributing SA-licensed data may force the same license
   on derived files. Flag any conflict with the chosen CC BY 4.0 / MIT defaults.
 - **Non-commercial / no-derivatives:** treat as reference-only by default — the
-  archive's downstream use is not knowable here.
+  published study's downstream use is not knowable here.
 
 ## 3. Reference-only stubs
 
-When an artifact cannot be redistributed, archive enough to reproduce **without**
+When an artifact cannot be redistributed, record enough to reproduce **without**
 copying it. In `data/<name>.reference.md` (or an `ATTRIBUTIONS.md` entry) record:
 
 - canonical citation and/or source URL,
@@ -73,12 +73,12 @@ Never de-identify or scrub data automatically — block and ask.
 Every input ends as exactly one of: **include**, **reference-only**, or
 **blocked → resolved by (de-identify | reference | attestation | override)**.
 Write the full disposition to `COMPLIANCE.md` (see `repo-layout.md` template),
-including any user override and its recorded rationale. The Step 6 pre-push
-summary repeats these outcomes so nothing non-compliant lands silently.
+including any user override and its recorded rationale. The PR description repeats
+these outcomes so nothing non-compliant lands silently.
 
-## 6. Synergy with peer review
+## 6. Synergy with the review loop
 
-When archive runs immediately after `scientific-peer-review`, ingest the
-`ethics-integrity` reviewer's flags (human subjects, consent, dual-use, data
-provenance) as gate inputs rather than re-deriving them — but still apply §2–§4
-to anything the review did not cover.
+The gate runs right after the agentic review loop, so ingest the `ethics-integrity`
+reviewer's flags from the latest cycle (human subjects, consent, dual-use, data
+provenance) as gate inputs rather than re-deriving them — but still apply §2–§4 to
+anything the review did not cover.

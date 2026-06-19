@@ -1,22 +1,23 @@
 ---
-description: Entry point to the scientific research family — runs the adversarial peer-review panel on a draft (more research phases coming).
-argument-hint: [path to draft, or what you want reviewed]
+description: Entry point to the scientific research family — produce an agentic-peer-reviewed study (published as a PR), or run the peer-review panel on a draft.
+argument-hint: [a research question/topic to study, or a draft to review]
 ---
 
-You are the entry point to the `scientific-*` research skill family. The built
-capabilities today are **peer review** and **archival**; study design, write-up,
-analysis, and reproducibility packaging will be routed from here as they are added.
+You are the entry point to the `scientific-*` research skill family. Route to the
+skill that matches the request:
 
-Invoke the `scientific-peer-review` skill to run the adversarial multi-reviewer
-panel.
+- **Produce a research study** (draft a paper, drive it through the agentic
+  peer-review quality-gate loop, run the compliance/privacy gate, and open a PR to
+  the private `jmresearch/research` repo for a human to review and merge) → invoke
+  the **`scientific-study`** skill. This is the default for "do a study on…,"
+  "research and write up…," or "get this ready to publish."
+- **Just review an existing draft** (adversarial multi-reviewer panel → one ranked
+  revision plan, review-only) → invoke the **`scientific-peer-review`** skill.
 
-To preserve a completed or reviewed study — push the paper plus its pertinent
-data/scripts/assets to the private `jmresearch/research` repo under
-`<topic>/<research-short-name>/`, after a dataset-licensing and privacy compliance
-gate — invoke the `scientific-archive` skill. It is the family's final, archival
-phase and the hand-off target from peer review.
+Study design, analysis, and reproducibility packaging will be routed from here as
+they are added.
 
-What to review: $ARGUMENTS
+Request: $ARGUMENTS
 
-If no draft (or path to one) was provided above, ask the user for the draft
-before proceeding — never review from memory or a verbal description.
+If nothing was provided above, ask the user what study to produce (or what draft to
+review) before proceeding — never invent a topic or review from a verbal description.
