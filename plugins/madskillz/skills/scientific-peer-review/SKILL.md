@@ -82,11 +82,18 @@ over every report. It deduplicates, resolves conflicts (integrity/correctness
 wins), ranks findings, surfaces genuine disagreements, and emits ONE ordered
 revision plan plus the overall call and the coverage statement.
 
-## Step 4 — Deliver and stop
+## Step 4 — Deliver, then offer to archive
 
-Present the reviewer reports and the meta-editor deliverable. Stop. Do not revise
-the paper. If asked to also rewrite, say that is out of scope here and point to
+Present the reviewer reports and the meta-editor deliverable. Do not revise the
+paper. If asked to also rewrite, say that is out of scope here and point to
 applying the plan manually (or the future `scientific-writeup` skill).
+
+Then offer the archival hand-off: if the author wants the reviewed paper, its
+data/scripts/assets, and this review report preserved, invoke the
+`scientific-archive` skill — it runs a compliance gate (dataset licensing +
+privacy) and pushes the item to the private `jmresearch/research` repo under
+`<topic>/<research-short-name>/`, with the review report under `review/`. Archiving
+is optional and never automatic; if declined, stop here.
 
 ## Edge cases
 
