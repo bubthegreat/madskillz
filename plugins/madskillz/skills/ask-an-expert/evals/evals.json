@@ -1,0 +1,42 @@
+{
+  "skill": "ask-an-expert",
+  "description": "Trigger and behavior evals for the reusable domain-expert skill.",
+  "tests": [
+    {
+      "id": "trigger-direct-question",
+      "prompt": "Ask a condensed-matter physics expert whether this room-temperature superconductivity claim is plausible.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers",
+        "Reuses an existing experts/<name>.md if one fits, otherwise invokes the finder to define one",
+        "Answers within the expert's stated Scope, with confidence and caveats",
+        "Cites real resolvable sources or marks claims unverified — never fabricates citations"
+      ]
+    },
+    {
+      "id": "vague-request-derives-specifics",
+      "prompt": "I need a physics expert to check the superconductivity argument in this paper.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Finder derives the concrete subfield required (condensed-matter / superconductivity), not a vague 'physics' generalist",
+        "Checks experts/ for an existing fit and reuses or extends rather than duplicating",
+        "Writes experts/<concise-name>.md with specific Scope and Boundaries per expert-format.md"
+      ]
+    },
+    {
+      "id": "cannot-establish-expertise",
+      "prompt": "Find an expert who can authoritatively settle this fringe, barely-studied claim with no real literature.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Does NOT mint a shallow expert to paper over the gap",
+        "Returns an honest 'expertise not establishable' with the reason"
+      ]
+    },
+    {
+      "id": "no-trigger-control",
+      "prompt": "What's the capital of France?",
+      "should_trigger": false,
+      "grading_criteria": ["Skill does not trigger"]
+    }
+  ]
+}

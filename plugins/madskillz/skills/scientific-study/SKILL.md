@@ -111,8 +111,8 @@ Lay out the folder per `references/repo-layout.md`, push the study branch, and o
 a PR into the default branch of `jmresearch/research` (per `git-workflow.md`). The
 PR description summarizes: the study (and whether it is novel or a
 replication/validation), how each review cycle changed the paper, any **residual
-findings**, and the compliance outcomes. Report the PR URL. The human reviews and
-merges there.
+findings**, any domain **experts** consulted or minted (and any unmet-expertise halt),
+and the compliance outcomes. Report the PR URL. The human reviews and merges there.
 
 ## Step 6 — Human-review follow-ups
 
@@ -135,5 +135,8 @@ needed. Never merge — the human does.
   a commit/push/PR (see `git-workflow.md`).
 - Dataset not redistributable → reference-only stub; PII/PHI or missing consent →
   block; unknown status → fail-closed (see `compliance-gate.md`).
+- Paper needs expertise the panel lacks → the review's domain-coverage triage mints/reuses a
+  domain expert via `ask-an-expert`; if adequate expertise cannot be established for a central
+  claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
 - Asked to merge → out of scope; the human merges the PR.

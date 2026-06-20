@@ -38,6 +38,17 @@ while plan has blocker-severity findings AND cycle < 3
   optimize the common "show me how the paper changed across review" case. Commit each
   snapshot with its cycle.
 
+## Expert gate (domain coverage)
+
+`scientific-peer-review` runs a domain-coverage triage each review (see its `SKILL.md`). When
+the paper needs expertise the panel lacks, it writes a `requested-expert.md`, resolves it via
+the **`ask-an-expert`** skill (reuse or mint), and adds the expert to the panel —
+auto-continuing the cycle. A minted/updated expert is challenged once by the adversarial
+reviewer. If adequate expertise **cannot** be established for a central claim (the egregious
+case), the gate **halts**: stop the loop and surface "could not establish adequate expertise
+for <domain>" — never fake a qualified review. Record experts consulted/minted, and any halt,
+for the PR.
+
 ## Stopping criterion
 
 Stop when **either**:

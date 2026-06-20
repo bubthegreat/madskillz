@@ -83,6 +83,19 @@ resolution; clean reviewers are consulted on the diff via their `Interests` and 
 if it touches them, else their prior verdict is carried forward and disclosed. A first-time
 review (no prior state) runs the full panel.
 
+**Domain-coverage triage & experts.** Before fanning out (and again whenever a reviewer
+escalates "out of my depth on X"), check whether the panel credibly covers the paper's
+domain(s). If a central claim needs expertise none of the standing reviewers have, write a
+`requested-expert.md` (domain; why — which claims/sections; the questions it must answer; who
+raised it) and resolve it with the **`ask-an-expert`** skill — reuse an existing
+`experts/<name>.md` or mint one via its finder. Add the resolved expert to the panel as an
+additional reviewer for the relevant claims; it returns the same report shape. A newly minted
+or updated expert is then **challenged once** by the adversarial reviewer: if a credentials gap
+is found, the finder gets one revision; on re-check the expert is accepted, noted with a
+residual gap, or — if the gap is egregious and blocks judging a central claim — the review
+**halts** with "could not establish adequate expertise for &lt;domain&gt;" (fail-closed, never
+faked). Record the expert(s) consulted/minted and any halt in the coverage statement.
+
 - **In Claude Code:** dispatch them as parallel subagents (use
   `superpowers:dispatching-parallel-agents`). Independent context is what makes
   the reviews genuinely independent.
@@ -125,3 +138,6 @@ this skill stays review-only.
 - Reviewers disagree → meta-editor surfaces the split, does not average it.
 - Asked to also rewrite → out of scope; point to applying the plan.
 - No subagents (claude.ai) → sequential reviews, reduced independence disclosed.
+- Domain beyond the panel → triage writes `requested-expert.md`, `ask-an-expert` resolves it
+  (reuse/mint), the expert joins the panel; adversarial challenges a minted expert (one shot);
+  an egregious unmet-expertise gap on a central claim halts the review, never faked.
