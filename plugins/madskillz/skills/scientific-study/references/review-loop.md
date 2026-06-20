@@ -10,10 +10,11 @@ round of feedback changed the paper.
 cycle = 0
 do:
   cycle += 1
+  snapshot CURRENT paper.md -> review/cycle-<cycle>-paper.md   # the exact version this cycle reviews
   plan   = run scientific-peer-review on the CURRENT paper + artifacts   # the engine
   save plan -> review/cycle-<cycle>.md
   apply plan to paper.md (and artifacts) — edit faithfully
-  commit "review cycle <cycle>: address <short summary>"
+  commit "review cycle <cycle>: address <short summary>"   # snapshot + report + edits together
 while plan has blocker-severity findings AND cycle < 3
 ```
 
@@ -24,6 +25,13 @@ while plan has blocker-severity findings AND cycle < 3
   paper's evolution. Never squash the cycles together before the PR.
 - **Save each review.** Write every cycle's adjudicated plan to `review/cycle-N.md`,
   so reviewers (and the PR) can see what was raised and how it was addressed.
+- **Snapshot each reviewed paper.** Before running the panel, copy the current
+  `paper.md` to `review/cycle-N-paper.md` — the exact version that cycle N reviewed.
+  This lets a reader diff `cycle-1-paper.md → cycle-2-paper.md → … → paper.md` (the
+  final) to see the iterations the reviewers produced **without** git. Git history
+  stays the source of truth for tracing back to code/asset changes; the snapshots
+  optimize the common "show me how the paper changed across review" case. Commit each
+  snapshot with its cycle.
 
 ## Stopping criterion
 

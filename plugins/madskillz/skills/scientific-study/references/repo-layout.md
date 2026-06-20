@@ -10,7 +10,7 @@ and opened as a PR (see `git-workflow.md`):
   data/               # datasets / results tables — real data, *.reference.md stubs, or a mix
   scripts/            # analysis code / reproducibility scripts / notebooks
     LICENSE           # MIT — covers code (from licenses/MIT.txt)
-  review/             # one report per agentic review cycle: cycle-1.md, cycle-2.md, …
+  review/             # per cycle: the report (cycle-N.md) + the reviewed paper snapshot (cycle-N-paper.md)
   LICENSE             # CC BY 4.0 — covers paper, data, assets (from licenses/CC-BY-4.0.txt)
   ATTRIBUTIONS.md     # third-party sources, their licenses, what reproduction requires
   COMPLIANCE.md       # gate outcome: cleared / referenced-only / consent basis / overrides
@@ -22,6 +22,9 @@ and opened as a PR (see `git-workflow.md`):
 - `review/cycle-N.md` is the adjudicated plan from cycle N; keep every cycle so the PR
   shows what was raised and how the paper changed. Residual/unresolved findings also
   go in the **PR description** (see `git-workflow.md`).
+- `review/cycle-N-paper.md` is the exact `paper.md` that cycle N reviewed, so a reader
+  can diff the iterations — cycle to cycle, and against the final `paper.md` — without
+  git. Keep every cycle's snapshot alongside its report.
 - Omit a subfolder that has no content. Never create an empty placeholder to imply
   coverage that does not exist.
 - License files are copied verbatim from `references/licenses/`. For `MIT.txt`,
@@ -74,7 +77,7 @@ End the manuscript with this back-matter, in this order:
 - `assets/` — <one line>
 - `data/` — <one line; note any reference-only datasets>
 - `scripts/` — <one line>
-- `review/` — agentic peer-review report per cycle (`cycle-N.md`)
+- `review/` — per review cycle: the report (`cycle-N.md`) and the reviewed paper snapshot (`cycle-N-paper.md`)
 
 ## Licensing
 - Paper, data, and assets: **CC BY 4.0** (`LICENSE`).
