@@ -82,12 +82,15 @@ plugins/madskillz/skills/scientific-podcast/
 Detailed in `references/reframe.md`:
 
 1. **Extract** the real exchanges from the source — the owner's questions and the agent's
-   answers — from the live session or the study artifacts.
+   answers — from the live session or the study artifacts. When the discussion spans **multiple
+   sessions/logs**, merge them (order by the owner's instruction or by timestamps, confirmed)
+   into one exchange set before reframing.
 2. **De-batch** — pair each question with its answer and interleave into true
    Q → A → Q → A turns, dissolving the "10 questions then 10 answers" artifact.
 3. **Thread** — group exchanges into coherent topic **segments** and order them for *narrative*
    flow (hook → build → payoff), not chronology. Related exchanges merge; redundant ones
-   condense.
+   condense. **Episode shape is tunable** — the owner can set a target length / segment count,
+   and the engine condenses or selects threads to fit while disclosing what was cut.
 4. **Tangent discipline** — a side-thread is either **woven back** into its main thread, or
    **explicitly marked** `[tangent: …]` and then **refocused** `[back to main]`. Never left
    dangling.
@@ -98,7 +101,9 @@ Detailed in `references/reframe.md`:
 ### 6.1 Speakers
 **Host = the owner**, voiced using `blog`'s voice profile (curious, deadpan-ironic), asking his
 real questions. **Guest = a neutral domain expert**, giving the real answers. Two voices, an
-interview.
+interview. The host borrows the voice profile's *attitude*, rendered in **speakable cadence** —
+spoken lines are shorter and more conversational than written blog prose, so the script reads
+naturally aloud rather than as an essay with names attached.
 
 ### 6.2 Script format (`references/script-format.md`)
 Labeled script with light production cues:
@@ -164,6 +169,10 @@ source (live session  OR  study folder: journey/transcript.md, review/cycle-*.md
   never leave it dangling.
 - **Sprawling source** → thread and condense aggressively; the script is a curated discussion,
   not a full transcript. Note what was condensed.
+- **Discussion spans multiple sessions/logs** → merge them in an owner-confirmed order
+  (timestamps as a hint) before reframing; one episode out of many sessions.
+- **Owner sets a target length/segment count** → fit by condensing or selecting threads, and
+  disclose what was cut; never fabricate filler to pad to length.
 - **TTS not installed / no GPU for the chosen model** → produce the script, fall back to
   Kokoro/CPU if possible, else skip audio and report; never fake audio.
 - **Asked to auto-publish to a podcast platform** → out of scope; deliver the script (and

@@ -1,7 +1,7 @@
 # story-studio: an agentic writing room for real books
 
 **Date:** 2026-06-20
-**Status:** Design refined (Phase-1 rough-edge pass) — pending written-spec review; implementation parked as a TODO
+**Status:** Design refined (round 2: full rough-edge sweep) — pending written-spec review; implementation parked as a TODO
 **Branch:** writing-skills
 
 ## 1. Context
@@ -22,6 +22,10 @@ This is not the owner's *blog* voice. A book invents its **own** narrator voice 
 **roster of character voices**, defined per book. The only thing borrowed from the existing
 `blog` skill is the **voice-profile file *format*** (an observed, evolving "how this entity
 talks" document). `blog` is a standalone skill and is **not** modified or depended upon.
+
+**Goblin Tales specifically** is to become a *single real novel* (not an anthology of separate
+stories) that **weaves in some of the world's history**. Its timeline therefore carries both
+deep-history events and in-narrative events on one ordered spine (§5.4).
 
 The owner is inspired by R.A. Salvatore (kinetic, legible action), Brandon Sanderson
 (rule-bound magic systems; disciplined setup/payoff), and Robert Jordan (sprawling ensemble
@@ -68,9 +72,14 @@ publishing to a configurable repo. That shape is proven here; this design reuses
   of bits the kids already love, kept verbatim where possible.
 - A **`locked` marker** on scenes/passages: critics may observe locked content but never propose
   rewrites to it.
+- A small **command surface** (`/story`, `/note`, `/review-and-update`, `/export`) — §4.1.
+- A **unified timeline spine** (deep-history + in-narrative events) that character beats,
+  flashbacks, and knowledge-state all anchor to (§5.4, §6).
+- **Real-book export** with front matter (title page, dedication, table of contents) and metadata
+  from `book.yaml`.
 - **EPUB + PDF** export via pandoc.
 - A **dedicated, configurable writing repo** for in-progress books and future-book ideas, with
-  direct push (the owner is the approver).
+  direct push to `main` (the owner is the approver).
 
 **Non-goals**
 - Writing in the owner's personal voice (that is `blog`'s job; untouched here).
@@ -113,6 +122,17 @@ pure secondary-world fantasy); opt-in **specialists** (Magic-System Logician, Co
 Choreographer, …) ship inactive and are switched on per book. "Default" vs "opt-in" therefore
 means *default-active* vs *default-inactive*, not two different mechanisms.
 
+### 4.1 Command surface
+
+Four commands front the skills (mirrors the scientific family's `/research` umbrella):
+
+| Command | Skill | Does |
+|---|---|---|
+| `/story` | story-studio | Umbrella entry — start a new book, resume one, scaffold the folder, or ingest existing source. Routes to the right step. |
+| `/note <text>` | story-studio | Capture a margin-note while reading. Anchors to the scene currently in context (optionally a quoted line: `/note ch03 "…" <text>`); appends to `notes/queue.md`. **Never** triggers a change — it just records. |
+| `/review-and-update` | story-room → story-studio | Run the consolidation cycle: room consolidates the whole queue into one adjudicated plan; owner approves/rejects/edits item-by-item; studio applies only approved items and commits. |
+| `/export` | story-studio | Assemble the manuscript (+ front matter) → EPUB/PDF via pandoc. |
+
 ## 5. The per-book folder format (the contract everything reads/writes)
 
 Lives in the configurable writing repo (§9).
@@ -128,7 +148,7 @@ Lives in the configurable writing repo (§9).
 │   └── soul-clone-death.md
 └── books/
     └── goblin-tales/
-        ├── book.yaml             # title, genre, audience block, status, active roles, narrator-voice ref
+        ├── book.yaml             # title, author, dedication, genre, audience, status, active roles, voice ref
         ├── outline.md            # Architect's beat sheet / structure
         ├── source/               # Phase-1 ingestion: raw ChatGPT logs + extraction provenance
         │   ├── raw/              # the original exported/pasted chat logs (untouched)
@@ -136,7 +156,7 @@ Lives in the configurable writing repo (§9).
         ├── bible/
         │   ├── world.md          # places, factions, history
         │   ├── magic-system.md   # costs / limits / laws (if any)
-        │   ├── timeline.md        # THE SPINE: E01, E02, … canonical events in story-order
+        │   ├── timeline.md        # THE SPINE: E01… ordered events, each tagged [history] or [story]
         │   └── glossary.md        # invented names/terms/pronunciations
         ├── voice/
         │   ├── narrator.md        # FRESH target voice (NOT the owner's, NOT extracted from source)
@@ -159,13 +179,17 @@ Lives in the configurable writing repo (§9).
 ```
 
 ### 5.1 `book.yaml`
-Records title, genre, status, the narrator-voice reference, the **list of active roles** drawn
-from `roles/`, and an **audience block**. The audience block names the *actual* readers so the
+Records title/author/dedication, genre/language, status, the narrator-voice reference, the
+**list of active roles** drawn from `roles/`, and an **audience block**. The audience block names the *actual* readers so the
 Beta Reader and Age-Appropriateness personas calibrate to *them*, not a generic "genre fan":
 
 ```yaml
 title: Goblin Tales
+author: <pen name or real name — fill in>   # printed on the title page (front matter)
+dedication: >-                               # printed after the title page; optional
+  For my boys.
 genre: middle-grade fantasy
+language: en
 status: phase-1-review
 narrator_voice: voice/narrator.md
 audience:
@@ -176,8 +200,8 @@ audience:
 active_roles: [age-appropriateness, science-plausibility]
 ```
 
-(Goblin book → age-appropriateness on; soul-clone book → Science/Plausibility +
-Magic-System Logician on.)
+(`title`/`author`/`dedication`/`language` feed the export front matter, §9. Goblin book →
+age-appropriateness on; soul-clone book → Science/Plausibility + Magic-System Logician on.)
 
 ### 5.2 Scene frontmatter
 Every manuscript scene/chapter declares its place on the timeline, its POV, and whether it is
@@ -202,21 +226,48 @@ The book **exports in `manuscript/` file order** (the reading order the author i
 `story_time` is used *only* to resolve character state (so flashbacks get the earlier self); it
 never reorders the manuscript. A chapter that is a flashback still reads where it is placed.
 
+### 5.4 The unified timeline spine (`bible/timeline.md`)
+There is **one ordered spine** of canonical events, each with an id and a **type tag**:
+
+```
+E01 [history] The Sundering — 300 years before the story
+E02 [history] Goblins exiled to the Underroot
+…
+E40 [story]   Grix finds the old map
+E41 [story]   Mara's mother dies
+```
+
+- **`[history]`** events are backstory the book *weaves in* (some long predating any living
+  character); **`[story]`** events happen within the narrative.
+- Scene `story_time`, character **evolution beats**, **knowledge** acquisition (§6), and
+  **flashbacks** all anchor to **any** event on this one spine. So a flashback to a `[history]`
+  moment resolves character state correctly, and the Architect can point at unused `[history]`
+  events as foreshadowing fuel (Phase 2).
+- Ordering is by the spine, not by `E`-number arithmetic; ids are stable labels, and new events
+  can be inserted between existing ones (e.g. `E40a`) without renumbering.
+
 ## 6. The character model (the spine)
 
 A character is **not** a static sheet. It is a persona an agent can **embody and act out**, so
 the room can drop the character into a situation, observe what they would actually do, and the
 critics flag inconsistencies or ask for clarification.
 
-- **`character.md`** — base/defining persona (who they are at first appearance / story start).
+- **`character.md`** — base/defining persona **as of first appearance** (not "story start" —
+  characters introduced later begin from their first-appearance state). Includes a lightweight
+  **relationships** note (allies/rivals/family/loyalties) so the Dialogue Director can judge
+  whether an interaction is *real* rather than filler.
 - **`voice.md`** — how they talk (voice-profile format).
 - **`evolution.md`** — an **append-only** log of change beats, each **anchored to a timeline
-  event**, e.g.:
+  event** (§5.4). A beat may record a change in **personality**, **relationships**, *and*
+  **knowledge** — knowledge is just another anchored state change. E.g.:
 
   ```
-  ## at E12 — mother's death
+  ## at E41 — mother's death
   Grief, guardedness, flashes of anger at the world. Withdraws from the friend group.
   Why: she blames herself for being away when it happened.
+
+  ## at E12 — learns the goblins are real
+  Knowledge: now knows goblins exist and acts on it. Before E12 she'd have scoffed.
   ```
 
 ### 6.1 State resolution (the one rule that makes flashbacks safe)
@@ -232,6 +283,10 @@ never lost — they are simply out of scope for earlier story-time. This lets th
 critic catch *both* "too cheerful three chapters after her mother died" *and* "this flashback
 wrongly references the death."
 
+Because **knowledge** is resolved the same way, the critic also catches the classic
+**knows-too-early** bug: if a scene `before E12` has Mara act on the goblins being real, the
+resolution shows she does not yet hold that knowledge → flagged.
+
 ### 6.2 Embodiment
 `story-room` can spin up an agent handed the **resolved** persona + voice for a given scene's
 `story_time`. Two uses: (a) **generation aid** — produce authentic in-character dialogue and
@@ -244,6 +299,8 @@ Each persona is one of four types — **✍️ Writer**, **🧭 Suggester**, **�
 **👓 Reader**. Suggesters/critics/readers never edit; they file into the notes queue.
 The room runs only the personas **relevant to a given pass** (a dialogue-heavy chapter pulls the
 Dialogue Director; a battle pulls the Combat Choreographer if the book has opted it in).
+**Reader (👓) feedback enters the queue as *advisory observations*** ("this dragged for me, and
+here's why"), not mandated changes; **Critic (🔍) findings carry actionable severity** (§8).
 
 **Default personas**
 
@@ -251,7 +308,7 @@ Dialogue Director; a battle pulls the Combat Choreographer if the book has opted
 |---|---|---|---|
 | Narrator | ✍️ | Holds the book's authorial throughline + narrator voice; does the drafting (Phase 2). | — |
 | Story Architect / dev editor | 🧭 | Outline, beats, arcs, stakes, pacing; proposes twists & tracks foreshadowing setup→payoff. | structure |
-| Lorekeeper / Continuity | 🔍 | Owns the bible; flags contradictions in names/places/timeline/facts/magic rules. | self-inconsistency |
+| Lorekeeper / Continuity | 🔍 | Owns the bible + timeline spine; flags contradictions in names/places/facts/magic rules **and in character state/knowledge resolved at each scene's story-time** (incl. knows-too-early). | self-inconsistency |
 | Character & Dialogue Director | 🔍 | Distinct voice + motivation per character; flags filler beats; proposes real interaction. | "And Jacob nodded" |
 | Line Editor / Prose Stylist | 🔍 | Sentence-level: awkward phrasing, clarity, rhythm; cuts purple prose. | weird language |
 | Tic & Repetition Hunter | 🔍 | Whole-document view: overused words/devices/crutch phrases/structural tics. | repetitive devices |
@@ -285,25 +342,45 @@ guards *internal* rule integrity — complementary, not redundant.
               (commit per draft + per revision cycle; plan saved for visibility)
 ```
 
-- **Margin-notes capture:** the owner can leave notes against scenes while reading; they land
-  in `notes/queue.md` without forcing any change.
+- **Margin-notes capture (`/note`):** the owner leaves notes against scenes while reading; they
+  land in `notes/queue.md` without forcing any change.
 - **Persona suggestions:** flow into the same queue, so notes and suggestions are adjudicated
   together.
-- **`/review-and-update`:** the consolidation cycle. Mirrors `scientific-peer-review`'s output
-  shape (one adjudicated, severity-ranked revision plan) — the room proposes, the owner
-  disposes, the studio applies.
+- **Consolidation is a meta-editor.** `/review-and-update` runs a meta-editor (like
+  `scientific-peer-review`'s) that **dedups** overlapping items and **reconciles conflicts** into
+  *one coherent* item — e.g. the Line Editor wanting to cut a line the Beta Reader loved becomes
+  a single decision for the owner, not two contradictory entries — then **ranks by
+  fiction-severity**:
+  - **blocker** — breaks the story or its consistency (continuity/knowledge contradiction, plot hole);
+  - **major** — weakens it (flat dialogue, a sagging scene, an overused device);
+  - **minor** — polish (word choice, a typo).
+  Reader reactions ride along as *advisory* context, not severities.
+- **Notes lifecycle.** When a cycle is adjudicated, consolidated items **move** from
+  `notes/queue.md` into the saved `cycle-NN.md` plan and are **cleared** from the queue; the
+  owner's dispositions (approved/edited/**rejected**) are recorded there, and **rejected items
+  are not re-proposed** in later cycles (no nagging). `/review-and-update` mirrors
+  `scientific-peer-review`'s output shape — the room proposes, the owner disposes, the studio
+  applies.
 
 ## 9. Repo storage & export
 
 - **Repo:** a dedicated writing repo, **target configurable per user** (e.g. `bub/writing`),
-  not hardcoded — so anyone using `madskillz` sets their own. The studio inits the layout,
-  commits **per draft and per revision cycle**, and **pushes directly** to a per-book branch
-  (`book/<slug>`). **No PR gate** — solo creative work where the owner is already the approver.
+  not hardcoded — so anyone using `madskillz` sets their own. The target is **resolved on first
+  run and remembered** in a local config (`~/.claude/writing/config`); first run **offers to
+  init** the repo and lay down the folder format. Thereafter the studio commits **per draft and
+  per revision cycle** and **pushes directly to `main`** — books in `books/<slug>/`, shared
+  `roles/` and `ideas/` at the root. **No branches, no PR gate** — solo creative work where the
+  owner is the approver, so per-book branches would only strand the shared `roles/`/`ideas/` and
+  add switching friction. (A throwaway `experiment/<thing>` branch for a risky rewrite is always
+  available ad hoc; the design does not require it.)
 - **Ideas:** future-book seeds live in `ideas/` (the seer and soul-clone pitches seed the
   first two).
-- **Export:** `pandoc` produces **EPUB** (reflowable; e-reader default) and **PDF** (fixed
-  layout; needs a LaTeX engine such as `tectonic`/`xelatex`). Missing toolchain → report and
-  fall back (e.g. EPUB-only if no LaTeX), never fake an export.
+- **Export:** `/export` assembles **front matter** — a **title page** (`title`/`author` from
+  `book.yaml`), an optional **dedication**, and a **table of contents** — ahead of the chapters
+  in `manuscript/` file order, then `pandoc` produces **EPUB** (reflowable; e-reader default) and
+  **PDF** (fixed layout; needs a LaTeX engine such as `tectonic`/`xelatex`). Document metadata
+  (title/author/language) comes from `book.yaml`. Missing toolchain → report and fall back
+  (e.g. EPUB-only if no LaTeX), never fake an export.
 
 ## 10. Build phasing (this spec covers all of it; the first plan targets Phase 1)
 
@@ -328,10 +405,15 @@ The source is ChatGPT chat logs and is *known to be inconsistent* — so the pri
 **never silently canonize the source's bugs.** Bootstrapping is a guided, owner-confirmed
 pipeline, not an automatic extraction.
 
-1. **Normalize the logs → manuscript.** Read the raw logs from `source/raw/`. Separate actual
-   story prose from prompts, model chatter, and meta. Stitch the prose in narrative order, split
-   into `manuscript/chNN.md` scenes (room proposes boundaries; owner confirms). Record exactly
-   what was kept vs dropped in `source/extraction.md` (provenance — so nothing vanishes silently).
+1. **Normalize the logs → manuscript.** Read the raw logs from `source/raw/` — accepting a
+   ChatGPT **`conversations.json`** export and/or **pasted markdown**. When the stories span
+   **multiple chat logs/sessions**, order them by the owner's instruction (or by export
+   timestamps, confirmed). Separate actual story prose from prompts, model chatter, and meta.
+   Where a scene was **regenerated/duplicated** in the logs (several versions of the same
+   passage), surface the variants and let the owner pick the canonical one — never silently keep
+   the last. Stitch the prose in narrative order, split into `manuscript/chNN.md` scenes (room
+   proposes boundaries; owner confirms). Record exactly what was kept, dropped, and chosen-among
+   in `source/extraction.md` (provenance — so nothing vanishes silently).
 2. **Extract canon *with* the Continuity critic running.** As the Lorekeeper builds
    `bible/` (world, magic, glossary) and the `timeline.md` spine (E01…), every place the source
    **contradicts itself** becomes a **flagged decision in the queue**, not a guess —
@@ -372,8 +454,16 @@ structure and contradictions, not to declare canon.
   manuscript. Never discard source content silently.
 - **Source contradicts itself during ingestion** (name/fact/timeline drift) → a flagged decision
   in the queue for the owner to ratify; never canonized by "whatever the text said last."
+- **Multiple chat logs in unknown order / a scene regenerated several times** → order is
+  owner-confirmed (timestamps as a hint); duplicate scene variants are surfaced for the owner to
+  pick the canonical one; the choice is recorded in `source/extraction.md`.
 - **Character base-vs-evolution split is unclear** → the room asks rather than inventing a
   backstory; inferences are proposals, not canon.
+- **A character knows something too early** (knowledge resolved at the scene's story-time is not
+  yet acquired) → Continuity flags it as a blocker; never silently "explained away."
+- **Two personas suggest conflicting changes** → the consolidation meta-editor reconciles them
+  into one decision for the owner (with the trade-off stated); the plan never contains two
+  contradictory items for the same text.
 - **Edit proposed against `locked` content** → refused at the source; critics may *comment* on
   locked scenes/passages but the plan cannot contain a rewrite of them.
 - **Scene with no resolvable `story_time`** → the room proposes one and asks the owner to
@@ -394,7 +484,18 @@ structure and contradictions, not to declare canon.
 
 - **Character state resolution** — unit-style fixtures: a character with beats at E04 and E12;
   assert a scene `after E12` resolves with both, a `flashback before E04` resolves to base only,
-  a scene `after E04` resolves with the E04 beat only.
+  a scene `after E04` resolves with the E04 beat only. Include a `[history]`-anchored beat and a
+  flashback to it (unified-spine resolution).
+- **Knows-too-early detection** — a scene `before` a knowledge beat in which the character acts on
+  that knowledge produces a blocker Continuity finding.
+- **Conflicting-suggestion reconciliation** — two personas proposing opposite changes to the same
+  line yield one reconciled decision in the plan, never two contradictory items.
+- **Front-matter export** — the EPUB/PDF carries a title page (`title`/`author`), the dedication,
+  and a TOC, with chapters in `manuscript/` file order.
+- **Direct-to-main commits** — drafts and each cycle commit to `main`; `roles/` and `ideas/`
+  remain at the repo root, not stranded on a branch.
+- **`/note` capture** — `/note` appends an anchored note to `notes/queue.md` and triggers no
+  change on its own.
 - **ChatGPT-log ingestion** — a fixture log with interleaved prompts/chatter/prose splits into
   prose-only manuscript scenes, with `source/extraction.md` recording what was dropped; nothing
   is lost without a record.
