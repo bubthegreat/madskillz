@@ -40,7 +40,7 @@ credentials and scope (see `scientific-peer-review/references/reviewers/adversar
   - gap remains → the adversarial reviewer **notes** the residual gap; the expert may still be
     used for what it does cover (no further rounds);
   - gap is **egregious and blocks judging a central claim** → stop and surface "could not
-    establish adequate expertise for &lt;domain&gt;" (fail-closed), for the caller's gate to
+    establish adequate expertise for <domain>" (fail-closed), for the caller's gate to
     handle.
 
 There is no second finder↔adversarial round. One attempt, then accept-with-note or halt.

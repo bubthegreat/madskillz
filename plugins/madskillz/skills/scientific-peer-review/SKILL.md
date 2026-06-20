@@ -93,7 +93,7 @@ additional reviewer for the relevant claims; it returns the same report shape. A
 or updated expert is then **challenged once** by the adversarial reviewer: if a credentials gap
 is found, the finder gets one revision; on re-check the expert is accepted, noted with a
 residual gap, or — if the gap is egregious and blocks judging a central claim — the review
-**halts** with "could not establish adequate expertise for &lt;domain&gt;" (fail-closed, never
+**halts** with "could not establish adequate expertise for <domain>" (fail-closed, never
 faked). Record the expert(s) consulted/minted and any halt in the coverage statement.
 
 - **In Claude Code:** dispatch them as parallel subagents (use
