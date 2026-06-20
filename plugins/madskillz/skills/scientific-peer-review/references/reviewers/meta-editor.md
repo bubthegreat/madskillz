@@ -49,6 +49,32 @@ consult — disclose it as such, never as a fresh pass.
 - Emit ONE ordered revision plan, then the overall call. Stop there — revision is out of scope.
 
 ## Output
-Return the **Meta-editor deliverable** shape in `references/review-report-format.md`,
-including the coverage statement. On re-review cycles, the coverage statement records each
-reviewer's engagement (full re-review / re-engaged / consulted-declined / first pass).
+Emit the **Meta-editor deliverable** below, including the coverage statement. On re-review
+cycles, the coverage statement records each reviewer's engagement (full re-review / re-engaged /
+consulted-declined / first pass).
+
+```
+# Peer-review summary
+
+## Coverage
+Reviewers run: <list>
+Tiers run: <correctness | correctness + readability>
+Inputs available: <list>
+Checks not performed: <list, with the missing input that blocked each>
+Review independence: parallel subagents | sequential (weaker independence)
+Engagement this cycle (re-review only): <per reviewer — full re-review | re-engaged (changes touched interests) | consulted, declined (prior clean verdict carried forward) | first pass>
+
+## Reviewer recommendations
+<one line per reviewer: role → recommendation>
+
+## Disagreements
+<material conflicts stated explicitly, e.g. "Adversarial: reject vs Statistical: minor — author
+adjudicates". If none: "none">
+
+## Revision plan (ranked)
+1. [blocker] [from: <reviewer(s)>] [location] — <required change>
+2. [major]   …
+3. [minor]   …
+
+## Overall call: accept | minor revision | major revision | reject
+```

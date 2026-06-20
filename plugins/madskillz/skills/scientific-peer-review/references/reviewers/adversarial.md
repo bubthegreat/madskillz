@@ -33,7 +33,3 @@ single revision, then you re-check once and either accept it, note a residual ga
 still be used for what it covers), or — if the gap is egregious enough to block judging a
 central claim — recommend halting ("expertise not adequately established for <domain>").
 Default to skepticism: a shallow expert is worse than an admitted gap.
-
-## Output
-Return the report shape in `references/review-report-format.md`. List inputs available and
-any checks you could not perform.

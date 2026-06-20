@@ -1,7 +1,8 @@
 # Review report format
 
-Every reviewer returns this exact shape. The meta-editor consumes them and emits the
-deliverable. Never invent a verdict for a check you could not run — report it as skipped.
+Every reviewer returns this exact shape. The meta-editor consumes them and emits its own
+deliverable (see `reviewers/meta-editor.md`). Never invent a verdict for a check you could not
+run — report it as skipped.
 
 ## Per-reviewer report
 
@@ -36,31 +37,3 @@ completeness failure — a term/acronym used but never defined or missing from i
 required reader-facing section (Acronyms / Glossary), or a missing/badly-misleading abstract. They
 are **never `blocker`**; the correctness tier owns blockers, and readability defers to correctness
 in every conflict.
-
-## Meta-editor deliverable
-
-```
-# Peer-review summary
-
-## Coverage
-Reviewers run: <list>
-Tiers run: <correctness | correctness + readability>
-Inputs available: <list>
-Checks not performed: <list, with the missing input that blocked each>
-Review independence: parallel subagents | sequential (weaker independence)
-Engagement this cycle (re-review only): <per reviewer — full re-review | re-engaged (changes touched interests) | consulted, declined (prior clean verdict carried forward) | first pass>
-
-## Reviewer recommendations
-<one line per reviewer: role → recommendation>
-
-## Disagreements
-<material conflicts stated explicitly, e.g. "Adversarial: reject vs Statistical: minor — author
-adjudicates". If none: "none">
-
-## Revision plan (ranked)
-1. [blocker] [from: <reviewer(s)>] [location] — <required change>
-2. [major]   …
-3. [minor]   …
-
-## Overall call: accept | minor revision | major revision | reject
-```

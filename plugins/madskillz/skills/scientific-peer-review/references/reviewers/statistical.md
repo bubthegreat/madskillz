@@ -24,7 +24,3 @@ sizes/CIs, sample sizes, corrections, or the pre-registered analysis plan.
 ## If inputs are missing
 - With no analysis outputs, review the statistics *as reported* and flag every number you
   cannot trace to a source as untraceable. Do not assume the numbers are correct.
-
-## Output
-Return the report shape in `references/review-report-format.md`. List inputs available and
-any checks you could not perform.

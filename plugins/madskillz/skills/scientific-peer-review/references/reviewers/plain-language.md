@@ -39,6 +39,5 @@ or section structure and flow.
   than overriding a correctness reviewer.
 
 ## Output
-Return the report shape in `references/review-report-format.md`. Readability findings are normally
-`minor`; a missing or badly misleading abstract may rise to `major`, never `blocker`. List inputs
-available and any checks you could not perform.
+Readability findings are normally `minor`; a missing or badly misleading abstract may rise to
+`major`, never `blocker`.

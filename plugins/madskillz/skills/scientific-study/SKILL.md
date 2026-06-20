@@ -1,18 +1,13 @@
 ---
 name: scientific-study
 description: >-
-  Produce a publication-ready scientific research study: frame the question (with a
-  novelty/prior-art check), draft the paper (plus data/scripts/assets), then drive
-  it through an agentic peer-review quality-gate loop — revising the paper against
-  the panel's feedback until it clears, with a dataset-licensing/privacy compliance
-  gate — and publish it as a PR to the private jmresearch/research repo for a human
-  to review and merge. Use whenever the user wants to run/produce a research study,
-  write a research paper meant for publication, "research X and write it up," get a
-  study peer-review-gated before a human sees it, or push an agentic-reviewed paper
-  up for review. Trigger on phrases like "do a research study on…," "research and
+  Use when the user wants to produce or publish a research study or paper — run or
+  produce a research study, "research X and write it up," produce a paper meant for
+  publication, get a study peer-review-gated before a human sees it, or open a PR
+  with the research. Trigger on phrases like "do a research study on…," "research and
   write up…," "produce a paper on…," "get this study ready to publish," or "open a
-  PR with the research." Drafts and revises the paper itself; reuses
-  scientific-peer-review as the review engine; humans review and merge in the PR.
+  PR with the research." Drafts and revises the paper itself and opens a PR to
+  jmresearch/research for a human to merge; for review-only, use scientific-peer-review.
 ---
 
 # scientific-study: agentic-peer-reviewed research, published as a PR
@@ -122,6 +117,14 @@ quality gate** (at minimum a focused re-review of the changed sections via
 so the requested changes are clearly visible. Update the PR description. Repeat as
 needed. Never merge — the human does.
 
+## Step 7 — Save the dialogue transcript (provenance)
+
+Save the human<->assistant dialogue of the study to `journey/transcript.md` — the owner's questions
+and direction, and the substantive replies/corrections (not tool-call noise). This is **provenance**:
+it makes clear which thinking was the owner's vs. where the AI did the heavy lifting. Commit it with
+the study. It is **not** part of `paper.md` and carries **no privacy gate** (it is the owner's own
+dialogue). The study may also **read** this transcript for refinement context when revising.
+
 ## Edge cases
 
 - No brief and no draft → ask what study to produce; never invent a topic.
@@ -139,4 +142,6 @@ needed. Never merge — the human does.
   domain expert via `ask-an-expert`; if adequate expertise cannot be established for a central
   claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
+- Asked to blog the study / write it up in the owner's voice → out of scope here; use the standalone
+  `blog` skill (the study still saves `journey/transcript.md` as provenance, Step 7).
 - Asked to merge → out of scope; the human merges the PR.

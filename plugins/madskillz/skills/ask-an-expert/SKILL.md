@@ -1,16 +1,14 @@
 ---
 name: ask-an-expert
 description: >-
-  Define, maintain, and query reusable domain-expert personas, and resolve requests
-  for expertise the rest of the research family is missing. Use when the user wants to
-  ask a subject-matter expert a question directly ("ask a condensed-matter physics
-  expert whether…," "consult an expert on survival analysis"), when they want to define
-  or find an expert for a domain ("I need a <domain> expert," "find the right expert
-  for this"), or when a peer-review panel hits a domain it cannot credibly judge and
-  needs an expert minted or reused (resolving a `requested-expert.md`). Owns the shared
-  `experts/` library and the expert-finder. Trigger on phrases like "ask an expert,"
-  "consult an expert," "is there an expert on X," "define an expert," or "find the right
-  expert."
+  Use when the user wants to ask a subject-matter expert a question directly ("ask a
+  condensed-matter physics expert whether…," "consult an expert on survival analysis"),
+  define or find an expert for a domain ("I need a <domain> expert," "find the right
+  expert for this"), or when a peer-review panel hits a domain it cannot credibly judge
+  and needs an expert minted or reused (resolving a `requested-expert.md`). Owns the
+  shared `experts/` library and the expert-finder. Trigger on phrases like "ask an
+  expert," "consult an expert," "is there an expert on X," "define an expert," or "find
+  the right expert."
 ---
 
 # ask-an-expert: reusable domain experts, on demand

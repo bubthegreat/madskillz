@@ -11,6 +11,7 @@ and opened as a PR (see `git-workflow.md`):
   scripts/            # analysis code / reproducibility scripts / notebooks
     LICENSE           # MIT — covers code (from licenses/MIT.txt)
   review/             # per cycle: the report (cycle-N.md) + the reviewed paper snapshot (cycle-N-paper.md)
+  journey/            # human<->assistant dialogue transcript — provenance; NOT part of paper.md
   LICENSE             # CC BY 4.0 — covers paper, data, assets (from licenses/CC-BY-4.0.txt)
   ATTRIBUTIONS.md     # third-party sources, their licenses, what reproduction requires
   COMPLIANCE.md       # gate outcome: cleared / referenced-only / consent basis / overrides
@@ -25,6 +26,10 @@ and opened as a PR (see `git-workflow.md`):
 - `review/cycle-N-paper.md` is the exact `paper.md` that cycle N reviewed, so a reader
   can diff the iterations — cycle to cycle, and against the final `paper.md` — without
   git. Keep every cycle's snapshot alongside its report.
+- `journey/transcript.md` is the human<->assistant dialogue behind the study (the owner's questions,
+  direction, and the substantive corrections) — committed as provenance so it is clear what was the
+  owner's vs. the AI's heavy lifting. It is **not** part of `paper.md` and carries no privacy gate
+  (it is the owner's own dialogue). Omit it when empty.
 - Omit a subfolder that has no content. Never create an empty placeholder to imply
   coverage that does not exist.
 - License files are copied verbatim from `references/licenses/`. For `MIT.txt`,
