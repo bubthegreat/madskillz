@@ -52,10 +52,17 @@ BRANCH="study/<topic>/<research-short-name>"
 SLUG="<topic>__<research-short-name>"               # filesystem-safe; unique per study
 WT="$ROOT/worktrees/$SLUG"                          # THIS study's isolated worktree
 
+# If an older NON-bare cache exists at "$ROOT", run the §2.1 migration here first — it imports
+# any in-flight study branches as old-cache/* refs that the resume chain below can attach to.
+
 if [ -d "$WT" ]; then
-  :                                                 # resuming: reuse the existing worktree
+  :                                                                         # resume: reuse the existing worktree
 elif git -C "$BARE" show-ref --verify --quiet "refs/heads/$BRANCH"; then
-  git -C "$BARE" worktree add "$WT" "$BRANCH"       # resuming: branch exists, attach a worktree
+  git -C "$BARE" worktree add "$WT" "$BRANCH"                               # resume: local branch exists
+elif git -C "$BARE" show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+  git -C "$BARE" worktree add "$WT" -b "$BRANCH" "origin/$BRANCH"           # resume: branch was pushed earlier
+elif git -C "$BARE" show-ref --verify --quiet "refs/remotes/old-cache/$BRANCH"; then
+  git -C "$BARE" worktree add "$WT" -b "$BRANCH" "old-cache/$BRANCH"        # resume: in-flight work migrated from the old cache (§2.1)
 else
   git -C "$BARE" worktree add "$WT" -b "$BRANCH" "origin/$DEFAULT_BRANCH"   # new study off up-to-date default
 fi
@@ -64,6 +71,39 @@ fi
 All subsequent git commands run **in the worktree** (`git -C "$WT" …`), never against
 `$BARE` or any shared checkout. Resuming a study reuses its worktree/branch and never
 resets committed work.
+
+### 2.1 Migrating in-flight work from an older non-bare cache (one-time)
+
+Earlier versions kept a single **non-bare** clone at `$ROOT` itself (so `$ROOT/.git` exists
+and `$ROOT/repo.git` does not). In-flight study branches and uncommitted edits may still live
+there. Migrate **non-destructively** — never delete the old checkout and never discard
+uncommitted work; the user may have other branches still to carry over.
+
+```bash
+OLD_GITDIR="$ROOT/.git"
+if [ -d "$OLD_GITDIR" ]; then
+  # 1) Surface — do NOT auto-commit or discard — any uncommitted work in the old checkout.
+  if [ -n "$(git -C "$ROOT" status --porcelain 2>/dev/null)" ]; then
+    git -C "$ROOT" status --short
+    git -C "$ROOT" stash list
+    # STOP and ask the user to commit or stash this on its branch before continuing.
+    # (Their in-flight edits live only in this working tree; never throw them away.)
+  fi
+  # 2) Import the old checkout's in-flight study branches into the bare repo as remote-tracking
+  #    refs — safe: never clobbers origin or local heads, never moves the old branches.
+  git -C "$BARE" remote add old-cache "$OLD_GITDIR" 2>/dev/null \
+    || git -C "$BARE" remote set-url old-cache "$OLD_GITDIR"
+  git -C "$BARE" fetch old-cache '+refs/heads/study/*:refs/remotes/old-cache/study/*'
+  git -C "$BARE" for-each-ref --format='migrated in-flight branch: %(refname:short)' \
+    refs/remotes/old-cache/study
+fi
+```
+
+Resuming any of those studies then goes through the normal §2 path: the resume chain attaches
+a worktree off `old-cache/<branch>` and continues it as a real study branch with its full
+history intact. **The old non-bare cache is left untouched** — remove it only once every
+in-flight branch has been carried over and the user confirms. (Re-running this is safe and
+idempotent: it re-imports the latest state of any branches not yet migrated.)
 
 ## 3. Commit cadence — make the evolution visible
 
