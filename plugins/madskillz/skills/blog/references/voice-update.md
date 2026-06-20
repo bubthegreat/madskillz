@@ -73,6 +73,26 @@ after that the gated auto-sync runs as part of this step.
 - **Don't force findings.** Most passes add little or nothing; that is expected and fine.
 - **Keep it usable.** The profile stays a tight, voice-defining brief — not a transcript dump.
 
+## Background auto-sync — the SessionEnd gate (optional)
+To sync without ever running the skill by hand, install the **gate hook** `hooks/voice-sync-gate.sh`
+(tested by `hooks/voice-sync-gate.test.sh`) as a **SessionEnd** hook. It is the cheap tier of the
+materiality check: on each session end it counts new corpus entries since `Repo-synced through` and,
+only when that count ≥ `VOICE_SYNC_MIN_COUNT` (default 15) **and** at least
+`VOICE_SYNC_MIN_INTERVAL_SECONDS` (default 720 = 12 min) have passed since the last attempt, it
+**detaches** a headless `claude -p "update my voice"` (model `opus`) that runs this updater plus the
+materiality-gated push. A lockfile prevents overlapping runs; the gate never blocks session teardown
+and writes only to `~/.claude/voice/sync.log`. Tunables are env vars (see the script header).
+
+Install: copy `hooks/voice-sync-gate.sh` to `~/.claude/hooks/`, make it executable, and add a
+`SessionEnd` hook to `~/.claude/settings.json` running `bash "$HOME/.claude/hooks/voice-sync-gate.sh"`.
+
+Notes:
+- The background agent runs **least-privilege** via `--allowedTools` (read/edit the voice file, run
+  the skill, git, python) — deliberately **not** `--permission-mode bypassPermissions`. A denied
+  tool just fails the sync quietly; the unattended agent never performs unapproved actions.
+- It pushes to `Push target` (default `main`). Make sure the voices-library infrastructure is on that
+  branch first, or an early background push lands the voice file without its supporting skill files.
+
 ## Setup — the capture hook (global, always-on)
 The corpus is fed by a **global** `UserPromptSubmit` hook in `~/.claude/settings.json` that runs
 `~/.claude/hooks/capture-voice.sh` on every prompt in every session — independent of any plugin, so it
