@@ -82,6 +82,31 @@ run_gate VOICE_SYNC_MIN_COUNT=15 VOICE_SYNC_MIN_INTERVAL_SECONDS=0
 check "only-5-new (1 old ignored) no launch" "$(launched)" "no"
 rm -rf "$TMP"
 
+# Helper: a throwaway git repo checked out on a non-target branch with a sentinel file.
+mkfixrepo() {
+  FIX="$TMP/fixrepo"; mkdir -p "$FIX"
+  git -C "$FIX" init -q
+  git -C "$FIX" config user.email t@t.test; git -C "$FIX" config user.name tester
+  echo precious > "$FIX/precious.txt"; git -C "$FIX" add -A; git -C "$FIX" commit -qm init
+  git -C "$FIX" checkout -q -b feature-branch   # deliberately NOT 'main'
+}
+
+# 8) Auto-refresh SAFETY: refuses to reset a repo that is not on the target branch.
+setup 20; mkfixrepo
+run_gate VOICE_SYNC_MIN_COUNT=15 VOICE_SYNC_MIN_INTERVAL_SECONDS=0 \
+         VOICE_SYNC_AUTOREFRESH=1 VOICE_SYNC_BRANCH=main VOICE_SYNC_REPO="$FIX"
+check "autorefresh refuses wrong-branch repo" "$(grep -c 'refusing to reset' "$TMP/sync.log" 2>/dev/null)" "1"
+check "autorefresh left repo untouched"       "$(cat "$FIX/precious.txt")" "precious"
+check "launch still proceeds after refresh"   "$(launched)" "yes"
+rm -rf "$TMP"
+
+# 9) Auto-refresh is OFF by default: no refresh attempted without the flag.
+setup 20; mkfixrepo
+run_gate VOICE_SYNC_MIN_COUNT=15 VOICE_SYNC_MIN_INTERVAL_SECONDS=0 VOICE_SYNC_REPO="$FIX"
+check "no autorefresh without flag"           "$(grep -c 'refresh:' "$TMP/sync.log" 2>/dev/null)" "0"
+check "launch proceeds (no flag)"             "$(launched)" "yes"
+rm -rf "$TMP"
+
 echo
 echo "passed: $PASS  failed: $FAIL"
 [ "$FAIL" -eq 0 ]

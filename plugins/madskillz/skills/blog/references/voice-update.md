@@ -84,7 +84,9 @@ materiality-gated push. A lockfile prevents overlapping runs; the gate never blo
 and writes only to `~/.claude/voice/sync.log`. Tunables are env vars (see the script header).
 
 Install: copy `hooks/voice-sync-gate.sh` to `~/.claude/hooks/`, make it executable, and add a
-`SessionEnd` hook to `~/.claude/settings.json` running `bash "$HOME/.claude/hooks/voice-sync-gate.sh"`.
+`SessionEnd` hook to `~/.claude/settings.json`. Recommended command (pushes from a dedicated
+`main`-pinned worktree and keeps it current):
+`VOICE_SYNC_REPO="$HOME/.claude/voice/madskillz-sync" VOICE_SYNC_AUTOREFRESH=1 bash "$HOME/.claude/hooks/voice-sync-gate.sh"`.
 
 Notes:
 - The background agent runs **least-privilege** via `--allowedTools` (read/edit the voice file, run
@@ -92,6 +94,13 @@ Notes:
   tool just fails the sync quietly; the unattended agent never performs unapproved actions.
 - It pushes to `Push target` (default `main`). Make sure the voices-library infrastructure is on that
   branch first, or an early background push lands the voice file without its supporting skill files.
+- **`VOICE_SYNC_REPO` should be a *dedicated* checkout/worktree pinned to the push branch** — never a
+  roaming working checkout. Create one with `git worktree add ~/.claude/voice/madskillz-sync main`.
+- **`VOICE_SYNC_AUTOREFRESH=1`** makes the gate `fetch` + `reset --hard origin/<branch>` that repo
+  before launching, so the push always fast-forwards. It is guarded: it **refuses** unless the repo
+  is actually on the target branch, so it can never reset a working checkout. `reset --hard` is safe
+  here only because the dedicated repo holds nothing precious (the live profile is the source of
+  truth). Do **not** enable it against a non-dedicated checkout.
 
 ## Setup — the capture hook (global, always-on)
 The corpus is fed by a **global** `UserPromptSubmit` hook in `~/.claude/settings.json` that runs
