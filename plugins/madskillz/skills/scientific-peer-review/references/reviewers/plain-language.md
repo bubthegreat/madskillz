@@ -12,6 +12,9 @@ confidence interval are, understands basic experimental design) but NOT a specia
 subfield. Standard scientific concepts need no explanation; subfield-specific jargon must be
 defined or replaced.
 
+**Interests (for re-engagement triage):** changes to the prose, the abstract, terminology choices,
+or section structure and flow.
+
 ## Required inputs
 - The draft manuscript (required), including its abstract.
 

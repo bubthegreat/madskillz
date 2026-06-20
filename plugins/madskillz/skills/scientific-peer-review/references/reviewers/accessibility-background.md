@@ -11,6 +11,9 @@ An adjacent-field researcher with an educated-generalist floor (general scientif
 subfield specialist). The reader navigates the body with the help of the abstract, the Glossary,
 the Acronyms index, and any Background / further-reading pointers.
 
+**Interests (for re-engagement triage):** changes to the abstract, glossary, background pointers,
+or any newly introduced concept that needs reader background.
+
 ## Required inputs
 - The draft manuscript (required), including its abstract, Glossary, Acronyms index, and any
   Background section.

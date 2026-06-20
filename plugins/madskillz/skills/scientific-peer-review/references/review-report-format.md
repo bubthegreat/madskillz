@@ -48,6 +48,7 @@ Tiers run: <correctness | correctness + readability>
 Inputs available: <list>
 Checks not performed: <list, with the missing input that blocked each>
 Review independence: parallel subagents | sequential (weaker independence)
+Engagement this cycle (re-review only): <per reviewer — full re-review | re-engaged (changes touched interests) | consulted, declined (prior clean verdict carried forward) | first pass>
 
 ## Reviewer recommendations
 <one line per reviewer: role → recommendation>

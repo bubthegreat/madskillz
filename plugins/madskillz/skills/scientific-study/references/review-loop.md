@@ -11,16 +11,21 @@ cycle = 0
 do:
   cycle += 1
   snapshot CURRENT paper.md -> review/cycle-<cycle>-paper.md   # the exact version this cycle reviews
-  plan   = run scientific-peer-review on the CURRENT paper + artifacts   # the engine
+  plan   = run scientific-peer-review on the CURRENT paper + artifacts   # the engine; cycle>1 also passes prior reports + the cycle-(cycle-1)-paper.md diff for re-engagement triage
   save plan -> review/cycle-<cycle>.md
   apply plan to paper.md (and artifacts) — edit faithfully
   commit "review cycle <cycle>: address <short summary>"   # snapshot + report + edits together
 while plan has blocker-severity findings AND cycle < 3
 ```
 
-- **Engine, not copy.** Always invoke `scientific-peer-review` fresh on the *current*
-  draft each cycle. Do not reuse a prior cycle's findings as if re-run — the whole
-  point is to confirm the edits actually resolved them.
+- **Re-engage, don't blanket re-run.** From cycle 2 on, pass the previous cycle's
+  reviewer reports and the diff since then (`review/cycle-(N-1)-paper.md` vs the current
+  `paper.md`) into `scientific-peer-review`. Its meta-editor runs a **re-engagement
+  triage**: any reviewer who had open findings is re-run to confirm the edits resolved
+  them; a reviewer who was clean is consulted with a specific question about the diff and
+  only re-run if the changes touch what they care about, otherwise their prior clean
+  verdict is carried forward and disclosed as such. Never carry an *open* finding forward
+  as resolved, and never present a carried-forward verdict as a fresh pass.
 - **One commit per cycle.** Each cycle is its own commit so the diff history shows the
   paper's evolution. Never squash the cycles together before the PR.
 - **Save each review.** Write every cycle's adjudicated plan to `review/cycle-N.md`,

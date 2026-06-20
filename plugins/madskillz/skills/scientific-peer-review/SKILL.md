@@ -75,6 +75,14 @@ available inputs. The panel has two tiers; the coverage statement names which ra
 The readability tier defers to the correctness tier in every conflict (presentation
 never outranks correctness); its findings are normally `minor` and never `blocker`.
 
+**Re-review cycles (incremental re-engagement).** When you are invoked with the previous
+cycle's reports and the diff since then (the `scientific-study` loop does this from cycle 2
+on), do not blanket-rerun the panel. The meta-editor first runs a re-engagement triage
+(`references/reviewers/meta-editor.md`): reviewers with open findings are re-run to confirm
+resolution; clean reviewers are consulted on the diff via their `Interests` and only re-run
+if it touches them, else their prior verdict is carried forward and disclosed. A first-time
+review (no prior state) runs the full panel.
+
 - **In Claude Code:** dispatch them as parallel subagents (use
   `superpowers:dispatching-parallel-agents`). Independent context is what makes
   the reviews genuinely independent.

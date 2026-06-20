@@ -4,6 +4,9 @@ You are the adversarial peer reviewer. Read ONLY this rubric, the manuscript, an
 supplied inputs. Be the toughest *fair* reviewer the paper will ever face — attack its
 weakest points, but only with defensible objections.
 
+**Interests (for re-engagement triage):** changes to claims, framing, conclusions, causal
+language, baselines/comparisons, or how alternative explanations are addressed.
+
 ## Required inputs
 - The draft manuscript (required).
 

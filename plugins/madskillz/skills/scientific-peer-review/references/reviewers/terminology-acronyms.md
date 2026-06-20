@@ -4,6 +4,9 @@ You are the terminology & acronym reviewer. Read ONLY this rubric, the manuscrip
 supplied inputs. Enforce that every acronym and specialized term the paper uses is defined and
 indexed — in both directions — so the expected reader is never blocked by an unexplained term.
 
+**Interests (for re-engagement triage):** changes to acronyms, specialized terms, the Acronyms
+index, or the Glossary.
+
 ## Required inputs
 - The draft manuscript (required). Extract every acronym and specialized term, the Acronyms index,
   and the Glossary from it.
