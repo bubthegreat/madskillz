@@ -117,6 +117,15 @@ quality gate** (at minimum a focused re-review of the changed sections via
 so the requested changes are clearly visible. Update the PR description. Repeat as
 needed. Never merge — the human does.
 
+## Step 7 — Optional: blog the journey
+
+If the user wants a shareable write-up, hand off to the **`research-blog`** skill: it saves the
+human<->assistant dialogue to `journey/transcript.md` (provenance, not part of the paper) and drafts
+a first-person blog post in the owner's voice under `blog/`. This step is optional and never gates
+publishing. The study may also **read** `journey/transcript.md` for refinement context — what the
+human actually asked for — when revising. The transcript is the owner's own dialogue: committed as
+provenance, never privacy-gated, never part of `paper.md`.
+
 ## Edge cases
 
 - No brief and no draft → ask what study to produce; never invent a topic.
@@ -134,4 +143,6 @@ needed. Never merge — the human does.
   domain expert via `ask-an-expert`; if adequate expertise cannot be established for a central
   claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
+- Asked to blog the study / share the journey → hand off to `research-blog` (Step 7); it also saves
+  the dialogue transcript as study provenance.
 - Asked to merge → out of scope; the human merges the PR.
