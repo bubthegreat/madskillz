@@ -235,3 +235,19 @@ split, cross-file de-duplication, edge-case trimming) are being applied now; the
 options (conditional readability tier, mechanical re-engagement, cycle/​panel reductions) are
 deferred to a TODO for later assessment. That work is **independent** of this design; this spec
 does not depend on it.
+
+## 13. Revision — standalone `blog` skill + voice-updater (2026-06-20)
+
+Per owner direction after the initial build:
+
+- **Split out of the scientific-* family.** `research-blog` → standalone **`blog`** skill, invoked
+  via its own `/blog` command, not routed from `/research`. Reverted: the `/research` blog route and
+  the `scientific-study` Step-7 blog handoff.
+- **Kept in `scientific-study`:** `journey/transcript.md` as a study-owned **provenance** step (now
+  with no blog mention); dropped `blog/` from the study layout.
+- **Voice-updater added.** The skill maintains an evolving voice profile at `~/.claude/voice/voice.md`
+  (seeded from `references/voice.md`), refined incrementally from a corpus
+  (`~/.claude/voice/corpus.jsonl`) fed by an always-on `UserPromptSubmit` capture hook. The updater
+  summarizes only entries newer than a recorded marker, never forces a finding, and never invents a
+  trait. See `skills/blog/references/voice-update.md`. Hook configured via the update-config skill.
+- Renames: `references/blog-voice.md` → `references/voice.md`; added `references/voice-update.md`.

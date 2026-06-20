@@ -117,14 +117,13 @@ quality gate** (at minimum a focused re-review of the changed sections via
 so the requested changes are clearly visible. Update the PR description. Repeat as
 needed. Never merge — the human does.
 
-## Step 7 — Optional: blog the journey
+## Step 7 — Save the dialogue transcript (provenance)
 
-If the user wants a shareable write-up, hand off to the **`research-blog`** skill: it saves the
-human<->assistant dialogue to `journey/transcript.md` (provenance, not part of the paper) and drafts
-a first-person blog post in the owner's voice under `blog/`. This step is optional and never gates
-publishing. The study may also **read** `journey/transcript.md` for refinement context — what the
-human actually asked for — when revising. The transcript is the owner's own dialogue: committed as
-provenance, never privacy-gated, never part of `paper.md`.
+Save the human<->assistant dialogue of the study to `journey/transcript.md` — the owner's questions
+and direction, and the substantive replies/corrections (not tool-call noise). This is **provenance**:
+it makes clear which thinking was the owner's vs. where the AI did the heavy lifting. Commit it with
+the study. It is **not** part of `paper.md` and carries **no privacy gate** (it is the owner's own
+dialogue). The study may also **read** this transcript for refinement context when revising.
 
 ## Edge cases
 
@@ -143,6 +142,6 @@ provenance, never privacy-gated, never part of `paper.md`.
   domain expert via `ask-an-expert`; if adequate expertise cannot be established for a central
   claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
-- Asked to blog the study / share the journey → hand off to `research-blog` (Step 7); it also saves
-  the dialogue transcript as study provenance.
+- Asked to blog the study / write it up in the owner's voice → out of scope here; use the standalone
+  `blog` skill (the study still saves `journey/transcript.md` as provenance, Step 7).
 - Asked to merge → out of scope; the human merges the PR.

@@ -1,5 +1,5 @@
 ---
-description: Entry point to the scientific research family — produce an agentic-peer-reviewed study (published as a PR), run the peer-review panel on a draft, consult/define a reusable domain expert, or blog the research journey in the owner's voice.
+description: Entry point to the scientific research family — produce an agentic-peer-reviewed study (published as a PR), run the peer-review panel on a draft, or consult/define a reusable domain expert.
 argument-hint: [a research question/topic to study, or a draft to review]
 ---
 
@@ -15,9 +15,6 @@ skill that matches the request:
   revision plan, review-only) → invoke the **`scientific-peer-review`** skill.
 - **Ask a domain expert directly** (consult an existing subject-matter expert, or define a new
   reusable one — no study or review required) → invoke the **`ask-an-expert`** skill.
-- **Blog the journey** (turn a research idea or study into a personal blog post in the owner's
-  voice, and save the chat dialogue as study provenance — "blog the journey," "write up what I
-  learned," "blog this study") → invoke the **`research-blog`** skill.
 
 Study design, analysis, and reproducibility packaging will be routed from here as
 they are added.

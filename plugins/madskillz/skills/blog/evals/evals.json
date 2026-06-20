@@ -1,0 +1,52 @@
+{
+  "skill": "blog",
+  "description": "Trigger and behavior evals for the standalone personal blog + voice skill.",
+  "tests": [
+    {
+      "id": "trigger-blog-this",
+      "prompt": "Write up what I learned about black-hole photon rings as a fun blog post in my voice.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers",
+        "Refreshes the voice profile (Step 0) before writing",
+        "Drafts a first-person post in the owner's voice that keeps the facts correct",
+        "Does not fabricate questions, aha moments, or citations"
+      ]
+    },
+    {
+      "id": "trigger-update-voice-only",
+      "prompt": "Update my voice profile from how I've been writing lately.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Runs the voice updater only; writes no blog post",
+        "Summarizes only corpus entries newer than the recorded marker",
+        "Merges only genuinely-new, repeated traits; never fabricates a trait",
+        "Advances the marker"
+      ]
+    },
+    {
+      "id": "voice-update-nothing-new",
+      "prompt": "Refresh how I sound.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "If nothing in the corpus is new, says so and changes nothing",
+        "Does not force a finding"
+      ]
+    },
+    {
+      "id": "blog-existing-study",
+      "prompt": "Blog the study in topic/old-study in my voice.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Reads the study artifacts (paper.md, review/, journey/transcript.md if present)",
+        "Labels reconstructed pieces and states gaps; never invents dialogue"
+      ]
+    },
+    {
+      "id": "no-trigger-research-study",
+      "prompt": "Do a research study on whether coffee improves memory and open a PR.",
+      "should_trigger": false,
+      "grading_criteria": ["Routes to scientific-study, not blog"]
+    }
+  ]
+}
