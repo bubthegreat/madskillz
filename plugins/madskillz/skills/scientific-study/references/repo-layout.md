@@ -28,6 +28,36 @@ and opened as a PR (see `git-workflow.md`):
   fill `<YEAR>` and `<COPYRIGHT HOLDER>`. CC BY 4.0 legal code is used as-is; the
   attribution/copyright line lives in `README.md` and `ATTRIBUTIONS.md`.
 
+## paper.md structure (required back-matter)
+
+The manuscript is written for an **adjacent-field researcher** with an **educated-generalist
+floor** (general scientific literacy, not a subfield specialist). The **abstract** doubles as the
+plain-language summary — a reader at that level grasps what was done and found from it alone. There
+is no separate lay-summary section.
+
+End the manuscript with this back-matter, in this order:
+
+```markdown
+## Acronyms
+| Acronym | Expansion |
+|---|---|
+| <ABC> | <full expansion> |
+
+## Glossary
+| Term | Plain-language definition |
+|---|---|
+| <term> | <definition the expected reader can follow> |
+
+## Background / further reading   <!-- optional; omit if nothing needs it -->
+- <concept> — <verified source: DOI / arXiv ID / ISBN / stable URL>, OR a clearly-marked
+  topic/keyword suggestion when no source can be verified. Never present an unverified reading as a
+  citation.
+```
+
+- Every acronym used in the body is expanded on first use AND listed in **Acronyms**; every
+  specialized term used in the body is in the **Glossary**. Both directions — no orphan entries.
+- Omit **Background / further reading** if nothing needs it; never pad it to imply coverage.
+
 ## README.md template
 
 ```markdown
@@ -40,7 +70,7 @@ and opened as a PR (see `git-workflow.md`):
 - **Status:** <in-review (PR open) | merged>
 
 ## Contents
-- `paper.md` — manuscript
+- `paper.md` — manuscript (ends with Acronyms, Glossary, and optional Background / further reading)
 - `assets/` — <one line>
 - `data/` — <one line; note any reference-only datasets>
 - `scripts/` — <one line>

@@ -30,13 +30,21 @@ Severity scale (shared across reviewers):
 - **major** — needs new analysis, data, or substantial reframing.
 - **minor** — improvable but not disqualifying; may be deferred with a note.
 
+**Readability tier severity ceiling:** readability findings (plain-language, terminology &
+acronym, accessibility / background) are normally `minor` and may rise to `major` only for a
+completeness failure — a term/acronym used but never defined or missing from its index, a missing
+required reader-facing section (Acronyms / Glossary), or a missing/badly-misleading abstract. They
+are **never `blocker`**; the correctness tier owns blockers, and readability defers to correctness
+in every conflict.
+
 ## Meta-editor deliverable
 
 ```
 # Peer-review summary
 
 ## Coverage
-Reviewers run: <list> (v1 tier: correctness-only)
+Reviewers run: <list>
+Tiers run: <correctness | correctness + readability>
 Inputs available: <list>
 Checks not performed: <list, with the missing input that blocked each>
 Review independence: parallel subagents | sequential (weaker independence)

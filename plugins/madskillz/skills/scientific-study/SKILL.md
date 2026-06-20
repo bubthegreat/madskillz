@@ -75,7 +75,13 @@ and create the study branch per `references/git-workflow.md`.
 Write `paper.md` and produce/organize any `data/`, `scripts/`, `assets/` the study
 needs. Be provenance-honest: distinguish what is **cited**, what is **data-derived**,
 and what is **speculation/assumption** — do not assert unsupported claims, and do
-not invent data or citations. If this is a replication/validation study (per Step 1),
+not invent data or citations. Write for the expected reader (adjacent-field body,
+educated-generalist floor): the abstract doubles as the plain-language summary, define every
+acronym on first use and every specialized term in the glossary, and end the manuscript with the
+required back-matter — an **Acronyms** index, a **Glossary**, and an optional **Background /
+further reading** section (see `references/repo-layout.md`). Background readings must be verified
+sources or clearly-marked topic suggestions, never fabricated citations. If this is a
+replication/validation study (per Step 1),
 frame it as such. Commit the initial draft (`draft: initial …`).
 
 ## Step 3 — Agentic peer-review quality-gate loop

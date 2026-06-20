@@ -50,8 +50,10 @@ network/web access for citation resolution?
 
 ## Step 2 — Fan out the reviewer panel
 
-Run these six reviewers, each reading ONLY its own rubric plus the manuscript and
-available inputs:
+Run these reviewers, each reading ONLY its own rubric plus the manuscript and
+available inputs. The panel has two tiers; the coverage statement names which ran.
+
+**Correctness tier (always):**
 
 | Reviewer | Rubric |
 |---|---|
@@ -61,6 +63,17 @@ available inputs:
 | Statistical / methodological | `references/reviewers/statistical.md` |
 | Ethics & integrity (can veto) | `references/reviewers/ethics-integrity.md` |
 | Citation-integrity | `references/reviewers/citation-integrity.md` |
+
+**Readability tier (always, for reader-facing drafts):**
+
+| Reviewer | Rubric |
+|---|---|
+| Plain-language / clarity | `references/reviewers/plain-language.md` |
+| Terminology & acronym | `references/reviewers/terminology-acronyms.md` |
+| Accessibility / background | `references/reviewers/accessibility-background.md` |
+
+The readability tier defers to the correctness tier in every conflict (presentation
+never outranks correctness); its findings are normally `minor` and never `blocker`.
 
 - **In Claude Code:** dispatch them as parallel subagents (use
   `superpowers:dispatching-parallel-agents`). Independent context is what makes
@@ -77,7 +90,7 @@ Each reviewer returns the report shape in `references/review-report-format.md`.
 
 ## Step 3 — Meta-editor synthesis
 
-After all six return, run the meta-editor (`references/reviewers/meta-editor.md`)
+After all reviewers return, run the meta-editor (`references/reviewers/meta-editor.md`)
 over every report. It deduplicates, resolves conflicts (integrity/correctness
 wins), ranks findings, surfaces genuine disagreements, and emits ONE ordered
 revision plan plus the overall call and the coverage statement.
@@ -96,7 +109,7 @@ this skill stays review-only.
 ## Edge cases
 
 - No draft → ask for it; never review from a description.
-- Draft only, nothing else → run all six on what's there; the coverage statement
+- Draft only, nothing else → run all reviewers on what's there; the coverage statement
   makes the thinness explicit; Reproducibility/Statistical narrow their claims.
 - No network → citation resolution flagged pending, not passed.
 - Ethics red flag (human subjects without approval, dual-use, fabrication signs)
