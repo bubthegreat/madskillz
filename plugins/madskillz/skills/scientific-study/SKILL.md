@@ -63,7 +63,9 @@ available; say so honestly when you cannot).
 
 Then establish the `<topic>` and a slugified `<research-short-name>` (propose a
 default, ask the user to confirm/override; validate as kebab-case). Resolve the repo
-and create the study branch per `references/git-workflow.md`.
+and create the study branch **in an isolated per-study worktree** per
+`references/git-workflow.md` — this is what lets concurrent research teams run without
+colliding on a shared checkout.
 
 ## Step 2 — Draft the paper and artifacts
 
