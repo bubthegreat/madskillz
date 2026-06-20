@@ -39,7 +39,5 @@ or any newly introduced concept that needs reader background.
   any conflict to the meta-editor.
 
 ## Output
-Return the report shape in `references/review-report-format.md`. Findings are normally `minor`; a
-concept essential to the central claim that the expected reader cannot follow and has no pointer
-for may rise to `major`, never `blocker`. List inputs available and any checks you could not
-perform.
+Findings are normally `minor`; a concept essential to the central claim that the expected reader
+cannot follow and has no pointer for may rise to `major`, never `blocker`.

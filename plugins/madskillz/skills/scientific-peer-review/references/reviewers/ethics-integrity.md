@@ -26,5 +26,4 @@ plagiarism.
   documentation), flag it as an open question, do not assume compliance.
 
 ## Output
-Return the report shape in `references/review-report-format.md`. Any credible fabrication or
-ethics red flag is a **blocker**. List inputs available and any checks you could not perform.
+Any credible fabrication or ethics red flag is a **blocker**.

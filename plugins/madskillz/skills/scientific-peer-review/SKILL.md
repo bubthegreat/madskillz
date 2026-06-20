@@ -1,16 +1,14 @@
 ---
 name: scientific-peer-review
 description: >-
-  Run a draft scientific paper or study through an adversarial multi-reviewer
-  peer-review panel and return one adjudicated, severity-ranked revision plan.
-  Use whenever the user wants to peer-review a paper or draft, find out what a
-  tough reviewer would say, pressure-test a study for statistical,
-  reproducibility, consistency, ethics, or citation problems, verify whether
-  citations are real and support their claims, or get a draft "peer-review
-  ready" before submission. Trigger on phrases like "review this paper," "what
-  would Reviewer 2 say," "is this study sound," "check my stats," "are these
-  citations real," or "is this ready to submit." Reviews only — it does not
-  write or revise the paper.
+  Use when the user wants to peer-review a scientific paper or draft — find out what
+  a tough reviewer would say, pressure-test a study for statistical, reproducibility,
+  consistency, ethics, or citation problems, verify whether citations are real and
+  support their claims, or get a draft "peer-review ready" before submission. Trigger
+  on phrases like "review this paper," "what would Reviewer 2 say," "is this study
+  sound," "check my stats," "are these citations real," or "is this ready to submit."
+  Reviews only — does not write or revise; returns one adjudicated, severity-ranked
+  revision plan.
 ---
 
 # scientific-peer-review: adversarial peer-review panel
@@ -107,7 +105,10 @@ faked). Record the expert(s) consulted/minted and any halt in the coverage state
   When they don't, it flags references "verification pending" — never a silent
   pass.
 
-Each reviewer returns the report shape in `references/review-report-format.md`.
+Dispatch each reviewer with its own rubric file **and** `references/review-report-format.md`, and
+have it return that shape — listing the inputs it had and any checks it skipped. The rubrics carry
+only their unique checks and severity rules; this shared output contract is stated once here rather
+than repeated in each.
 
 ## Step 3 — Meta-editor synthesis
 

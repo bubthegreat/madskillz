@@ -26,7 +26,6 @@ index, or the Glossary.
   specialized terms, say so — do not manufacture findings.
 
 ## Output
-Return the report shape in `references/review-report-format.md`. A term/acronym used but never
-defined or missing from its index, or a missing required section (Acronyms / Glossary) when the
-paper needs one, is a `major`; orphan entries and synonym drift are `minor`; never `blocker`. List
-inputs available and any checks you could not perform.
+A term/acronym used but never defined or missing from its index, or a missing required section
+(Acronyms / Glossary) when the paper needs one, is a `major`; orphan entries and synonym drift are
+`minor`; never `blocker`.

@@ -1,18 +1,13 @@
 ---
 name: scientific-study
 description: >-
-  Produce a publication-ready scientific research study: frame the question (with a
-  novelty/prior-art check), draft the paper (plus data/scripts/assets), then drive
-  it through an agentic peer-review quality-gate loop — revising the paper against
-  the panel's feedback until it clears, with a dataset-licensing/privacy compliance
-  gate — and publish it as a PR to the private jmresearch/research repo for a human
-  to review and merge. Use whenever the user wants to run/produce a research study,
-  write a research paper meant for publication, "research X and write it up," get a
-  study peer-review-gated before a human sees it, or push an agentic-reviewed paper
-  up for review. Trigger on phrases like "do a research study on…," "research and
+  Use when the user wants to produce or publish a research study or paper — run or
+  produce a research study, "research X and write it up," produce a paper meant for
+  publication, get a study peer-review-gated before a human sees it, or open a PR
+  with the research. Trigger on phrases like "do a research study on…," "research and
   write up…," "produce a paper on…," "get this study ready to publish," or "open a
-  PR with the research." Drafts and revises the paper itself; reuses
-  scientific-peer-review as the review engine; humans review and merge in the PR.
+  PR with the research." Drafts and revises the paper itself and opens a PR to
+  jmresearch/research for a human to merge; for review-only, use scientific-peer-review.
 ---
 
 # scientific-study: agentic-peer-reviewed research, published as a PR

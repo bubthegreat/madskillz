@@ -22,7 +22,3 @@ environment/versions, or any step needed to re-run the work.
 ## If inputs are missing
 - With no code/data/environment, assess the *described* methods only and cap the rating at
   **conceptual**. Say so explicitly; do not guess that it would run.
-
-## Output
-Return the report shape in `references/review-report-format.md`. List inputs available and
-any checks you could not perform.

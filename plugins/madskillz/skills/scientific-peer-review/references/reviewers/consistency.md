@@ -22,7 +22,3 @@ mismatch.
 ## If inputs are missing
 - With no pre-registration, you cannot verify confirmatory/exploratory labels — report that
   as a check you could not perform, do not assume the labels are correct.
-
-## Output
-Return the report shape in `references/review-report-format.md`. List inputs available and
-any checks you could not perform.

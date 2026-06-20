@@ -29,6 +29,4 @@ supporting reference.
   report a silent pass for a citation you could not verify. This goes in the coverage section.
 
 ## Output
-Return the report shape in `references/review-report-format.md`. An unverifiable or
-unsupported citation is a **blocker**, not a warning. List inputs available and any checks
-you could not perform.
+An unverifiable or unsupported citation is a **blocker**, not a warning.
