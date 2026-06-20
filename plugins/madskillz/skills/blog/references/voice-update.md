@@ -34,10 +34,13 @@ forcing a new finding when there isn't one.
 - **Don't force findings.** Most passes add little or nothing; that is expected and fine.
 - **Keep it usable.** The profile stays a tight, voice-defining brief — not a transcript dump.
 
-## Setup — the capture hook
-The corpus is fed automatically by the madskillz **plugin hook** `hooks/capture-voice.sh` (registered
-on `UserPromptSubmit` in `hooks/hooks.json`): it appends each of the owner's messages to
-`~/.claude/voice/corpus.jsonl` (UTC-timestamped) and never blocks the prompt. It ships with the
-plugin, so no manual `settings.json` edit is needed — it is active wherever madskillz is installed
-(after the plugin update lands). Until then, the updater can still run on demand over whatever
-messages are present in the current session.
+## Setup — the capture hook (global, always-on)
+The corpus is fed by a **global** `UserPromptSubmit` hook in `~/.claude/settings.json` that runs
+`~/.claude/hooks/capture-voice.sh` on every prompt in every session — independent of any plugin, so it
+records the owner's writing no matter which prompt or project they are in. The canonical script lives
+in this repo at `hooks/capture-voice.sh` (tested by `hooks/capture-voice.test.sh`); install it by
+copying to `~/.claude/hooks/capture-voice.sh` and adding the hook to `~/.claude/settings.json`. It
+appends each message as `{ts,text}` to `~/.claude/voice/corpus.jsonl`, never blocking the prompt and
+emitting no stdout. It is deliberately **not** a plugin hook — a plugin-scoped hook would only fire
+when this plugin is loaded, and would double-record alongside the global one. The updater can also run
+on demand over whatever messages are present in the current session.
