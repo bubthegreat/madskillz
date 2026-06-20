@@ -35,7 +35,9 @@ forcing a new finding when there isn't one.
 - **Keep it usable.** The profile stays a tight, voice-defining brief — not a transcript dump.
 
 ## Setup — the capture hook
-The corpus is fed by a `UserPromptSubmit` hook in `~/.claude/settings.json` that appends each of the
-owner's messages to `~/.claude/voice/corpus.jsonl` (timestamped). Configure it via the update-config
-skill. Until the hook exists, the updater can still run on demand over whatever messages are present
-in the current session.
+The corpus is fed automatically by the madskillz **plugin hook** `hooks/capture-voice.sh` (registered
+on `UserPromptSubmit` in `hooks/hooks.json`): it appends each of the owner's messages to
+`~/.claude/voice/corpus.jsonl` (UTC-timestamped) and never blocks the prompt. It ships with the
+plugin, so no manual `settings.json` edit is needed — it is active wherever madskillz is installed
+(after the plugin update lands). Until then, the updater can still run on demand over whatever
+messages are present in the current session.

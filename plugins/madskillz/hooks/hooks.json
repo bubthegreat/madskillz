@@ -1,6 +1,16 @@
 {
-  "description": "madskillz sound cues: tada when Claude finishes, Alarm01 when Claude needs you",
+  "description": "madskillz hooks: sound cues (tada on finish, Alarm01 when needed) + voice-capture for the blog skill",
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/capture-voice.sh\""
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
