@@ -10,20 +10,44 @@ round of feedback changed the paper.
 cycle = 0
 do:
   cycle += 1
-  plan   = run scientific-peer-review on the CURRENT paper + artifacts   # the engine
+  snapshot CURRENT paper.md -> review/cycle-<cycle>-paper.md   # the exact version this cycle reviews
+  plan   = run scientific-peer-review on the CURRENT paper + artifacts   # the engine; cycle>1 also passes prior reports + the cycle-(cycle-1)-paper.md diff for re-engagement triage
   save plan -> review/cycle-<cycle>.md
   apply plan to paper.md (and artifacts) — edit faithfully
-  commit "review cycle <cycle>: address <short summary>"
+  commit "review cycle <cycle>: address <short summary>"   # snapshot + report + edits together
 while plan has blocker-severity findings AND cycle < 3
 ```
 
-- **Engine, not copy.** Always invoke `scientific-peer-review` fresh on the *current*
-  draft each cycle. Do not reuse a prior cycle's findings as if re-run — the whole
-  point is to confirm the edits actually resolved them.
+- **Re-engage, don't blanket re-run.** From cycle 2 on, pass the previous cycle's
+  reviewer reports and the diff since then (`review/cycle-(N-1)-paper.md` vs the current
+  `paper.md`) into `scientific-peer-review`. Its meta-editor runs a **re-engagement
+  triage**: any reviewer who had open findings is re-run to confirm the edits resolved
+  them; a reviewer who was clean is consulted with a specific question about the diff and
+  only re-run if the changes touch what they care about, otherwise their prior clean
+  verdict is carried forward and disclosed as such. Never carry an *open* finding forward
+  as resolved, and never present a carried-forward verdict as a fresh pass.
 - **One commit per cycle.** Each cycle is its own commit so the diff history shows the
   paper's evolution. Never squash the cycles together before the PR.
 - **Save each review.** Write every cycle's adjudicated plan to `review/cycle-N.md`,
   so reviewers (and the PR) can see what was raised and how it was addressed.
+- **Snapshot each reviewed paper.** Before running the panel, copy the current
+  `paper.md` to `review/cycle-N-paper.md` — the exact version that cycle N reviewed.
+  This lets a reader diff `cycle-1-paper.md → cycle-2-paper.md → … → paper.md` (the
+  final) to see the iterations the reviewers produced **without** git. Git history
+  stays the source of truth for tracing back to code/asset changes; the snapshots
+  optimize the common "show me how the paper changed across review" case. Commit each
+  snapshot with its cycle.
+
+## Expert gate (domain coverage)
+
+`scientific-peer-review` runs a domain-coverage triage each review (see its `SKILL.md`). When
+the paper needs expertise the panel lacks, it writes a `requested-expert.md`, resolves it via
+the **`ask-an-expert`** skill (reuse or mint), and adds the expert to the panel —
+auto-continuing the cycle. A minted/updated expert is challenged once by the adversarial
+reviewer. If adequate expertise **cannot** be established for a central claim (the egregious
+case), the gate **halts**: stop the loop and surface "could not establish adequate expertise
+for <domain>" — never fake a qualified review. Record experts consulted/minted, and any halt,
+for the PR.
 
 ## Stopping criterion
 

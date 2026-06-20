@@ -3,6 +3,9 @@
 You are the reproducibility reviewer. Read ONLY this rubric, the manuscript, and any
 supplied inputs. Try to reproduce the work as a stranger who has only what was provided.
 
+**Interests (for re-engagement triage):** changes to methods, code, data, parameters, seeds,
+environment/versions, or any step needed to re-run the work.
+
 ## Required inputs
 - The draft manuscript (required).
 - Helpful: code, data, environment capture (versions/seeds/hardware), the reproducibility

@@ -10,7 +10,7 @@ and opened as a PR (see `git-workflow.md`):
   data/               # datasets / results tables — real data, *.reference.md stubs, or a mix
   scripts/            # analysis code / reproducibility scripts / notebooks
     LICENSE           # MIT — covers code (from licenses/MIT.txt)
-  review/             # one report per agentic review cycle: cycle-1.md, cycle-2.md, …
+  review/             # per cycle: the report (cycle-N.md) + the reviewed paper snapshot (cycle-N-paper.md)
   LICENSE             # CC BY 4.0 — covers paper, data, assets (from licenses/CC-BY-4.0.txt)
   ATTRIBUTIONS.md     # third-party sources, their licenses, what reproduction requires
   COMPLIANCE.md       # gate outcome: cleared / referenced-only / consent basis / overrides
@@ -22,11 +22,44 @@ and opened as a PR (see `git-workflow.md`):
 - `review/cycle-N.md` is the adjudicated plan from cycle N; keep every cycle so the PR
   shows what was raised and how the paper changed. Residual/unresolved findings also
   go in the **PR description** (see `git-workflow.md`).
+- `review/cycle-N-paper.md` is the exact `paper.md` that cycle N reviewed, so a reader
+  can diff the iterations — cycle to cycle, and against the final `paper.md` — without
+  git. Keep every cycle's snapshot alongside its report.
 - Omit a subfolder that has no content. Never create an empty placeholder to imply
   coverage that does not exist.
 - License files are copied verbatim from `references/licenses/`. For `MIT.txt`,
   fill `<YEAR>` and `<COPYRIGHT HOLDER>`. CC BY 4.0 legal code is used as-is; the
   attribution/copyright line lives in `README.md` and `ATTRIBUTIONS.md`.
+
+## paper.md structure (required back-matter)
+
+The manuscript is written for an **adjacent-field researcher** with an **educated-generalist
+floor** (general scientific literacy, not a subfield specialist). The **abstract** doubles as the
+plain-language summary — a reader at that level grasps what was done and found from it alone. There
+is no separate lay-summary section.
+
+End the manuscript with this back-matter, in this order:
+
+```markdown
+## Acronyms
+| Acronym | Expansion |
+|---|---|
+| <ABC> | <full expansion> |
+
+## Glossary
+| Term | Plain-language definition |
+|---|---|
+| <term> | <definition the expected reader can follow> |
+
+## Background / further reading   <!-- optional; omit if nothing needs it -->
+- <concept> — <verified source: DOI / arXiv ID / ISBN / stable URL>, OR a clearly-marked
+  topic/keyword suggestion when no source can be verified. Never present an unverified reading as a
+  citation.
+```
+
+- Every acronym used in the body is expanded on first use AND listed in **Acronyms**; every
+  specialized term used in the body is in the **Glossary**. Both directions — no orphan entries.
+- Omit **Background / further reading** if nothing needs it; never pad it to imply coverage.
 
 ## README.md template
 
@@ -40,11 +73,11 @@ and opened as a PR (see `git-workflow.md`):
 - **Status:** <in-review (PR open) | merged>
 
 ## Contents
-- `paper.md` — manuscript
+- `paper.md` — manuscript (ends with Acronyms, Glossary, and optional Background / further reading)
 - `assets/` — <one line>
 - `data/` — <one line; note any reference-only datasets>
 - `scripts/` — <one line>
-- `review/` — agentic peer-review report per cycle (`cycle-N.md`)
+- `review/` — per review cycle: the report (`cycle-N.md`) and the reviewed paper snapshot (`cycle-N-paper.md`)
 
 ## Licensing
 - Paper, data, and assets: **CC BY 4.0** (`LICENSE`).

@@ -118,4 +118,8 @@ Agentic-peer-reviewed before human review. A human reviews and merges this PR.
 ### Compliance & privacy
 <Datasets included vs reference-only; PII/PHI screen result; any recorded override.
 See COMPLIANCE.md / ATTRIBUTIONS.md.>
+
+### Domain experts
+<Experts consulted or minted for this review (each `experts/<name>.md`), any residual
+expertise gap the adversarial reviewer noted, or "none".>
 ```

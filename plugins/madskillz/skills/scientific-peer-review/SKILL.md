@@ -50,8 +50,10 @@ network/web access for citation resolution?
 
 ## Step 2 — Fan out the reviewer panel
 
-Run these six reviewers, each reading ONLY its own rubric plus the manuscript and
-available inputs:
+Run these reviewers, each reading ONLY its own rubric plus the manuscript and
+available inputs. The panel has two tiers; the coverage statement names which ran.
+
+**Correctness tier (always):**
 
 | Reviewer | Rubric |
 |---|---|
@@ -61,6 +63,38 @@ available inputs:
 | Statistical / methodological | `references/reviewers/statistical.md` |
 | Ethics & integrity (can veto) | `references/reviewers/ethics-integrity.md` |
 | Citation-integrity | `references/reviewers/citation-integrity.md` |
+
+**Readability tier (always, for reader-facing drafts):**
+
+| Reviewer | Rubric |
+|---|---|
+| Plain-language / clarity | `references/reviewers/plain-language.md` |
+| Terminology & acronym | `references/reviewers/terminology-acronyms.md` |
+| Accessibility / background | `references/reviewers/accessibility-background.md` |
+
+The readability tier defers to the correctness tier in every conflict (presentation
+never outranks correctness); its findings are normally `minor` and never `blocker`.
+
+**Re-review cycles (incremental re-engagement).** When you are invoked with the previous
+cycle's reports and the diff since then (the `scientific-study` loop does this from cycle 2
+on), do not blanket-rerun the panel. The meta-editor first runs a re-engagement triage
+(`references/reviewers/meta-editor.md`): reviewers with open findings are re-run to confirm
+resolution; clean reviewers are consulted on the diff via their `Interests` and only re-run
+if it touches them, else their prior verdict is carried forward and disclosed. A first-time
+review (no prior state) runs the full panel.
+
+**Domain-coverage triage & experts.** Before fanning out (and again whenever a reviewer
+escalates "out of my depth on X"), check whether the panel credibly covers the paper's
+domain(s). If a central claim needs expertise none of the standing reviewers have, write a
+`requested-expert.md` (domain; why — which claims/sections; the questions it must answer; who
+raised it) and resolve it with the **`ask-an-expert`** skill — reuse an existing
+`experts/<name>.md` or mint one via its finder. Add the resolved expert to the panel as an
+additional reviewer for the relevant claims; it returns the same report shape. A newly minted
+or updated expert is then **challenged once** by the adversarial reviewer: if a credentials gap
+is found, the finder gets one revision; on re-check the expert is accepted, noted with a
+residual gap, or — if the gap is egregious and blocks judging a central claim — the review
+**halts** with "could not establish adequate expertise for <domain>" (fail-closed, never
+faked). Record the expert(s) consulted/minted and any halt in the coverage statement.
 
 - **In Claude Code:** dispatch them as parallel subagents (use
   `superpowers:dispatching-parallel-agents`). Independent context is what makes
@@ -77,7 +111,7 @@ Each reviewer returns the report shape in `references/review-report-format.md`.
 
 ## Step 3 — Meta-editor synthesis
 
-After all six return, run the meta-editor (`references/reviewers/meta-editor.md`)
+After all reviewers return, run the meta-editor (`references/reviewers/meta-editor.md`)
 over every report. It deduplicates, resolves conflicts (integrity/correctness
 wins), ranks findings, surfaces genuine disagreements, and emits ONE ordered
 revision plan plus the overall call and the coverage statement.
@@ -96,7 +130,7 @@ this skill stays review-only.
 ## Edge cases
 
 - No draft → ask for it; never review from a description.
-- Draft only, nothing else → run all six on what's there; the coverage statement
+- Draft only, nothing else → run all reviewers on what's there; the coverage statement
   makes the thinness explicit; Reproducibility/Statistical narrow their claims.
 - No network → citation resolution flagged pending, not passed.
 - Ethics red flag (human subjects without approval, dual-use, fabrication signs)
@@ -104,3 +138,6 @@ this skill stays review-only.
 - Reviewers disagree → meta-editor surfaces the split, does not average it.
 - Asked to also rewrite → out of scope; point to applying the plan.
 - No subagents (claude.ai) → sequential reviews, reduced independence disclosed.
+- Domain beyond the panel → triage writes `requested-expert.md`, `ask-an-expert` resolves it
+  (reuse/mint), the expert joins the panel; adversarial challenges a minted expert (one shot);
+  an egregious unmet-expertise gap on a central claim halts the review, never faked.

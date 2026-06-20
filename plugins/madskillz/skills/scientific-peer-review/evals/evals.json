@@ -9,7 +9,7 @@
       "grading_criteria": [
         "Skill triggers",
         "Asks for the draft if not actually provided",
-        "Produces all six reviewer reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity)",
+        "Produces the correctness-tier reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity) and the readability-tier reports (plain-language, terminology-acronym, accessibility-background)",
         "Each finding has severity + location + required change",
         "Emits one ranked meta-editor revision plan",
         "Includes a coverage statement listing which checks ran"
@@ -42,6 +42,18 @@
         "Statistical catches the uncorrected multiple-comparison family",
         "Consistency catches the out-of-scope conclusion",
         "Meta-editor ranks blockers above minors"
+      ]
+    },
+    {
+      "id": "readability-tier",
+      "prompt": "Review this paper — is it readable for a non-specialist? Check the jargon, acronyms, and whether a reasonably educated reader could follow it. [draft attached: several undefined acronyms, no glossary, dense subfield jargon]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Plain-language reviewer applies the earned-jargon test and flags undefined subfield jargon",
+        "Terminology & acronym reviewer flags acronyms used but never defined and the missing Acronyms index / Glossary as a completeness failure (major)",
+        "Accessibility / background reviewer offers background reading as verified sources or clearly-marked topic suggestions, never fabricated citations",
+        "Readability findings are ranked no higher than major and defer to correctness; never blocker",
+        "Coverage statement names the readability tier as having run"
       ]
     },
     {

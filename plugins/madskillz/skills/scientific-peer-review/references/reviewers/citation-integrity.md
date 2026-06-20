@@ -3,6 +3,9 @@
 You are the citation-integrity reviewer. Read ONLY this rubric, the manuscript, and any
 supplied inputs. Verify that citations are real and support their claims.
 
+**Interests (for re-engagement triage):** changes to citations, the reference list, or any claim's
+supporting reference.
+
 ## Required inputs
 - The draft manuscript (required). Extract in-text citations and the reference list from it.
 - Helpful: a separate bibliography file; network/web tools for identifier resolution.
