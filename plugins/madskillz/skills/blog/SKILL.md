@@ -19,8 +19,17 @@ Two things in one:
 - **Blog writer** — turns a topic or learning journey into a post in that voice
   (`references/blog-format.md`).
 
-The seed voice is `references/voice.md`; the **live, evolving** profile lives at
-`~/.claude/voice/voice.md` (user-local, refined by the updater).
+### Voices — which file is "me"
+The owner can have **several named, per-purpose voices**, each a real `status: personal` profile in
+the voices library: `references/voices/<name>.md`. This skill's voice is **`science-blog`**. The
+generic `references/voice.md` is a `status: template` only — the starting shape for minting a new
+voice, **never** presented as the owner.
+
+**Voice resolution order** (use the first that exists; never fall through to the template *as* "me"):
+1. **Live profile** `~/.claude/voice/voice.md` — freshest, evolves per session.
+2. **Committed voice** `references/voices/science-blog.md` — the shared source of truth non-local
+   agents read; the fallback on a fresh machine.
+3. **Template** `references/voice.md` — only to *create* a new named voice, never rendered as "me."
 
 ## Integrity stance (non-negotiable)
 1. **Correct even when funny.** Comedy never licenses a wrong explanation. If the understanding is
@@ -34,10 +43,13 @@ The seed voice is `references/voice.md`; the **live, evolving** profile lives at
 
 ## Step 0 — Refresh the voice (always, before writing)
 Run the voice updater per `references/voice-update.md`: ensure `~/.claude/voice/voice.md` exists
-(seed it from `references/voice.md` on first run), read the corpus entries newer than the recorded
-marker, and if there is something genuinely new about how the owner writes, merge it into the profile
-and advance the marker. If nothing is new, leave it unchanged. This step can also be run **on its
-own** ("update my voice") with no post written.
+(seed it from the owner's committed `references/voices/science-blog.md` on first run — falling back to
+the `references/voice.md` template only if no committed voice exists), read the corpus entries newer
+than the recorded marker, and if there is something genuinely new about how the owner writes, merge it
+into the profile (descriptive layer, with keep/tone-down tags) and advance the marker. Then run the
+**materiality-gated repo sync**: when the change is material, push the updated profile to the voices
+library so non-local agents benefit; otherwise leave the repo untouched. If nothing is new, leave it
+unchanged. This step can also be run **on its own** ("update my voice") with no post written.
 
 ## Step 1 — Gather what to blog
 The live session, notes the owner gives, or an existing study's artifacts (`paper.md`,
@@ -45,9 +57,12 @@ The live session, notes the owner gives, or an existing study's artifacts (`pape
 the corrections, and the aha moments — never invent them.
 
 ## Step 2 — Draft the post in the owner's voice
-Using the live `~/.claude/voice/voice.md` (fallback: `references/voice.md`) and the post arc in
-`references/blog-format.md`, write the post — funny, vivid, factually/scientifically accurate. Gloss
-every technical term; keep the wonder; keep honest open threads.
+Using the resolved voice (per the resolution order above — live profile, else committed
+`references/voices/science-blog.md`; never the bare template *as* "me") and the post arc in
+`references/blog-format.md`, write the post — funny, vivid, factually/scientifically accurate. Honor
+the voice's two layers: render the owner faithfully (descriptive) but follow the prescriptive/register
+guidance so conversational tics and overused phrases don't leak into the prose. Gloss every technical
+term; keep the wonder; keep honest open threads.
 
 ## Step 3 — Deliver
 Save the post (default `~/.claude/voice/posts/<slug>.md`, or a path the owner gives) and show it. The
