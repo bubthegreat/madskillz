@@ -14,6 +14,11 @@
 #   VOICE_SYNC_LOCK_STALE_SECONDS    a lock older than this is treated as dead    (1800 = 30 min)
 #   VOICE_SYNC_MODEL                 model for the background agent               (opus)
 #   VOICE_SYNC_REPO                  repo checkout to commit/push from            (~/Development/madskillz)
+#   VOICE_SYNC_BRANCH                push/refresh target branch                   (main)
+#   VOICE_SYNC_AUTOREFRESH           if set, fetch + reset the (dedicated) sync   (unset)
+#                                    repo to origin/<branch> before launching, so
+#                                    the agent's push fast-forwards. Guarded — see
+#                                    refresh_sync_repo(); only safe on a dedicated repo.
 #   VOICE_DIR                        voice dir                                    (~/.claude/voice)
 #   VOICE_SYNC_LAUNCH                test/override: run this synchronously instead of detaching
 set -u
@@ -32,8 +37,29 @@ MIN_INTERVAL="${VOICE_SYNC_MIN_INTERVAL_SECONDS:-720}"
 LOCK_STALE="${VOICE_SYNC_LOCK_STALE_SECONDS:-1800}"
 MODEL="${VOICE_SYNC_MODEL:-opus}"
 REPO="${VOICE_SYNC_REPO:-$HOME/Development/madskillz}"
+BRANCH="${VOICE_SYNC_BRANCH:-main}"
 
 log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG" 2>/dev/null; }
+
+# Bring the DEDICATED sync repo to origin/<branch> so the agent's push is a fast-forward.
+# Opt-in (VOICE_SYNC_AUTOREFRESH) and guarded: it REFUSES unless the repo is actually checked out on
+# <branch>, so it can never reset a roaming working checkout. reset --hard is safe ONLY because the
+# dedicated sync repo holds nothing precious — the live profile (~/.claude/voice/voice.md) is the
+# source of truth and the agent re-derives the committed copy from it. Best-effort: any failure
+# (not a repo / wrong branch / offline) just logs and returns; the launch proceeds regardless.
+refresh_sync_repo() {
+  local repo="$1" branch="$2" cur
+  git -C "$repo" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { log "refresh: '$repo' is not a git repo — skip"; return 1; }
+  cur=$(git -C "$repo" branch --show-current 2>/dev/null)
+  if [ "$cur" != "$branch" ]; then
+    log "refresh: '$repo' is on '$cur', not target '$branch' — refusing to reset"
+    return 1
+  fi
+  git -C "$repo" fetch origin "$branch" -q 2>/dev/null || { log "refresh: fetch failed (offline?) — skip"; return 1; }
+  git -C "$repo" reset --hard "origin/$branch" -q 2>/dev/null || { log "refresh: reset failed — skip"; return 1; }
+  git -C "$repo" clean -fd -q 2>/dev/null || true
+  log "refresh: '$repo' reset to origin/$branch"
+}
 
 command -v python3 >/dev/null 2>&1 || exit 0
 [ -f "$CORPUS" ] || exit 0
@@ -98,6 +124,11 @@ fi
 touch "$STAMP" 2>/dev/null
 touch "$LOCK" 2>/dev/null
 log "gate passed: $count new msgs >= $MIN_COUNT — launching background sync (model=$MODEL)"
+
+# Keep the dedicated sync repo current so the agent's push fast-forwards (opt-in, guarded).
+if [ -n "${VOICE_SYNC_AUTOREFRESH:-}" ]; then
+  refresh_sync_repo "$REPO" "$BRANCH" || true
+fi
 
 # Test/override hook: run synchronously, then release the lock.
 if [ -n "${VOICE_SYNC_LAUNCH:-}" ]; then
