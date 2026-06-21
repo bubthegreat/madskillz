@@ -111,9 +111,9 @@ canonical. The handoff is explicit:
    - Style-guide content: voice, do/don't, and the complete banned-phrase list
      (for `bible/style-guide.md`).
    - All proper nouns and invented terms (for `bible/glossary.md`).
-   - The `book.yaml` field values: `audience`, `reading_level`, `genre`, `tone`,
+   - The `book.yaml` field values: `title`, `audience`, `reading_level`, `genre`, `tone`,
      `pov`, `tense`, `target_chapters`, `target_words_per_chapter`,
-     `banned_phrases`, `illustrate`, `status: co-design`.
+     `banned_phrases`, `illustrate`, `status: co-design`. (`author` is taken from the storycraft config.)
 
 2. **Bible Keeper receives** the Showrunner proposal and writes each item into the
    correct file under `bible/` (see `references/story-bible.md` for exact file

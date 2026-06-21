@@ -112,6 +112,8 @@ All proper nouns, invented words, place names, and faction names live here. The 
 ## Read/write rule
 
 - **All personas read** the full `bible/` before drafting, editing, or reviewing.
-- **Only the Bible Keeper writes** `bible/*`, and only after the Continuity Checker has proposed a change, the Editor-in-Chief has adjudicated it, and the user has seen and approved the canon at a checkpoint.
+- **Only the Bible Keeper writes** `bible/*`:
+  - **Phase 1 (co-design):** the Bible Keeper writes the initial `bible/*` from the Showrunner's co-design proposal once the user approves it at the co-design checkpoint (see `co-design.md`).
+  - **Phase 2 (drafting):** subsequent canon changes are written only after the Continuity Checker proposes them, the Editor-in-Chief adjudicates, and the user has seen and approved them at a chapter checkpoint.
 - No persona may invent or record new canon outside this path.
 - Rejected or uncertain proposals are logged in `notes/checkpoints.md`, not written to the bible.
