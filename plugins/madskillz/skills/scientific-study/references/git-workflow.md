@@ -19,6 +19,17 @@ no command ever resets shared state.
 > harness's native worktree tool isolates the current project (madskillz), not an arbitrary
 > external clone, so it does not apply here. Do not "simplify" these to a native call.
 
+**Never clobber shared infrastructure (the one rule that prevents cross-study damage).** The bare
+repo (`$ROOT/repo.git`), every *other* `study/*` branch ref, and every other study's worktree belong
+to **concurrent runs**. Your run owns exactly two things: **your own `study/<topic>/<slug>` branch**
+and **your own worktree dir**. Therefore, against the shared cache you must **never**:
+`rm -rf`/recreate the bare repo; `git clone --bare` over an existing bare; `reset --hard`,
+`branch -f`, or `push --force` any ref you did not create; `worktree remove`/`worktree prune` for a
+worktree that is not yours; or `git checkout`/`reset` in a way that moves a *shared* HEAD. Re-cloning
+or resetting the bare wipes sibling branch refs and worktree metadata — that is the exact failure this
+layout exists to prevent. If a shared path looks broken, **stop and surface it**; do not "fix" it by
+deleting it. (Updating *your own* study branch is fine; everything else is read-only.)
+
 ## 1. Preflight — verify access (stop if it fails)
 
 ```bash
@@ -40,9 +51,29 @@ on its **own branch** — so concurrent runs never share a working tree.
 ROOT="${XDG_CACHE_HOME:-$HOME/.cache}/jmresearch-research"
 BARE="$ROOT/repo.git"                              # shared bare clone (no working tree)
 
-# One-time: create the bare clone. (Migration: an older non-bare checkout may exist at
-# "$ROOT" directly — it is now vestigial and can be deleted; this skill no longer uses it.)
-[ -d "$BARE" ] || gh repo clone jmresearch/research "$BARE" -- --bare
+# Create the shared bare clone ONCE, atomically, and NEVER recreate or reset it — sibling
+# studies' worktrees and branch refs live inside it (see "Never clobber shared infrastructure").
+# (Migration: an older non-bare checkout may exist at "$ROOT" directly; do NOT delete it until
+# §2.1 confirms every in-flight branch is carried over.)
+if [ -d "$BARE" ] && git -C "$BARE" rev-parse --is-bare-repository >/dev/null 2>&1; then
+  :                                                  # present and valid → reuse; NEVER re-clone/rm/reset it
+elif [ -e "$BARE" ]; then
+  # A path exists but is not a valid bare repo: a prior clone failed, or a concurrent run is
+  # mid-create. Do NOT rm -rf it (another study may be racing on it). Stop and surface it.
+  echo "FATAL: $BARE exists but is not a valid bare repo (failed/partial clone, or a concurrent"
+  echo "       create in progress). Do NOT delete it blindly — a sibling study may share it."
+  echo "       Wait/retry; if truly orphaned, the user removes it. Stopping."; exit 1
+else
+  # Clone into a unique temp dir, then publish atomically so two concurrent creators cannot
+  # clobber each other. Use the SSH/owner URL git resolves — gh's `--bare` path can default to
+  # HTTPS and fail non-interactively ("could not read Username for 'https://github.com'").
+  URL=$(gh repo view jmresearch/research --json sshUrl -q .sshUrl)   # git@github.com:owner/repo.git
+  mkdir -p "$ROOT"; TMP="$ROOT/.repo.git.tmp.$$"
+  git clone --bare "$URL" "$TMP"
+  git -C "$TMP" rev-parse --is-bare-repository >/dev/null 2>&1 \
+    || { echo "FATAL: bare clone invalid"; rm -rf "$TMP"; exit 1; }
+  mv -T --no-clobber "$TMP" "$BARE" 2>/dev/null || rm -rf "$TMP"     # lost the race → keep the winner's bare
+fi
 # Track remotes under refs/remotes/origin/* (a bare clone otherwise maps heads directly,
 # which has no origin/<branch> ref and would force-update local study branches on fetch).
 git -C "$BARE" config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
@@ -104,6 +135,36 @@ a worktree off `old-cache/<branch>` and continues it as a real study branch with
 history intact. **The old non-bare cache is left untouched** — remove it only once every
 in-flight branch has been carried over and the user confirms. (Re-running this is safe and
 idempotent: it re-imports the latest state of any branches not yet migrated.)
+
+### 2.2 Recovery — a concurrent run clobbered your study anyway
+
+If a *misbehaving* concurrent run violated the rules above (recreated the bare, or `reset --hard`'d
+a shared checkout while your branch was its HEAD), your branch ref or worktree can vanish. **Your
+committed work is not lost — git objects survive until garbage-collected.** Recover, don't restart:
+
+```bash
+# 1) Find your commits. Try, in order, the bare's reflog, the old cache, and dangling objects.
+git -C "$BARE"        reflog --all 2>/dev/null | grep -i "<slug or commit subject>"
+git -C "$ROOT/.git"   log --oneline -3 "$BRANCH" 2>/dev/null     # old non-bare cache often still has the ref
+git -C "$BARE"        fsck --no-reflogs --lost-found 2>/dev/null | grep commit   # dangling commits
+# 2) Restore YOUR branch ref (allowed — it is yours) to the recovered tip, WITHOUT a checkout
+#    that could disturb another run:  git -C <repo-with-objects> branch -f "$BRANCH" <sha>
+```
+
+If the shared cache keeps getting clobbered, **stop fighting it and finish from a private clone
+outside the cache** — collision-proof, and it preserves full commit history:
+
+```bash
+PRIV="$HOME/jmr-<slug>"                                   # OUTSIDE $ROOT; no other run touches it
+git clone --branch "$BRANCH" "$ROOT/.git" "$PRIV"        # or clone from "$BARE", or from origin
+git -C "$PRIV" remote set-url origin "$(gh repo view jmresearch/research --json sshUrl -q .sshUrl)"
+cp -a "$WT/<topic>/<slug>/." "$PRIV/<topic>/<slug>/"     # overlay any on-disk worktree edits not yet committed
+git -C "$PRIV" add "<topic>/<slug>"; git -C "$PRIV" commit -m "…"
+git -C "$PRIV" push -u origin "$BRANCH"                   # then open/continue the PR from here
+```
+
+Never report this recovery as routine in the PR without saying it happened — note the incident (and
+that no committed work was lost) in `journey/transcript.md`.
 
 ## 3. Commit cadence — make the evolution visible
 
@@ -178,11 +239,18 @@ concurrent studies share it.
   repo's refs). Report honestly and offer to leave them for the user to push later. Never
   report a PR that was not opened.
 - `git worktree add` fails — path already exists, or the branch is checked out in another
-  worktree → run `git -C "$BARE" worktree prune`, pick a fresh `$WT` path (or reuse the
-  existing one if it is this same study), and retry. Never `reset --hard` a shared checkout
-  to force it.
-- `gh pr create` fails → report it; the branch is pushed, so the user can open the PR
-  manually. Do not claim a PR URL you did not get back.
+  worktree → run `git -C "$BARE" worktree prune` (safe: only drops metadata for worktree dirs
+  that no longer exist — it never removes a live sibling worktree), pick a fresh `$WT` path (or
+  reuse the existing one if it is this same study), and retry. Never `reset --hard` a shared
+  checkout to force it.
+- **Your branch ref or worktree vanished** (a concurrent run recreated the bare or reset a shared
+  HEAD) → do not restart the study; recover the commits and finish from a private clone per
+  **§2.2**. Your committed work survives in git objects.
+- `bare clone fails "could not read Username for https://github.com"` → gh used HTTPS
+  non-interactively; clone the SSH URL instead (`gh repo view … --json sshUrl`), as §2 now does.
+- `gh pr create` fails (including transient `unexpected EOF` / `error connecting to api.github.com`)
+  → retry 2–3×; the branch is already pushed, so the user can also open the PR manually. Do not
+  claim a PR URL you did not get back.
 
 ## PR body template
 
