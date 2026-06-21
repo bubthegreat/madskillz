@@ -45,6 +45,18 @@
       ]
     },
     {
+      "id": "citation-format-by-field",
+      "prompt": "Review the citations in this paper. [a psychology study that cites sources in a numeric style, still carries leftover [C: 12]/[D]/[A] provenance tags, and cross-references its own sections as (§4)]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Citation-integrity reviewer acts as the citation specialist and judges the citation FORMAT/system, not only whether references are real",
+        "Flags the leftover bespoke provenance tags ([C: ]/[D]/[A]) as a major finding",
+        "Flags the non-standard section cross-reference (§4) — should be spelled out as 'Section 4'",
+        "Recognizes that a psychology study's field norm is author–date and recommends switching from numeric (numbered [N] is the default house style, but the specialist switches by field/journal)",
+        "Requires one consistent citation system throughout; a real/unresolvable citation stays a blocker, a format mismatch is major"
+      ]
+    },
+    {
       "id": "readability-tier",
       "prompt": "Review this paper — is it readable for a non-specialist? Check the jargon, acronyms, and whether a reasonably educated reader could follow it. [draft attached: several undefined acronyms, no glossary, dense subfield jargon]",
       "should_trigger": true,

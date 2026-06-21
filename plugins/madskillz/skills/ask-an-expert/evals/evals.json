@@ -33,6 +33,16 @@
       ]
     },
     {
+      "id": "reviewer-covers-it-no-new-expert",
+      "prompt": "We need an expert to decide what citation format this paper should use for its field.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Recognizes a standing peer-review reviewer already owns this — the citation-integrity reviewer (citation specialist) decides citation format by field",
+        "Routes to / extends that reviewer instead of minting a new standalone 'citation-style' expert",
+        "Treats minting a new expert as a last resort; does not create a redundant near-duplicate-of-a-reviewer persona"
+      ]
+    },
+    {
       "id": "no-trigger-control",
       "prompt": "What's the capital of France?",
       "should_trigger": false,

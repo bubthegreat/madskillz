@@ -26,21 +26,29 @@ whole `scientific-*` research family and standalone.
    responsibly represented, say so plainly.
 3. State confidence and uncertainty honestly; cite real, resolvable sources or mark a claim
    as unverified — never fabricate citations.
-4. Reuse before you create. Do not spawn near-duplicate experts; extend the existing one.
+4. Reuse before you create. Minting a new expert is a last resort: first check whether a
+   standing **peer-review reviewer** persona's mandate already covers the need (extend that
+   reviewer), then whether an existing expert does. Do not spawn near-duplicate or
+   redundant-with-a-reviewer personas.
 
 ## Step 1 — Determine the need
 
-- **Direct question to an expert?** List `experts/` and pick the persona whose **Scope** covers
-  the question. If one fits, go to Step 3. If none fits, go to Step 2.
+- **Direct question to an expert?** First check whether a **standing peer-review reviewer**
+  already owns this (`scientific-peer-review/references/reviewers/` — e.g. citation/style → the
+  citation-integrity reviewer, stats → the statistical reviewer, ethics → ethics-integrity): if
+  one reasonably covers it, engage/extend that reviewer rather than minting an expert. Otherwise
+  list `experts/` and pick the persona whose **Scope** covers the question. If one fits, go to
+  Step 3. If none fits, go to Step 2.
 - **A `requested-expert.md` to resolve** (handed over by `scientific-peer-review`'s
   domain-coverage triage)? Go to Step 2.
 
 ## Step 2 — Find the right expert (when none fits)
 
 Follow `references/find-the-right-expert.md`: derive the *actual* expertise the question
-demands, check `experts/` for something that already covers it (reuse or extend rather than
-duplicate), and write/extend `experts/<concise-name>.md` per `references/expert-format.md`. The
-finder either returns a ready expert file or an honest "expertise not establishable."
+demands, check whether a standing reviewer or an existing expert already covers it (reuse or
+extend rather than duplicate), and only when neither fits, write a new
+`experts/<concise-name>.md` per `references/expert-format.md`. The finder either routes to an
+existing persona, returns a ready expert file, or gives an honest "expertise not establishable."
 
 ## Step 3 — Engage the expert
 

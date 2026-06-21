@@ -69,6 +69,19 @@
       ]
     },
     {
+      "id": "citation-provenance-conventions",
+      "prompt": "Draft a paper for this modelling study and get it ready to publish. [study cites published literature values, computes outputs shown in figures/tables, and makes explicit modelling assumptions]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Cited prior work uses numbered [N] citations keyed to a numbered reference list (the default house style)",
+        "Data-derived values point to the Figure/Table that shows them, e.g. (Figure 3) — not a [D] tag",
+        "Assumptions are stated in prose in Methods (with sensitivity analysis where possible) — not an [A] tag",
+        "Speculation is hedged and confined to the Discussion, carrying its caveat reasoning",
+        "In-text cross-references spell out the element ('Section 4', 'Figure 1') — not (§4)",
+        "Does NOT carry a [C]/[D]/[A] provenance legend in the published paper"
+      ]
+    },
+    {
       "id": "no-trigger-control",
       "prompt": "What's the capital of France?",
       "should_trigger": false,
