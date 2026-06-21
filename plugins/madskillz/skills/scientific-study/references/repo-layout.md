@@ -6,6 +6,7 @@ and opened as a PR (see `git-workflow.md`):
 ```
 <topic>/<research-short-name>/
   paper.md            # manuscript in markdown — evolves across the review-cycle commits
+  build/              # rendered PDF + EPUB of paper.md — committed, ships in the PR (human / e-reader); see render.md
   assets/             # figures, plots, diagrams referenced by the paper
   data/               # datasets / results tables — real data, *.reference.md stubs, or a mix
   scripts/            # analysis code / reproducibility scripts / notebooks
@@ -30,6 +31,9 @@ and opened as a PR (see `git-workflow.md`):
   direction, and the substantive corrections) — committed as provenance so it is clear what was the
   owner's vs. the AI's heavy lifting. It is **not** part of `paper.md` and carries no privacy gate
   (it is the owner's own dialogue). Omit it when empty.
+- `build/<research-short-name>.{pdf,epub}` are the rendered paper, **committed** so a human can read
+  it from the PR (offline / e-reader). Build them in Step 5 and re-build on every change (Step 6) per
+  `references/render.md`; never `.gitignore` them, and never hand-place a faked artifact.
 - Omit a subfolder that has no content. Never create an empty placeholder to imply
   coverage that does not exist.
 - License files are copied verbatim from `references/licenses/`. For `MIT.txt`,

@@ -105,22 +105,32 @@ publishing: classify licensing (include / reference-only), screen for PII/PHI an
 human-subjects consent. **Fail-closed** — unknown status is not published without a
 recorded override. Record the outcome in `COMPLIANCE.md`.
 
-## Step 5 — Publish as a PR
+## Step 5 — Render and publish as a PR
 
-Lay out the folder per `references/repo-layout.md`, push the study branch, and open
+**Render first.** Build a human-readable **PDF and EPUB** from `paper.md` per
+`references/render.md` → `build/<research-short-name>.{pdf,epub}` (PDF via pandoc's
+Typst engine; EPUB via pandoc), and commit them as their own commit
+(`render: build PDF + EPUB for <short-name>`). These artifacts ship **in the PR** so a
+human can read the paper offline / on an e-reader without rebuilding it. If the render
+tooling is unavailable, do **not** fake or hand-place a file — render whatever you can
+(e.g., EPUB only) and note the skipped artifact in the PR (see `references/render.md`).
+
+Then lay out the folder per `references/repo-layout.md`, push the study branch, and open
 a PR into the default branch of `jmresearch/research` (per `git-workflow.md`). The
 PR description summarizes: the study (and whether it is novel or a
 replication/validation), how each review cycle changed the paper, any **residual
 findings**, any domain **experts** consulted or minted (and any unmet-expertise halt),
-and the compliance outcomes. Report the PR URL. The human reviews and merges there.
+the compliance outcomes, and that the rendered **PDF/EPUB are included** (or why not).
+Report the PR URL. The human reviews and merges there.
 
 ## Step 6 — Human-review follow-ups
 
 When a human requests changes in the PR, apply them, **run them back through the
 quality gate** (at minimum a focused re-review of the changed sections via
-`scientific-peer-review`), and push as a **separate commit** to the same PR branch
-so the requested changes are clearly visible. Update the PR description. Repeat as
-needed. Never merge — the human does.
+`scientific-peer-review`), **re-render the PDF/EPUB** (Step 5 / `references/render.md`)
+so the build artifacts never drift from `paper.md`, and push as a **separate commit**
+to the same PR branch so the requested changes are clearly visible. Update the PR
+description. Repeat as needed. Never merge — the human does.
 
 ## Step 7 — Save the dialogue transcript (provenance)
 
@@ -141,6 +151,9 @@ dialogue). The study may also **read** this transcript for refinement context wh
 - A reviewer finding is disputed → surface it in the PR for the human to adjudicate.
 - `gh` missing/unauthed, no push access, or offline → stop with guidance; never fake
   a commit/push/PR (see `git-workflow.md`).
+- Render tooling (`pandoc` / the PDF engine) missing → render whatever you can (often
+  EPUB only), publish the PR without the missing artifact, and say so in the PR; never
+  commit a placeholder or a hand-faked PDF (see `references/render.md`).
 - Dataset not redistributable → reference-only stub; PII/PHI or missing consent →
   block; unknown status → fail-closed (see `compliance-gate.md`).
 - Paper needs expertise the panel lacks → the review's domain-coverage triage mints/reuses a
