@@ -17,6 +17,17 @@ from pathlib import Path
 
 _WORD = re.compile(r"[a-z0-9']+")
 
+_STOPWORDS = frozenset("""
+a an the this that these those some any each every all both no
+i me my we us our you your he him his she her hers it its they them their
+who whom which what
+of to in on at by for with from into onto over under up down out off about as
+through between behind before after
+and or but nor so yet if because while than then
+is am are was were be been being have has had do does did
+will would can could should may might must
+""".split())
+
 
 def tokenize(text: str) -> list[str]:
     return _WORD.findall(text.lower())
@@ -48,7 +59,7 @@ def find_crutches(text: str, banned: list[str] | None = None, min_count: int = 4
             out.append({"phrase": phrase, "count": c, "banned": True})
             seen.add(phrase)
     for word, c in counts.items():
-        if c >= min_count and word not in seen and len(word) > 2:
+        if c >= min_count and word not in seen and len(word) > 2 and word not in _STOPWORDS:
             out.append({"phrase": word, "count": c, "banned": False})
     out.sort(key=lambda x: (not x["banned"], -x["count"]))
     return out

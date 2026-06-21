@@ -41,3 +41,10 @@ def test_find_crutches_banned_uses_word_boundaries():
     crutches = rs.find_crutches("The sand and the candy and the band.", banned=["and"], min_count=99)
     hit = [c for c in crutches if c["phrase"] == "and"]
     assert hit and hit[0]["count"] == 2 and hit[0]["banned"]
+
+
+def test_find_crutches_filters_function_word_stopwords():
+    text = "the the the the the of of of of of really really really really really"
+    phrases = {c["phrase"] for c in rs.find_crutches(text, min_count=4)}
+    assert "the" not in phrases and "of" not in phrases   # grammatical stopwords filtered
+    assert "really" in phrases                            # genuine crutch word kept
