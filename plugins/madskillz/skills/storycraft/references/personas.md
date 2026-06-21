@@ -10,8 +10,8 @@ writes to `bible/`; every other reviewer is read-only with respect to canon.
 ## Shared editorial note schema
 
 All reviewing personas (Line Editor, Dialogue & Character Doctor, Repetition &
-Device Auditor, Continuity Checker, Audience-Fit Editor, Beta Reader, and
-Continuity Checker's proposed bible diffs) return structured notes in this shape:
+Device Auditor, Continuity Checker, Audience-Fit Editor, and Beta Reader) return
+structured notes in this shape:
 
 ```json
 {
