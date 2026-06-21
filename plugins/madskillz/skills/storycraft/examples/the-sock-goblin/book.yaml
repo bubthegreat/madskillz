@@ -1,0 +1,13 @@
+title: The Sock Goblin
+author: "storycraft sample"
+audience: "ages 7-9"
+reading_level: "early chapter book"
+genre: "cozy fantasy / humor"
+tone: "warm, funny, gently mischievous"
+pov: "third-limited"
+tense: "past"
+target_chapters: 2
+target_words_per_chapter: 450
+status: done
+banned_phrases: ["nodded", "just nodded", "nodded slowly", "shrugged"]
+illustrate: false

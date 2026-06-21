@@ -1,0 +1,58 @@
+{
+  "skill": "storycraft",
+  "description": "Trigger and behavior evals for the collaborative book-writing skill with co-design, chapter drafting, and story bible support.",
+  "tests": [
+    {
+      "id": "trigger-new-book",
+      "prompt": "Write a goblin story for my kids",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on new book request",
+        "Starts with co-design phase (Phase 1) to define story premise, characters, and arc",
+        "Does not skip to drafting; co-design is mandatory first step"
+      ]
+    },
+    {
+      "id": "trigger-resume-chapter-draft",
+      "prompt": "Draft the next chapter of my book",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on chapter draft request",
+        "Enters Phase 2 drafting loop with checkpoint reviews",
+        "References the story bible and prior chapters for consistency"
+      ]
+    },
+    {
+      "id": "trigger-book-from-notes",
+      "prompt": "Turn these notes into a book",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on new book from existing material",
+        "Starts with co-design phase to structure notes into a coherent narrative",
+        "Establishes story bible from the material"
+      ]
+    },
+    {
+      "id": "trigger-resume-existing",
+      "prompt": "Work on my novel",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on existing project resume",
+        "Loads story bible and prior work state",
+        "Resumes from where the project left off (co-design or draft phase)"
+      ]
+    },
+    {
+      "id": "no-trigger-blog-post",
+      "prompt": "Write a blog post about X",
+      "should_trigger": false,
+      "grading_criteria": ["Routes to blog skill, not storycraft"]
+    },
+    {
+      "id": "no-trigger-research-study",
+      "prompt": "Do a research study on Y and open a PR",
+      "should_trigger": false,
+      "grading_criteria": ["Routes to scientific-study skill, not storycraft"]
+    }
+  ]
+}
