@@ -182,6 +182,10 @@ git -C "$WT" commit -m "review cycle <N>: address <short summary>"
 # compliance gate result (Step 4)
 git -C "$WT" add "<topic>/<research-short-name>"
 git -C "$WT" commit -m "compliance: gate outcome for <research-short-name>"
+
+# rendered PDF + EPUB (Step 5) — see references/render.md
+git -C "$WT" add "<topic>/<research-short-name>/build"
+git -C "$WT" commit -m "render: build PDF + EPUB for <research-short-name>"
 ```
 
 Stage only this study's folder — never `git add -A`. The worktree is a full checkout of
@@ -189,7 +193,7 @@ the default branch, so it also contains *other* studies' folders; `git add -A` w
 those in. End each commit message with:
 `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`
 
-## 4. Push the branch and open the PR (Step 5)
+## 4. Push the branch and open the PR (Step 6)
 
 ```bash
 git -C "$WT" push -u origin "$BRANCH"
@@ -201,7 +205,7 @@ gh -R jmresearch/research pr create \
 
 Report the PR URL. Do **not** merge. The human reviews and merges the PR.
 
-## 5. Human-review follow-ups (Step 6)
+## 5. Human-review follow-ups (Step 7)
 
 Apply the requested change, re-gate it (see `review-loop.md`), then add it as a
 **separate** commit on the same branch and push — so the human's requested change is

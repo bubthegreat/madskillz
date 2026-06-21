@@ -78,7 +78,7 @@ where 3 cycles ended with blockers still open, and any disputed findings) into t
 description so the human reviews with full knowledge. Hitting the cap with open
 blockers is published **flagged**, never as a clean pass.
 
-## Human-review follow-ups (Step 6)
+## Human-review follow-ups (Step 7)
 
 After the PR is open, a human may request changes. For each request:
 1. Apply the change.

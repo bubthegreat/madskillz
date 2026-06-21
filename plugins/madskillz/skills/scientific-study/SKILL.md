@@ -105,7 +105,24 @@ publishing: classify licensing (include / reference-only), screen for PII/PHI an
 human-subjects consent. **Fail-closed** — unknown status is not published without a
 recorded override. Record the outcome in `COMPLIANCE.md`.
 
-## Step 5 — Publish as a PR
+## Step 5 — Render the manuscript (PDF + EPUB)
+
+Build distributable copies of the finished `paper.md` so the study can be read off a
+screen — e-readers, tablets, print — not only as Markdown in the repo. Run the
+renderer (see `references/render.md`):
+
+```bash
+uv run <skill>/scripts/render-paper.py <topic>/<research-short-name>
+```
+
+It writes `build/<research-short-name>.pdf` (Typst-typeset, no LaTeX) and
+`build/<research-short-name>.epub` (reflowable, adjustable text on an e-reader) into
+the study folder, with a table of contents and the `assets/` figures and tables
+embedded. Commit them so they ship in the PR (`render: build PDF + EPUB …`). `pandoc`
+and `typst` must be on PATH — install per `references/render.md` if missing; if
+neither can be installed, publish without the artifacts and say so. Never fake a build.
+
+## Step 6 — Publish as a PR
 
 Lay out the folder per `references/repo-layout.md`, push the study branch, and open
 a PR into the default branch of `jmresearch/research` (per `git-workflow.md`). The
@@ -114,7 +131,7 @@ replication/validation), how each review cycle changed the paper, any **residual
 findings**, any domain **experts** consulted or minted (and any unmet-expertise halt),
 and the compliance outcomes. Report the PR URL. The human reviews and merges there.
 
-## Step 6 — Human-review follow-ups
+## Step 7 — Human-review follow-ups
 
 When a human requests changes in the PR, apply them, **run them back through the
 quality gate** (at minimum a focused re-review of the changed sections via
@@ -122,7 +139,7 @@ quality gate** (at minimum a focused re-review of the changed sections via
 so the requested changes are clearly visible. Update the PR description. Repeat as
 needed. Never merge — the human does.
 
-## Step 7 — Save the dialogue transcript (provenance)
+## Step 8 — Save the dialogue transcript (provenance)
 
 Save the human<->assistant dialogue of the study to `journey/transcript.md` — the owner's questions
 and direction, and the substantive replies/corrections (not tool-call noise). This is **provenance**:
@@ -138,6 +155,8 @@ dialogue). The study may also **read** this transcript for refinement context wh
   after refining the question.
 - Loop hits 3 cycles with blockers remaining → publish the PR anyway with the
   blockers prominently flagged as unresolved; do not hide them, do not fake a pass.
+- `pandoc`/`typst` missing for the render step → install per `references/render.md`;
+  if neither can be installed, publish without the PDF/EPUB and say so. Never fake a build.
 - A reviewer finding is disputed → surface it in the PR for the human to adjudicate.
 - `gh` missing/unauthed, no push access, or offline → stop with guidance; never fake
   a commit/push/PR (see `git-workflow.md`).
@@ -148,5 +167,5 @@ dialogue). The study may also **read** this transcript for refinement context wh
   claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
 - Asked to blog the study / write it up in the owner's voice → out of scope here; use the standalone
-  `blog` skill (the study still saves `journey/transcript.md` as provenance, Step 7).
+  `blog` skill (the study still saves `journey/transcript.md` as provenance, Step 8).
 - Asked to merge → out of scope; the human merges the PR.
