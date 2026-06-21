@@ -52,8 +52,9 @@ def render(book_dir: Path, out_dir: Path | None = None) -> dict:
     epub = out_dir / f"{slug}.epub"
     pdf = out_dir / f"{slug}.pdf"
     common = ["--metadata", f"title={meta['title']}", "--metadata", f"author={meta['author']}"]
-    subprocess.run(["pandoc", str(combined), "-o", str(epub), *common], check=True)
-    subprocess.run(["pandoc", str(combined), "-o", str(pdf), "--pdf-engine=typst", *common], check=True)
+    subprocess.run(["pandoc", str(combined), "-o", str(epub), *common], check=True, capture_output=True)
+    subprocess.run(["pandoc", str(combined), "-o", str(pdf), "--pdf-engine=typst", *common], check=True, capture_output=True)
+    combined.unlink(missing_ok=True)
     return {"epub": epub, "pdf": pdf}
 
 

@@ -28,3 +28,5 @@ def test_render_produces_valid_epub_and_pdf(tmp_path):
     with zipfile.ZipFile(out["epub"]) as z:
         assert z.read("mimetype").decode() == "application/epub+zip"
     assert out["pdf"].read_bytes()[:5] == b"%PDF-"
+    leftovers = sorted(p.suffix for p in tmp_path.iterdir())
+    assert leftovers == [".epub", ".pdf"]
