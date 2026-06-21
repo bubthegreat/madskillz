@@ -12,7 +12,7 @@ convention exists to prevent.
 
 Two deliberate exceptions — do **not** "simplify" these into superpowers worktrees:
 
-- **voice-sync** runs from a standalone *clone* at `~/.claude/voice/madskillz-sync` pinned to
+- **voice-sync** runs from a standalone *clone* at `~/.madskillz/voice/madskillz-sync` pinned to
   `main`. Its background-push hook (`~/.claude/hooks/voice-sync-gate.sh`) is hard-pinned to
   `main` (auto-reset + push to `main`); making it a worktree re-locks `main` out of the
   primary checkout. Keep it a clone.

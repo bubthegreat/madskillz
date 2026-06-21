@@ -8,7 +8,7 @@ hook="$here/capture-voice.sh"
 fail=0
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
-corpus="$tmp/.claude/voice/corpus.jsonl"
+corpus="$tmp/.madskillz/voice/corpus.jsonl"
 
 # 1) real prompt -> exactly one corpus line carrying the text + a timestamp, no stdout
 out="$(printf '%s' '{"prompt":"Hello voice","hook_event_name":"UserPromptSubmit"}' | HOME="$tmp" bash "$hook")"

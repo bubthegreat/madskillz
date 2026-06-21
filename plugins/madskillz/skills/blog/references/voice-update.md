@@ -7,19 +7,19 @@ for fidelity) from **prescriptive** ("how I should write", for quality); the upd
 descriptive layer.
 
 ## Files
-- **Live profile:** `~/.claude/voice/voice.md` — the working copy the blog writer uses; evolves every
+- **Live profile:** `~/.madskillz/voice/voice.md` — the working copy the blog writer uses; evolves every
   session. Carries frontmatter (`voice`, `owner`, `purpose`, `status: personal`).
 - **Voices library:** `references/voices/<name>.md` — the **committed** copy of each named,
   per-purpose owner voice (e.g. `science-blog.md`). What non-local agents read. The generic
   `references/voice.md` (`status: template`) is **only** a starting shape — never treated as "me."
-- **Corpus:** `~/.claude/voice/corpus.jsonl` — append-only; one JSON object per owner message,
+- **Corpus:** `~/.madskillz/voice/corpus.jsonl` — append-only; one JSON object per owner message,
   `{ "ts": "<ISO8601>", "text": "<the message>" }`, written by the capture hook (see Setup).
 - **Markers** (in the live profile's Provenance section):
   - `Processed through: <ts>` — last corpus entry folded into the live profile.
   - `Repo-synced through: <ts>` — last corpus entry whose changes were pushed to the voices library.
 
 ## Update algorithm (one pass)
-1. If `~/.claude/voice/voice.md` does not exist, seed it: copy the owner's committed voice
+1. If `~/.madskillz/voice/voice.md` does not exist, seed it: copy the owner's committed voice
    `references/voices/<name>.md` if one exists (preferred — inherits the real, evolved voice); else
    copy `references/voice.md` (the template). Set Provenance to `Processed through: none`,
    `Repo-synced through: none`, plus an empty `Changelog`.
@@ -81,12 +81,12 @@ only when that count ≥ `VOICE_SYNC_MIN_COUNT` (default 15) **and** at least
 `VOICE_SYNC_MIN_INTERVAL_SECONDS` (default 720 = 12 min) have passed since the last attempt, it
 **detaches** a headless `claude -p "update my voice"` (model `opus`) that runs this updater plus the
 materiality-gated push. A lockfile prevents overlapping runs; the gate never blocks session teardown
-and writes only to `~/.claude/voice/sync.log`. Tunables are env vars (see the script header).
+and writes only to `~/.madskillz/voice/sync.log`. Tunables are env vars (see the script header).
 
 Install: copy `hooks/voice-sync-gate.sh` to `~/.claude/hooks/`, make it executable, and add a
 `SessionEnd` hook to `~/.claude/settings.json`. Recommended command (pushes from a dedicated
 `main`-pinned worktree and keeps it current):
-`VOICE_SYNC_REPO="$HOME/.claude/voice/madskillz-sync" VOICE_SYNC_AUTOREFRESH=1 bash "$HOME/.claude/hooks/voice-sync-gate.sh"`.
+`VOICE_SYNC_REPO="$HOME/.madskillz/voice/madskillz-sync" VOICE_SYNC_AUTOREFRESH=1 bash "$HOME/.claude/hooks/voice-sync-gate.sh"`.
 
 Notes:
 - The background agent runs **least-privilege** via `--allowedTools` (read/edit the voice file, run
@@ -94,8 +94,10 @@ Notes:
   tool just fails the sync quietly; the unattended agent never performs unapproved actions.
 - It pushes to `Push target` (default `main`). Make sure the voices-library infrastructure is on that
   branch first, or an early background push lands the voice file without its supporting skill files.
-- **`VOICE_SYNC_REPO` should be a *dedicated* checkout/worktree pinned to the push branch** — never a
-  roaming working checkout. Create one with `git worktree add ~/.claude/voice/madskillz-sync main`.
+- **`VOICE_SYNC_REPO` should be a *dedicated* clone pinned to the push branch** — never a roaming
+  working checkout, and **a clone, not a worktree** (a worktree would re-lock `main` out of your
+  primary checkout). Create one with `git clone <your madskillz remote> ~/.madskillz/voice/madskillz-sync`
+  checked out on `main`.
 - **`VOICE_SYNC_AUTOREFRESH=1`** makes the gate `fetch` + `reset --hard origin/<branch>` that repo
   before launching, so the push always fast-forwards. It is guarded: it **refuses** unless the repo
   is actually on the target branch, so it can never reset a working checkout. `reset --hard` is safe
@@ -108,7 +110,7 @@ The corpus is fed by a **global** `UserPromptSubmit` hook in `~/.claude/settings
 records the owner's writing no matter which prompt or project they are in. The canonical script lives
 in this repo at `hooks/capture-voice.sh` (tested by `hooks/capture-voice.test.sh`); install it by
 copying to `~/.claude/hooks/capture-voice.sh` and adding the hook to `~/.claude/settings.json`. It
-appends each message as `{ts,text}` to `~/.claude/voice/corpus.jsonl`, never blocking the prompt and
+appends each message as `{ts,text}` to `~/.madskillz/voice/corpus.jsonl`, never blocking the prompt and
 emitting no stdout. It is deliberately **not** a plugin hook — a plugin-scoped hook would only fire
 when this plugin is loaded, and would double-record alongside the global one. The updater can also run
 on demand over whatever messages are present in the current session.
