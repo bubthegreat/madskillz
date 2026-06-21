@@ -80,7 +80,7 @@ pandoc/typst is passed through so the underlying failure is visible.
 ## What the renderer does
 
 1. Reads `book.yaml` → `title`, `author`.
-2. Collects `chapters/NN-*.md` in sorted order.
+2. Collects all `chapters/*.md` in sorted order (the `NN-` prefix is the naming convention that makes sort order correct, but any `.md` file in `chapters/` is included).
 3. Stitches them into a single combined Markdown (in memory → `build/<slug>.md` temp file).
 4. Runs `pandoc <slug>.md -o <slug>.epub` with title/author metadata.
 5. Runs `pandoc <slug>.md -o <slug>.pdf --pdf-engine=typst` (no LaTeX required).

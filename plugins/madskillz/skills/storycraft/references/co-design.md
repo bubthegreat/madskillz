@@ -85,15 +85,19 @@ Produce the style guide covering:
   action scenes").
 - **Don't list** — prohibited devices or patterns.
 - **Banned phrases** — seed this list with common crutch phrases; add any the user
-  names. Mandatory seed entries:
-  - `"And X nodded"` (and variants: "nodded slowly", "just nodded")
-  - `"suddenly"` used as a lazy escalation device
-  - `"He/She smiled"` as a default filler beat
-  - `"X turned to Y and said"` as a dialogue introducer
+  names. Mandatory seed entries (all are literal phrases the scanner can match):
+  - `"nodded"`, `"just nodded"`, `"nodded slowly"`
+  - `"suddenly"`
+  - `"smiled and said"`
+  - `"turned to"`
+
+  Pattern-style filler that cannot be matched literally (e.g. constructions with
+  character-name placeholders) is caught by the Dialogue & Character Doctor and
+  Repetition & Device Auditor personas rather than the scanner.
 
   The banned-phrase list is mirrored verbatim into `book.yaml: banned_phrases[]` and
   `bible/style-guide.md`; the Repetition & Device Auditor and Dialogue & Character
-  Doctor enforce it mechanically in Phase 2.
+  Doctor enforce it in Phase 2.
 
 ---
 

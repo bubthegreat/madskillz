@@ -45,7 +45,7 @@ Omit any subfolder that has no content. Never create empty placeholders.
 
 ## `book.yaml` fields
 
-All of the following keys are required when present; omit optional keys only if explicitly not applicable:
+Include every applicable key below; omit a key only when it genuinely does not apply:
 
 | Key | Description |
 |---|---|

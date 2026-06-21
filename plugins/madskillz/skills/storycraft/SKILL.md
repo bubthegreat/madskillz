@@ -102,7 +102,7 @@ Drafting is sequential (each chapter depends on the prior); the editorial panel 
 
 Delegate to **`render.md`** for the full render pipeline.
 
-Stitch chapters + minimal front matter (title page, chapter titles, dedication) and invoke
+Stitch chapters with a title heading and the chapters in order (richer front matter like a dedication or title page is not generated in v1) and invoke
 `render.py` (see Scripts below). Commit `build/<slug>.epub` and `build/<slug>.pdf` so they sync
 to the e-reader via the repo.
 

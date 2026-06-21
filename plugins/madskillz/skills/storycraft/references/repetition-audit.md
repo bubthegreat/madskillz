@@ -12,7 +12,9 @@ Before emitting any notes, run:
 uv run plugins/madskillz/skills/storycraft/scripts/repetition_scan.py <book_dir>
 ```
 
-where `<book_dir>` is the book's root folder (e.g. `~/stories/goblin-scouts`). The script scans all committed chapters plus the current draft in `chapters/`.
+where `<book_dir>` is the book's root folder (e.g. `~/stories/goblin-scouts`). The script globs all `*.md` files on disk in `chapters/` (sorted), committed or not — whatever is present in the folder at run time.
+
+> **Scanner caveat:** the scanner mechanically matches only LITERAL banned phrases (whole-word matched). Pattern-style entries containing placeholders (such as "X nodded" or "X turned to Y and said") are NOT matched by the scanner; those are judged by the Repetition & Device Auditor and Dialogue & Character Doctor personas instead.
 
 Output is JSON with three top-level keys:
 
@@ -60,7 +62,7 @@ Each entry identifies two or more chapters whose opening sentences or paragraphs
 
 ## 3. Check the current chapter for new repetitions
 
-The scanner may run on committed chapters only. After reading the scan results, also read the current chapter draft directly for:
+The scanner reads whatever `*.md` files are on disk in `chapters/` at run time. After reading the scan results, also read the current chapter draft directly for:
 - New crutch phrases introduced in this chapter that are not yet in the scan.
 - Patterns already flagged by the scanner that this chapter continues or worsens.
 

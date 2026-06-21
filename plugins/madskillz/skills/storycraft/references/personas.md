@@ -129,7 +129,7 @@ and reading-level mismatches sentence by sentence.
 
 **Reads:**
 - Current chapter draft
-- `book.yaml` (reading level, age range)
+- `book.yaml` (reading_level, audience)
 - `bible/style-guide.md` (voice, do/don't list)
 
 **Emits:**
@@ -221,7 +221,7 @@ introduces legitimate new canon.
 ## 8. Audience-Fit Editor
 
 **Role:** Age-appropriateness and engagement auditor. Ensures vocabulary, themes,
-content, and pacing match the target audience (`book.yaml: age_range, reading_level`).
+content, and pacing match the target audience (`book.yaml: audience, reading_level`).
 
 **Mandate:**
 - Flag vocabulary that is above the reading level without adequate context.
@@ -233,7 +233,7 @@ content, and pacing match the target audience (`book.yaml: age_range, reading_le
 
 **Reads:**
 - Current chapter draft
-- `book.yaml` (age_range, reading_level, audience notes)
+- `book.yaml` (audience, reading_level)
 - `bible/style-guide.md`
 
 **Emits:**
@@ -260,7 +260,7 @@ where the chapter was confusing, boring, or delightful.
 
 **Reads:**
 - Current chapter draft (the whole chapter, front to back, like a reader)
-- `book.yaml` (age_range — to calibrate the simulated reader)
+- `book.yaml` (audience — to calibrate the simulated reader)
 
 **Emits:**
 - Structured notes (`{ "persona": "Beta Reader", "severity": ..., "location": ...,
