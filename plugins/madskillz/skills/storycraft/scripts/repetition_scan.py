@@ -43,7 +43,7 @@ def find_crutches(text: str, banned: list[str] | None = None, min_count: int = 4
     out: list[dict] = []
     seen: set[str] = set()
     for phrase in banned_set:
-        c = text.lower().count(phrase)
+        c = len(re.findall(r"\b" + re.escape(phrase) + r"\b", text.lower()))
         if c >= 1:
             out.append({"phrase": phrase, "count": c, "banned": True})
             seen.add(phrase)
