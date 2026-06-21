@@ -66,6 +66,33 @@ End the manuscript with this back-matter, in this order:
   specialized term used in the body is in the **Glossary**. Both directions — no orphan entries.
 - Omit **Background / further reading** if nothing needs it; never pad it to imply coverage.
 
+## Citation, cross-reference & provenance conventions
+
+The manuscript grounds every claim using **standard scholarly conventions** — what any journal
+article shows — not bespoke inline tags. Distinguish the kinds of grounding by *form*, not by a
+`[C]/[D]/[A]`-style label:
+
+- **Cited (external prior work)** → a **numbered citation `[N]`** keyed to a numbered reference
+  list (`[12]`, `[3,5–7]`). This is the **default house style**. The citation-integrity reviewer
+  (the citation specialist) may switch a paper to **author–date** `(Author, Year)` when its
+  field/target journal expects that system — see
+  `scientific-peer-review/references/reviewers/citation-integrity.md`. Use one system
+  consistently; never mix systems and never leave a bespoke tag.
+- **Data-derived (computed by this study)** → state the value and point to the **Figure or
+  Table** that shows it: "modelled recurrence was 23.2% (Figure 3)" / "(Table 2)". Not `[D]`.
+- **Assumption (a modelling/analysis choice)** → state it in **prose**, in Methods, and where
+  possible test it with a sensitivity analysis: "We assume independent effects on the log
+  scale." Not `[A]`.
+- **Speculation / interpretation** → **hedged prose confined to the Discussion** ("may",
+  "suggests", "we speculate that …"), never in Results. Each speculation still carries its
+  reasoning — why it matters, why the data can't settle it, and what would settle it (feeds
+  Future Work). The discipline is kept; only the inline tag is gone.
+
+In-text **cross-references** to the paper's own parts spell out and capitalize the element —
+**"Section 4", "Section 2.3", "Figure 1", "Table 2", "Appendix A"** — not `§4` (the section
+sign is venue-specific; use it only where the target venue does) and not a bare number. Do not
+carry a `[C]/[D]/[A]` provenance legend in the published paper.
+
 ## README.md template
 
 ```markdown

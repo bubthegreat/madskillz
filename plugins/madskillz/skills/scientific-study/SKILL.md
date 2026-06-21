@@ -70,9 +70,12 @@ colliding on a shared checkout.
 ## Step 2 — Draft the paper and artifacts
 
 Write `paper.md` and produce/organize any `data/`, `scripts/`, `assets/` the study
-needs. Be provenance-honest: distinguish what is **cited**, what is **data-derived**,
-and what is **speculation/assumption** — do not assert unsupported claims, and do
-not invent data or citations. Write for the expected reader (adjacent-field body,
+needs. Be provenance-honest, using the **citation, cross-reference & provenance conventions**
+in `references/repo-layout.md`: cited work as numbered `[N]` citations (the default house
+style; the citation specialist may switch to author–date by field), data-derived values pointed
+to their **Figure/Table**, assumptions stated in **prose**, and speculation hedged in the
+**Discussion** with its caveats — do not assert unsupported claims, and do not invent data or
+citations. Write for the expected reader (adjacent-field body,
 educated-generalist floor): the abstract doubles as the plain-language summary, define every
 acronym on first use and every specialized term in the glossary, and end the manuscript with the
 required back-matter — an **Acronyms** index, a **Glossary**, and an optional **Background /

@@ -18,10 +18,21 @@ A request (a `requested-expert.md` file, or an inline ask) contains:
    questions actually demand — subfield, methods, depth. "A physics expert" for a
    superconductivity claim really needs condensed-matter / superconductivity expertise, not
    "physics" broadly. Vague in, specific out.
-2. **Check for an existing expert.** List `experts/`. If one already covers the derived
-   requirements, **reuse it** — do not duplicate. If one is close but missing something, plan to
-   **update** it rather than create a near-duplicate.
-3. **Define or update the expert.** Write or extend `experts/<concise-name>.md` per
+2. **Check existing personas first — reviewers *and* experts — before minting anything.**
+   Minting a new expert is the **last** resort. In order:
+   1. **Standing peer-review reviewers** (`scientific-peer-review/references/reviewers/`:
+      adversarial, citation-integrity, consistency, statistical, reproducibility,
+      ethics-integrity, plain-language, terminology-acronyms, accessibility-background). If the
+      derived requirement falls within a reviewer's reasonable mandate, **route to / extend that
+      reviewer** instead of minting a standalone expert. A close-but-narrow case is a scope
+      *extension* of the existing reviewer, not a new persona — e.g. "what citation format does
+      this field expect?" is the **citation-integrity reviewer's** job, not a new "citation-style
+      expert." Only treat it as out of a reviewer's scope if covering it would genuinely
+      distort that reviewer's mandate.
+   2. **Existing `experts/`.** List them; if one covers the derived requirements, **reuse it**;
+      if it is close but missing something, **update** it rather than create a near-duplicate.
+3. **Define or update the persona.** If an existing reviewer or expert fits, extend *that* file.
+   Only when neither reasonably covers the need, write a new `experts/<concise-name>.md` per
    `expert-format.md`, with **Scope** and **Boundaries** matching the derived requirements, and a
    **Provenance** note (which request created or extended it, and what was added).
 4. **Be honest about reach.** If the required expertise cannot be responsibly represented (too

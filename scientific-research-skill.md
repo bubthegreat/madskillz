@@ -286,13 +286,15 @@ The reference must give the model enough to choose and run the right analysis, i
 
 ## 9. Claim-provenance system — required content of `references/claim-provenance.md` **[GATE]**
 
-This is the mechanism behind the user's core requirement: *every statement is grounded, or flagged as speculation with caveats.* The skill tags each assertion in the draft as exactly one of three kinds. Tags are inline and machine-checkable by `scripts/check_claims.py`; they are stripped (or rendered as footnotes) in the final formatted output.
+This is the mechanism behind the user's core requirement: *every statement is grounded, or flagged as speculation with caveats.* The skill tags each assertion in the draft as exactly one of three kinds. Tags are an inline, machine-checkable **drafting** mechanism (`scripts/check_claims.py`); in the **published** manuscript they are rendered to standard scholarly form — never shown as raw tags or a `[C]/[D]/[A]` legend (see the citation, cross-reference & provenance conventions in `scientific-study`'s `references/repo-layout.md`).
 
-| Tag | Meaning | Requirement |
-|---|---|---|
-| `[CITED: ref-key]` | Supported by external prior work | Must point to a verified reference (§11.6). |
-| `[DATA: result-ref]` | A finding from *this* study's analysis | Must trace to a specific table/figure/line in the analysis output. |
-| `[SPECULATION: …]` | Interpretation, conjecture, or inference not provable from the data | Must carry the caveat block below. |
+| Tag (drafting) | Meaning | Requirement | Published rendering |
+|---|---|---|---|
+| `[CITED: ref-key]` | Supported by external prior work | Must point to a verified reference (§11.6). | A numbered `[N]` citation (default house style; the citation-integrity reviewer may switch to author–date by field). |
+| `[DATA: result-ref]` | A finding from *this* study's analysis | Must trace to a specific table/figure/line in the analysis output. | A pointer to the **Figure/Table** that shows the value, e.g. "(Figure 3)". |
+| `[SPECULATION: …]` | Interpretation, conjecture, or inference not provable from the data | Must carry the caveat block below. | **Hedged prose in the Discussion**, still carrying its caveat reasoning (feeds Future Work). |
+
+A modelling/analysis **assumption** (not one of the three tags above) renders as explicit **prose** in Methods, paired with a sensitivity analysis where possible.
 
 **Speculation caveat block — required fields whenever `[SPECULATION]` is used:**
 1. **Why it matters in this study's context** — what question or result motivates raising it.
@@ -473,7 +475,7 @@ Grade on: presence of all required sections, every claim tagged, no unverifiable
 ## 17. Decisions to confirm before generation **[DECIDE]**
 
 1. Default reporting format — journal IMRaD vs. preprint/conference (§4).
-2. Default citation style and which `.csl` files to ship (§10.4).
+2. Citation style: **pinned** — numbered `[N]` is the default house style; the citation-integrity reviewer (citation specialist) switches a paper to author–date by field/target journal (§9, §10.4, and that reviewer's rubric). Confirm only the target field/journal and which `.csl` files to ship.
 3. Default reviewer panel — full ten vs. lite mode, and the loop cap (§11.10, §12).
 4. Target execution environment — Claude Code/Cowork (subagents) vs. Claude.ai (sequential), since §7 branches on it.
 5. Stats stack for the scripts (e.g., Python + `scipy`/`statsmodels`/`pingouin`), and whether to include Bayesian tooling.
