@@ -1,7 +1,7 @@
 # Blog format — post arc and blog-notes
 
 Shapes the `blog` skill produces. The **voice** lives in `voice.md` (seed) and the live profile at
-`~/.claude/voice/voice.md`; this file is **structure**.
+`~/.madskillz/voice/voice.md`; this file is **structure**.
 
 ## The post
 

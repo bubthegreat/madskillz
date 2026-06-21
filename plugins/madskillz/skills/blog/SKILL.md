@@ -26,7 +26,7 @@ generic `references/voice.md` is a `status: template` only — the starting shap
 voice, **never** presented as the owner.
 
 **Voice resolution order** (use the first that exists; never fall through to the template *as* "me"):
-1. **Live profile** `~/.claude/voice/voice.md` — freshest, evolves per session.
+1. **Live profile** `~/.madskillz/voice/voice.md` — freshest, evolves per session.
 2. **Committed voice** `references/voices/science-blog.md` — the shared source of truth non-local
    agents read; the fallback on a fresh machine.
 3. **Template** `references/voice.md` — only to *create* a new named voice, never rendered as "me."
@@ -42,7 +42,7 @@ voice, **never** presented as the owner.
 5. **No fabricated citations.** A real, resolvable source, or an honest "read up on X."
 
 ## Step 0 — Refresh the voice (always, before writing)
-Run the voice updater per `references/voice-update.md`: ensure `~/.claude/voice/voice.md` exists
+Run the voice updater per `references/voice-update.md`: ensure `~/.madskillz/voice/voice.md` exists
 (seed it from the owner's committed `references/voices/science-blog.md` on first run — falling back to
 the `references/voice.md` template only if no committed voice exists), read the corpus entries newer
 than the recorded marker, and if there is something genuinely new about how the owner writes, merge it
@@ -65,7 +65,7 @@ guidance so conversational tics and overused phrases don't leak into the prose. 
 term; keep the wonder; keep honest open threads.
 
 ## Step 3 — Deliver
-Save the post (default `~/.claude/voice/posts/<slug>.md`, or a path the owner gives) and show it. The
+Save the post (default `~/.madskillz/voice/posts/<slug>.md`, or a path the owner gives) and show it. The
 human publishes it. This skill does not post to any platform.
 
 ## Blogging an existing study (optional)

@@ -19,13 +19,13 @@
 #                                    repo to origin/<branch> before launching, so
 #                                    the agent's push fast-forwards. Guarded — see
 #                                    refresh_sync_repo(); only safe on a dedicated repo.
-#   VOICE_DIR                        voice dir                                    (~/.claude/voice)
+#   VOICE_DIR                        voice dir                                    (~/.madskillz/voice)
 #   VOICE_SYNC_LAUNCH                test/override: run this synchronously instead of detaching
 set -u
 
 cat >/dev/null 2>&1   # drain the SessionEnd event JSON on stdin
 
-VOICE_DIR="${VOICE_DIR:-$HOME/.claude/voice}"
+VOICE_DIR="${VOICE_DIR:-$HOME/.madskillz/voice}"
 PROFILE="$VOICE_DIR/voice.md"
 CORPUS="$VOICE_DIR/corpus.jsonl"
 LOCK="$VOICE_DIR/.sync.lock"
@@ -44,7 +44,7 @@ log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG" 2>/dev/n
 # Bring the DEDICATED sync repo to origin/<branch> so the agent's push is a fast-forward.
 # Opt-in (VOICE_SYNC_AUTOREFRESH) and guarded: it REFUSES unless the repo is actually checked out on
 # <branch>, so it can never reset a roaming working checkout. reset --hard is safe ONLY because the
-# dedicated sync repo holds nothing precious — the live profile (~/.claude/voice/voice.md) is the
+# dedicated sync repo holds nothing precious — the live profile (~/.madskillz/voice/voice.md) is the
 # source of truth and the agent re-derives the committed copy from it. Best-effort: any failure
 # (not a repo / wrong branch / offline) just logs and returns; the launch proceeds regardless.
 refresh_sync_repo() {
