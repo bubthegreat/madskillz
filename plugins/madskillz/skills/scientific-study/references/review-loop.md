@@ -42,8 +42,12 @@ while plan has blocker-severity findings AND cycle < 3
 
 `scientific-peer-review` runs a domain-coverage triage each review (see its `SKILL.md`). When
 the paper needs expertise the panel lacks, it writes a `requested-expert.md`, resolves it via
-the **`ask-an-expert`** skill (reuse or mint), and adds the expert to the panel —
-auto-continuing the cycle. A minted/updated expert is challenged once by the adversarial
+the **`ask-an-expert`** skill (reuse or mint) — passing the study's **run-id
+(`<topic>__<research-short-name>`) and `defer-publish`** so a minted expert is committed to the
+madskillz sync clone on the run's branch and published as **one bundled madskillz PR at Step 6**
+(see `git-workflow.md` §4.1 and ask-an-expert's `references/expert-writeback.md`), not left in the
+research project — and adds the expert to the panel, auto-continuing the cycle. A minted/updated
+expert is challenged once by the adversarial
 reviewer. If adequate expertise **cannot** be established for a central claim (the egregious
 case), the gate **halts**: stop the loop and surface "could not establish adequate expertise
 for <domain>" — never fake a qualified review. Record experts consulted/minted, and any halt,
