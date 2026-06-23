@@ -29,12 +29,16 @@ A request (a `requested-expert.md` file, or an inline ask) contains:
       this field expect?" is the **citation-integrity reviewer's** job, not a new "citation-style
       expert." Only treat it as out of a reviewer's scope if covering it would genuinely
       distort that reviewer's mandate.
-   2. **Existing `experts/`.** List them; if one covers the derived requirements, **reuse it**;
-      if it is close but missing something, **update** it rather than create a near-duplicate.
+   2. **Existing `experts/`.** List them **from the canonical madskillz clone (`origin/main`,
+      freshly fetched per `expert-writeback.md`)** — the real current library, not a stale plugin
+      cache. If one covers the derived requirements, **reuse it**; if it is close but missing
+      something, **update** it rather than create a near-duplicate.
 3. **Define or update the persona.** If an existing reviewer or expert fits, extend *that* file.
    Only when neither reasonably covers the need, write a new `experts/<concise-name>.md` per
    `expert-format.md`, with **Scope** and **Boundaries** matching the derived requirements, and a
-   **Provenance** note (which request created or extended it, and what was added).
+   **Provenance** note (which request created or extended it, and what was added). Write and commit
+   it **into the canonical madskillz clone (not the current project or the plugin cache) and publish
+   it as a PR** — see `expert-writeback.md`.
 4. **Be honest about reach.** If the required expertise cannot be responsibly represented (too
    specialized to stand behind, or the request is incoherent), say so plainly — do not mint a
    shallow "expert" to paper over the gap.
@@ -58,5 +62,8 @@ There is no second finder↔adversarial round. One attempt, then accept-with-not
 
 ## Output
 
-The path to the ready `experts/<name>.md` (reused, created, or updated) plus a one-line note on
-which and why; or an honest "expertise not establishable" with the reason.
+The path to the ready `experts/<name>.md` (reused, created, or updated) — for a minted/updated
+expert this is its path inside the run's `expert-writeback.md` worktree — plus a one-line note on
+which and why, and (when published immediately) the PR URL; or an honest "expertise not
+establishable" with the reason. Deferred (in-study) minting leaves publishing to the study's
+end-of-run step.

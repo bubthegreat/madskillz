@@ -7,7 +7,9 @@ expertise). Shared by the whole `scientific-*` research family and by direct
 - **Format:** see `../references/expert-format.md`.
 - **Adding one:** the finder (`../references/find-the-right-expert.md`) derives the real
   requirements, reuses or extends an existing expert when possible, and only then mints a new
-  file. A minted/updated expert is challenged once by the adversarial reviewer before use.
+  file. A minted/updated expert is challenged once by the adversarial reviewer before use, then
+  **written back to the madskillz repo and opened as a PR** for human review — minting through a
+  run does not edit this directory in place; see `../references/expert-writeback.md`.
 - **Reuse first.** Before creating a file here, check whether an existing expert already covers
   the need — extend it rather than spawning a near-duplicate.
 
