@@ -43,6 +43,26 @@
       ]
     },
     {
+      "id": "mint-writes-back-and-prs",
+      "prompt": "Mint a new expert on tokamak plasma confinement and have it weigh in on this fusion claim.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Mints the expert into the canonical madskillz sync clone (~/.madskillz/experts/...), NOT into the current working project or the plugin cache",
+        "Opens a PR to bubthegreat/madskillz (base main) carrying the new expert plus a patch version bump, per references/expert-writeback.md",
+        "Does not leave the expert file committed in the project being worked on",
+        "Never fabricates a PR URL; if gh is missing/unauthenticated it stops with guidance instead"
+      ]
+    },
+    {
+      "id": "reuse-opens-no-pr",
+      "prompt": "Ask a systems-theory expert whether this inputs-to-outputs framing holds up.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Reuses the existing experts/systems-theory.md rather than minting a near-duplicate",
+        "Opens NO PR, because reusing an unchanged expert is not a change to the canonical source"
+      ]
+    },
+    {
       "id": "no-trigger-control",
       "prompt": "What's the capital of France?",
       "should_trigger": false,
