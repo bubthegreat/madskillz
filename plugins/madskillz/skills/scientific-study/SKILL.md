@@ -129,7 +129,10 @@ a PR into the default branch of `jmresearch/research` (per `git-workflow.md`). T
 PR description summarizes: the study (and whether it is novel or a
 replication/validation), how each review cycle changed the paper, any **residual
 findings**, any domain **experts** consulted or minted (and any unmet-expertise halt),
-and the compliance outcomes. Report the PR URL. The human reviews and merges there.
+and the compliance outcomes. If this run **minted or updated** any experts, also open the
+**separate bundled madskillz PR** that ships them (per `git-workflow.md` §4.1) and link it from
+the research PR's "Domain experts" section — minted experts live in the madskillz repo, not in
+`jmresearch/research`. Report the PR URL. The human reviews and merges there.
 
 ## Step 7 — Human-review follow-ups
 
