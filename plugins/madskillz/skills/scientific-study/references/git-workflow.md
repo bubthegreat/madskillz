@@ -205,6 +205,16 @@ gh -R jmresearch/research pr create \
 
 Report the PR URL. Do **not** merge. The human reviews and merges the PR.
 
+### 4.1 Publish staged experts (separate madskillz PR)
+
+If this run minted or updated any experts (the domain-coverage triage did so with `defer-publish`),
+publish them now as **one bundled PR to `bubthegreat/madskillz`** per ask-an-expert's
+`references/expert-writeback.md` (its run-slug is this study's `<topic>__<research-short-name>`): it
+patch-bumps `plugin.json`, pushes the `experts/<run-slug>` branch, and opens the PR. This is a
+**separate** PR from the research PR above — the experts belong to madskillz, not to
+`jmresearch/research`. Capture its URL to link in the research PR's "Domain experts" section. If no
+expert was minted this run, skip. `gh`/push failure handling is the same as above — never fake a PR.
+
 ## 5. Human-review follow-ups (Step 7)
 
 Apply the requested change, re-gate it (see `review-loop.md`), then add it as a
@@ -283,5 +293,6 @@ See COMPLIANCE.md / ATTRIBUTIONS.md.>
 
 ### Domain experts
 <Experts consulted or minted for this review (each `experts/<name>.md`), any residual
-expertise gap the adversarial reviewer noted, or "none".>
+expertise gap the adversarial reviewer noted, or "none". For experts **minted/updated** this run,
+link the bundled madskillz PR that ships them (opened per §4.1).>
 ```
