@@ -218,7 +218,7 @@ test -f "$F" || echo "MISSING FILE"
 for p in '~/.madskillz/experts/repo.git' 'experts/<run-slug>' \
          'gh pr create -R bubthegreat/madskillz' 'defer-publish' \
          'Fail-closed halt' 'never fake'; do
-  grep -qF "$p" "$F" && echo "ok: $p" || echo "MISSING: $p"
+  grep -qiF "$p" "$F" && echo "ok: $p" || echo "MISSING: $p"
 done
 ```
 Expected: six `ok:` lines, no `MISSING`. Any `MISSING` line names an anchor to add to the file.
