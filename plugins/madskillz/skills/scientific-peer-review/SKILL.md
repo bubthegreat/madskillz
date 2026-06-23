@@ -86,7 +86,11 @@ escalates "out of my depth on X"), check whether the panel credibly covers the p
 domain(s). If a central claim needs expertise none of the standing reviewers have, write a
 `requested-expert.md` (domain; why — which claims/sections; the questions it must answer; who
 raised it) and resolve it with the **`ask-an-expert`** skill — reuse an existing
-`experts/<name>.md` or mint one via its finder. Add the resolved expert to the panel as an
+`experts/<name>.md` or mint one via its finder. When invoked inside a study run, pass the study's
+**run-id (`<topic>__<research-short-name>`) and `defer-publish`** so a minted expert is committed to
+the madskillz sync clone on the run's branch and **bundled into one PR opened at study end** (see
+ask-an-expert's `references/expert-writeback.md`) — never stored in the research project. Add the
+resolved expert to the panel as an
 additional reviewer for the relevant claims; it returns the same report shape. A newly minted
 or updated expert is then **challenged once** by the adversarial reviewer: if a credentials gap
 is found, the finder gets one revision; on re-check the expert is accepted, noted with a
