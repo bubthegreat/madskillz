@@ -63,7 +63,7 @@ There is no second finder↔adversarial round. One attempt, then accept-with-not
 ## Output
 
 The path to the ready `experts/<name>.md` (reused, created, or updated) — for a minted/updated
-expert this is its path inside the run's `expert-writeback.md` worktree — plus a one-line note on
+expert this is its path inside the run's worktree (see `expert-writeback.md`) — plus a one-line note on
 which and why, and (when published immediately) the PR URL; or an honest "expertise not
 establishable" with the reason. Deferred (in-study) minting leaves publishing to the study's
 end-of-run step.

@@ -83,7 +83,7 @@ Write or edit the file in the worktree, then commit just that file:
 
 ```bash
 # write/edit "$WT/plugins/madskillz/skills/ask-an-expert/experts/<name>.md"
-#   per ../references/expert-format.md (with a dated Provenance line)
+#   per expert-format.md (with a dated Provenance line)
 git -C "$WT" add "plugins/madskillz/skills/ask-an-expert/experts/<name>.md"
 git -C "$WT" commit -m "experts: mint <name> (<source>)
 
@@ -155,7 +155,7 @@ Patch bump <old> → <new>.
 ## Failure handling
 
 - `gh` missing / unauthenticated → **stop**; tell the user to run `gh auth login` (suggest the `!`
-  prefix). **never fake a PR URL.**
+  prefix). **Never fake a PR URL.**
 - `git push` / `gh pr create` fails (incl. transient `unexpected EOF`) → retry 2–3×; the commits
   already live on `experts/<run-slug>` in the bare repo, so report honestly and offer manual push.
   Never claim a PR that did not open.

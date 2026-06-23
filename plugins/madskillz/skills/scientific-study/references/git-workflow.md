@@ -212,7 +212,7 @@ publish them now as **one bundled PR to `bubthegreat/madskillz`** per ask-an-exp
 `references/expert-writeback.md` (its run-slug is this study's `<topic>__<research-short-name>`): it
 patch-bumps `plugin.json`, pushes the `experts/<run-slug>` branch, and opens the PR. This is a
 **separate** PR from the research PR above — the experts belong to madskillz, not to
-`jmresearch/research`. Capture its URL to link in the research PR's "Domain experts" section. If no
+`jmresearch/research`. Capture its URL and **insert it into the already-open research PR's "Domain experts" section** as a follow-up edit — the research PR from §4 is already open, so add the link with `gh pr edit -R jmresearch/research <number> --body-file <updated body>` (or a `gh pr comment`). Never leave an unfilled link placeholder. If no
 expert was minted this run, skip. `gh`/push failure handling is the same as above — never fake a PR.
 
 ## 5. Human-review follow-ups (Step 7)
