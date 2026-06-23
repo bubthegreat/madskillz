@@ -16,7 +16,10 @@ description: >-
 Define, maintain, and query reusable **domain-expert personas**. Two ways in: ask an
 already-defined expert a question directly, or have one **found and defined** for a domain
 that isn't covered yet. Experts live in `experts/<concise-name>.md` and are reused across the
-whole `scientific-*` research family and standalone.
+whole `scientific-*` research family and standalone. The library is owned here but **lives in the
+madskillz repo** — so minting or updating an expert is a change to a canonical source: this skill
+**writes it back to madskillz and opens a PR** for human review (never leaving it in the project
+being researched or the throwaway plugin cache). See `references/expert-writeback.md`.
 
 ## Integrity stance (non-negotiable)
 
@@ -49,6 +52,12 @@ demands, check whether a standing reviewer or an existing expert already covers 
 extend rather than duplicate), and only when neither fits, write a new
 `experts/<concise-name>.md` per `references/expert-format.md`. The finder either routes to an
 existing persona, returns a ready expert file, or gives an honest "expertise not establishable."
+
+A minted or updated expert is **persisted to the canonical madskillz clone and published as a PR**
+per `references/expert-writeback.md`. A research caller (`scientific-peer-review`/`scientific-study`)
+passes a **run-id** and **defer-publish** so the run's experts bundle into one PR opened at study
+end; a standalone ask publishes immediately (one PR per expert). Reuse-with-no-change and a
+fail-closed "expertise not establishable" open **no PR**.
 
 ## Step 3 — Engage the expert
 
