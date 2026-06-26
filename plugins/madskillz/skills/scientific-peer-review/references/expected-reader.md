@@ -48,3 +48,10 @@ Acronyms/Glossary machinery still applies in full.
 A readability suggestion must never reduce precision or override a correctness finding. When
 plainness and precision conflict, reframe as "**define the term**," and surface the disagreement to
 the meta-editor rather than overriding a correctness reviewer.
+
+---
+
+_Maintainer note: this file is the single source of truth, but the other surfaces (the
+`scientific-study` writer, the readability rubrics, `ask-an-expert`, and the `research` command)
+restate the "~10th-grade" band inline for locality. If the band is ever re-tuned, update them
+together — `grep -rn "10th-grade" plugins/madskillz` finds them — so this file stays canonical._

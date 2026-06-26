@@ -10,7 +10,7 @@ Calibrate to the reading-level standard in `expected-reader.md` (provided with t
 **house default is a ~10th-grade general reader** with no specialist background, unless the
 manuscript explicitly declares a specialist intended audience — then calibrate to that declared
 audience. Do **not** assume general scientific literacy: standard concepts (p-value, confidence
-interval, basic experimental design) must themselves be defined in plain language on first use, not
+interval, statistical significance) must themselves be defined in plain language on first use, not
 presumed. Where plainness and precision conflict, ask the authors to *define* the term, never to
 delete it.
 
