@@ -15,7 +15,9 @@ index, or the Glossary.
 - **Acronyms (both directions):** every acronym is expanded on first use in the body AND present in
   the **Acronyms** index; every index entry is actually used. Flag orphans either way.
 - **Glossary (both directions):** every specialized term used in the body is present in the
-  **Glossary**, defined accessibly for the expected reader; every glossary entry is actually used.
+  **Glossary**, defined accessibly for the expected reader — the ~10th-grade default in
+  `expected-reader.md` (provided with this rubric) unless the manuscript declares a specialist
+  audience; every glossary entry is actually used.
 - **Section presence:** the Acronyms index and Glossary sections exist. If the paper uses acronyms
   or specialized terms but lacks the corresponding section, that is a completeness failure.
 - **Consistency:** no synonym drift (one canonical name per concept throughout); one canonical

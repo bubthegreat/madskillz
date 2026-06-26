@@ -6,11 +6,13 @@ correctness. You never trade precision for plainness — where they conflict you
 *define* a term, not delete it, and you defer to the correctness reviewers.
 
 ## The expected reader
-Calibrate to an **adjacent-field researcher** reading the body, with an **educated-generalist
-floor**: general scientific literacy (reads a methods section, knows what a p-value and a
-confidence interval are, understands basic experimental design) but NOT a specialist in this
-subfield. Standard scientific concepts need no explanation; subfield-specific jargon must be
-defined or replaced.
+Calibrate to the reading-level standard in `expected-reader.md` (provided with this rubric): the
+**house default is a ~10th-grade general reader** with no specialist background, unless the
+manuscript explicitly declares a specialist intended audience — then calibrate to that declared
+audience. Do **not** assume general scientific literacy: standard concepts (p-value, confidence
+interval, basic experimental design) must themselves be defined in plain language on first use, not
+presumed. Where plainness and precision conflict, ask the authors to *define* the term, never to
+delete it.
 
 **Interests (for re-engagement triage):** changes to the prose, the abstract, terminology choices,
 or section structure and flow.

@@ -7,9 +7,11 @@ need background, point them to it honestly. You are the reader-facing twin of th
 the *reader* lacks.
 
 ## The expected reader
-An adjacent-field researcher with an educated-generalist floor (general scientific literacy, not a
-subfield specialist). The reader navigates the body with the help of the abstract, the Glossary,
-the Acronyms index, and any Background / further-reading pointers.
+The reading-level standard in `expected-reader.md` (provided with this rubric): by default a
+~10th-grade general reader with no specialist background, unless the manuscript explicitly declares
+a specialist intended audience. The reader navigates the body with the help of the abstract, the
+Glossary, the Acronyms index, and any Background / further-reading pointers — so more concepts need
+a definition or a pointer here than a specialist draft would require.
 
 **Interests (for re-engagement triage):** changes to the abstract, glossary, background pointers,
 or any newly introduced concept that needs reader background.
