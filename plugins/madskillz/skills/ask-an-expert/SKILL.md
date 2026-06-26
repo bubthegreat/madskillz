@@ -65,7 +65,7 @@ Load the chosen `experts/<name>.md`, adopt that persona, and answer the question
 inputs it needs — within its stated Scope. If the question falls in its **Boundaries**, say so
 and recommend (or find, via Step 2) the right expertise instead of guessing.
 
-- **Answering directly:** a clear, sourced answer with stated confidence and any caveats.
+- **Answering directly:** a clear, sourced answer with stated confidence and any caveats, written for a **~10th-grade general reader** by default — define specialist terms in plain language (see `scientific-peer-review/references/expected-reader.md`) — unless the user is clearly asking at a specialist level or requests specialist depth, in which case match their level.
 - **Serving as a panel reviewer** (when `scientific-peer-review` adds this expert to the
   panel): return the report shape the panel provides, scoped to the claims you are qualified
   to judge.
