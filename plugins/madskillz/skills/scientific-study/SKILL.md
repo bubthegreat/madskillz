@@ -81,7 +81,11 @@ in `references/repo-layout.md`: cited work as numbered `[N]` citations (the defa
 style; the citation specialist may switch to author–date by field), data-derived values pointed
 to their **Figure/Table**, assumptions stated in **prose**, and speculation hedged in the
 **Discussion** with its caveats — do not assert unsupported claims, and do not invent data or
-citations. Write for the expected reader defined in `scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general reader** (no specialist background; standard concepts such as p-values are defined, not presumed), unless this study is deliberately framed for a specialist audience (see Step 1): the abstract doubles as the plain-language summary, define every
+citations. Write for the expected reader defined in
+`scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general
+reader** (no specialist background; standard concepts such as p-values are defined, not
+presumed), unless this study is deliberately framed for a specialist audience (see Step 1): the
+abstract doubles as the plain-language summary, define every
 acronym on first use and every specialized term in the glossary, and end the manuscript with the
 required back-matter — an **Acronyms** index, a **Glossary**, and an optional **Background /
 further reading** section (see `references/repo-layout.md`). Background readings must be verified
