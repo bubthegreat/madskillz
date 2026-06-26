@@ -39,10 +39,12 @@ and opened as a PR (see `git-workflow.md`):
 
 ## paper.md structure (required back-matter)
 
-The manuscript is written for an **adjacent-field researcher** with an **educated-generalist
-floor** (general scientific literacy, not a subfield specialist). The **abstract** doubles as the
-plain-language summary — a reader at that level grasps what was done and found from it alone. There
-is no separate lay-summary section.
+The manuscript is written for the expected reader defined in
+`scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general reader**
+with no specialist background (standard concepts such as p-values are defined in plain language, not
+presumed), unless the study explicitly declares a specialist intended audience. The **abstract**
+doubles as the plain-language summary — a reader at that level grasps what was done and found from
+it alone. There is no separate lay-summary section.
 
 End the manuscript with this back-matter, in this order:
 

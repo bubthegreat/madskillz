@@ -61,6 +61,12 @@ available; say so honestly when you cannot).
   paper's framing) and continue — the study is then framed honestly as a
   replication/validation, not as novel work.
 
+**Audience.** The study is written for a **~10th-grade general reader** by default (see Step 2 and
+`scientific-peer-review/references/expected-reader.md`). If it is deliberately aimed at a specialist
+audience, record that intended audience as explicit context in the brief and the paper's framing —
+the same honest-context discipline as a replication/validation study — so the drafting and the
+review panel both calibrate to it.
+
 Then establish the `<topic>` and a slugified `<research-short-name>` (propose a
 default, ask the user to confirm/override; validate as kebab-case). Resolve the repo
 and create the study branch **in an isolated per-study worktree** per
@@ -75,8 +81,7 @@ in `references/repo-layout.md`: cited work as numbered `[N]` citations (the defa
 style; the citation specialist may switch to author–date by field), data-derived values pointed
 to their **Figure/Table**, assumptions stated in **prose**, and speculation hedged in the
 **Discussion** with its caveats — do not assert unsupported claims, and do not invent data or
-citations. Write for the expected reader (adjacent-field body,
-educated-generalist floor): the abstract doubles as the plain-language summary, define every
+citations. Write for the expected reader defined in `scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general reader** (no specialist background; standard concepts such as p-values are defined, not presumed), unless this study is deliberately framed for a specialist audience (see Step 1): the abstract doubles as the plain-language summary, define every
 acronym on first use and every specialized term in the glossary, and end the manuscript with the
 required back-matter — an **Acronyms** index, a **Glossary**, and an optional **Background /
 further reading** section (see `references/repo-layout.md`). Background readings must be verified
