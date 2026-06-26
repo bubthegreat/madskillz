@@ -62,7 +62,7 @@ available inputs. The panel has two tiers; the coverage statement names which ra
 | Ethics & integrity (can veto) | `references/reviewers/ethics-integrity.md` |
 | Citation-integrity | `references/reviewers/citation-integrity.md` |
 
-**Readability tier (always, for reader-facing drafts):**
+**Readability tier (always, for reader-facing drafts; calibrated to `references/expected-reader.md`):**
 
 | Reviewer | Rubric |
 |---|---|
@@ -110,9 +110,11 @@ faked). Record the expert(s) consulted/minted and any halt in the coverage state
   pass.
 
 Dispatch each reviewer with its own rubric file **and** `references/review-report-format.md`, and
-have it return that shape — listing the inputs it had and any checks it skipped. The rubrics carry
-only their unique checks and severity rules; this shared output contract is stated once here rather
-than repeated in each.
+have it return that shape — listing the inputs it had and any checks it skipped. Dispatch the
+**readability-tier** reviewers (plain-language, terminology & acronym, accessibility / background)
+with `references/expected-reader.md` as well — it defines the reading level they judge against. The
+rubrics carry only their unique checks and severity rules; these shared contracts are stated once
+here rather than repeated in each.
 
 ## Step 3 — Meta-editor synthesis
 
