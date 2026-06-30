@@ -75,23 +75,38 @@ colliding on a shared checkout.
 
 ## Step 2 — Draft the paper and artifacts
 
-Write `paper.md` and produce/organize any `data/`, `scripts/`, `assets/` the study
-needs. Be provenance-honest, using the **citation, cross-reference & provenance conventions**
-in `references/repo-layout.md`: cited work as numbered `[N]` citations (the default house
-style; the citation specialist may switch to author–date by field), data-derived values pointed
-to their **Figure/Table**, assumptions stated in **prose**, and speculation hedged in the
-**Discussion** with its caveats — do not assert unsupported claims, and do not invent data or
-citations. When generating data figures, follow the visualization conventions in `references/visualization.md` — seaborn is the required default library; see that file for the PEP 723 dependency header, theme setup, and when to fall back to matplotlib. Write for the expected reader defined in
+### Step 2a — Write the story spine
+
+After gathering evidence (from Step 1 deep-research or initial synthesis), write `story-spine.md`
+in the study folder using the template in `references/story-spine.md`. Complete all five fields:
+starting hypothesis, what the data showed, the turn, the one-sentence arc, and the abstract spine
+(3 sentences, 10th-grade). Commit `story-spine.md` alone as `narrative: story spine for <slug>`
+before writing any prose in `paper.md`.
+
+### Step 2b — Draft the paper
+
+Open `paper.md` with `story-spine.md` visible. The abstract must derive from the **Abstract
+Spine** field. Each Results/Analysis section must advance the **One-Sentence Arc** — a section
+that could be removed without changing the story is either misplaced or should be cut.
+
+Write `paper.md` and produce/organize any `data/`, `scripts/`, `assets/` the study needs. Be
+provenance-honest, using the **citation, cross-reference & provenance conventions** in
+`references/repo-layout.md`: cited work as numbered `[N]` citations (the default house style;
+the citation specialist may switch to author–date by field), data-derived values pointed to their
+**Figure/Table**, assumptions stated in **prose**, and speculation hedged in the **Discussion**
+with its caveats — do not assert unsupported claims, and do not invent data or citations. When
+generating data figures, follow the visualization conventions in `references/visualization.md` —
+seaborn is the required default library; see that file for the PEP 723 dependency header, theme
+setup, and when to fall back to matplotlib. Write for the expected reader defined in
 `scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general
-reader** (no specialist background; standard concepts such as p-values are defined, not
-presumed), unless this study is deliberately framed for a specialist audience (see Step 1): the
-abstract doubles as the plain-language summary, define every
-acronym on first use and every specialized term in the glossary, and end the manuscript with the
-required back-matter — an **Acronyms** index, a **Glossary**, and an optional **Background /
-further reading** section (see `references/repo-layout.md`). Background readings must be verified
-sources or clearly-marked topic suggestions, never fabricated citations. If this is a
-replication/validation study (per Step 1),
-frame it as such. Commit the initial draft (`draft: initial …`).
+reader** (no specialist background; standard concepts such as p-values are defined, not presumed),
+unless this study is deliberately framed for a specialist audience (see Step 1): the abstract
+doubles as the plain-language summary, define every acronym on first use and every specialized
+term in the glossary, and end the manuscript with the required back-matter — an **Acronyms**
+index, a **Glossary**, and an optional **Background / further reading** section (see
+`references/repo-layout.md`). Background readings must be verified sources or clearly-marked
+topic suggestions, never fabricated citations. If this is a replication/validation study (per
+Step 1), frame it as such. Commit the initial draft (`draft: initial <slug>`).
 
 ## Step 3 — Agentic peer-review quality-gate loop
 

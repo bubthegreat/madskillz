@@ -40,6 +40,22 @@ or section structure and flow.
   conflict, reframe as "define the term," and surface the disagreement to the meta-editor rather
   than overriding a correctness reviewer.
 
+## Narrative arc check
+
+When `story-spine.md` is present in the study folder, check each Results/Analysis section
+against the **One-Sentence Arc** field:
+
+> Does this section advance the one-sentence arc? Could it be removed without affecting the
+> story the paper is telling?
+
+A section that is not load-bearing is either misplaced or should be cut. Severity: **major**.
+A paper that does not tell a coherent story is not publication-ready regardless of factual
+accuracy; this finding blocks the quality gate until resolved.
+
+If `story-spine.md` is absent (legacy papers or papers predating this check), skip this check
+and note its absence in the coverage statement.
+
 ## Output
-Readability findings are normally `minor`; a missing or badly misleading abstract may rise to
-`major`, never `blocker`.
+Readability findings are normally `minor`; a missing or badly misleading abstract, or a paper
+failing the narrative arc check, may rise to `major`. Narrative arc failures block the quality
+gate. `blocker` severity is reserved for the correctness tier.
