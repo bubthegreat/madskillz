@@ -69,6 +69,7 @@ available inputs. The panel has two tiers; the coverage statement names which ra
 | Plain-language / clarity | `references/reviewers/plain-language.md` |
 | Terminology & acronym | `references/reviewers/terminology-acronyms.md` |
 | Accessibility / background | `references/reviewers/accessibility-background.md` |
+| Visualization opportunities ("This should have been a visual") | `references/reviewers/visualization-opportunities.md` |
 
 The readability tier defers to the correctness tier in every conflict (presentation
 never outranks correctness); its findings are normally `minor` and never `blocker`.
