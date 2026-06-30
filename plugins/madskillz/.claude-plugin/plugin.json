@@ -1,6 +1,9 @@
 {
   "name": "madskillz",
   "description": "Bub's personal skills bundle",
-  "version": "0.14.0",
-  "author": { "name": "Bub Taylor", "email": "bubthegreat@gmail.com" }
+  "version": "0.15.0",
+  "author": { "name": "Bub Taylor", "email": "bubthegreat@gmail.com" },
+  "skills": [
+    { "name": "promote-study-to-public", "path": "skills/promote-study-to-public/SKILL.md" }
+  ]
 }
