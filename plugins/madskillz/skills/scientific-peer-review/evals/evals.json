@@ -9,7 +9,7 @@
       "grading_criteria": [
         "Skill triggers",
         "Asks for the draft if not actually provided",
-        "Produces the correctness-tier reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity) and the readability-tier reports (plain-language, terminology-acronym, accessibility-background)",
+        "Produces the correctness-tier reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity, claims-ledger) and the readability-tier reports (plain-language, terminology-acronym, accessibility-background)",
         "Each finding has severity + location + required change",
         "Emits one ranked meta-editor revision plan",
         "Includes a coverage statement listing which checks ran"
@@ -54,6 +54,18 @@
         "Flags the non-standard section cross-reference (§4) — should be spelled out as 'Section 4'",
         "Recognizes that a psychology study's field norm is author–date and recommends switching from numeric (numbered [N] is the default house style, but the specialist switches by field/journal)",
         "Requires one consistent citation system throughout; a real/unresolvable citation stays a blocker, a format mismatch is major"
+      ]
+    },
+    {
+      "id": "unsupported-consensus-claims",
+      "prompt": "Is this ready to submit? [draft's abstract and intro assert 'the standard approach is X', 'teams typically retry blindly', and 'the most common way to solve this' — none carries a citation; the technique named as 'most common' was invented in this very paper]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Claims-ledger reviewer audits the abstract/intro sentence by sentence and classifies each declarative sentence (data-derived / cited / definitional-methodological / marked speculation / UNSUPPORTED)",
+        "Each uncited prevalence claim ('standard approach', 'typically', 'most common') is flagged as an UNSUPPORTED world-claim at blocker severity, quoted verbatim with its location",
+        "Each flag states the two legal repairs: attach a supporting citation, or rewrite as a claim about this study only",
+        "Calling the paper's own newly invented technique 'the most common way' is caught as fabricated consensus",
+        "The report includes the per-section claims ledger (bucket counts + UNSUPPORTED list)"
       ]
     },
     {

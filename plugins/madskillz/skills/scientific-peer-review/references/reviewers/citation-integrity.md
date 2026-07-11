@@ -20,7 +20,9 @@ expects (see "Citation style & format" below). You own the format decision.
   reserved DOI prefix `10.1000` (DOI-handbook example), `arXiv:0000.00000`, `example.com`
   URLs, or any obviously templated id. These read as fabricated/placeholder, not real.
 - Each citation plausibly supports the *specific* claim it is attached to, not merely the
-  same topic.
+  same topic. Prevalence/consensus/priority claims ("most common," "widely used," "first
+  to," "standard approach") get the highest scrutiny here: the source must support the
+  prevalence or priority statement itself, not just discuss the technique.
 
 ## Resolution (when tools/network are available)
 - Verify that identifiers actually resolve to the cited work. Prefer reusing the

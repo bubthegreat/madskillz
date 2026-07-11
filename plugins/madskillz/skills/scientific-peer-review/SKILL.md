@@ -4,7 +4,8 @@ description: >-
   Use when the user wants to peer-review a scientific paper or draft — find out what
   a tough reviewer would say, pressure-test a study for statistical, reproducibility,
   consistency, ethics, or citation problems, verify whether citations are real and
-  support their claims, or get a draft "peer-review ready" before submission. Trigger
+  support their claims, catch confidently-wrong or unsupported statements
+  sentence-by-sentence, or get a draft "peer-review ready" before submission. Trigger
   on phrases like "review this paper," "what would Reviewer 2 say," "is this study
   sound," "check my stats," "are these citations real," or "is this ready to submit."
   Reviews only — does not write or revise; returns one adjudicated, severity-ranked
@@ -61,6 +62,7 @@ available inputs. The panel has two tiers; the coverage statement names which ra
 | Statistical / methodological | `references/reviewers/statistical.md` |
 | Ethics & integrity (can veto) | `references/reviewers/ethics-integrity.md` |
 | Citation-integrity | `references/reviewers/citation-integrity.md` |
+| Claims-ledger (sentence-level support audit) | `references/reviewers/claims-ledger.md` |
 
 **Readability tier (always, for reader-facing drafts; calibrated to `references/expected-reader.md`):**
 
