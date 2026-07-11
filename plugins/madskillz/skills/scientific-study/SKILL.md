@@ -97,7 +97,26 @@ the citation specialist may switch to author–date by field), data-derived valu
 with its caveats — do not assert unsupported claims, and do not invent data or citations. When
 generating data figures, follow the visualization conventions in `references/visualization.md` —
 seaborn is the required default library; see that file for the PEP 723 dependency header, theme
-setup, and when to fall back to matplotlib. Write for the expected reader defined in
+setup, and when to fall back to matplotlib.
+
+**Claim discipline (sentence-level contract).** Every declarative sentence in `paper.md` is one
+of exactly four kinds, and shows its support in-line:
+
+1. **Data-derived** — points at its Figure/Table (or `data/` artifact).
+2. **Cited** — carries a citation that supports the *specific* claim made.
+3. **Definitional / methodological** — defines a term, or states what *this study* did or assumed.
+4. **Marked speculation** — explicitly hedged, and located in the Discussion.
+
+A sentence that fits none of these gets rewritten or cut before commit. Prevalence, consensus,
+and priority claims — "most common," "widely used," "standard approach," "typically,"
+"routinely," "commonly," "well known," "often," "first to" — are claims about the world: they
+are kind 2 (cited) or they are rewritten as kind 3 claims about this study ("our baseline
+retries every failure blindly," not "the standard response is to retry blindly"). The abstract
+and introduction follow the same contract as every other section — they are where unsupported
+world-claims concentrate, and the `claims-ledger` reviewer audits them sentence by sentence in
+Step 3.
+
+Write for the expected reader defined in
 `scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general
 reader** (no specialist background; standard concepts such as p-values are defined, not presumed),
 unless this study is deliberately framed for a specialist audience (see Step 1): the abstract

@@ -82,6 +82,17 @@
       ]
     },
     {
+      "id": "claim-discipline-drafting",
+      "prompt": "Draft the abstract and introduction for this study and get it ready for review. [study invented a brand-new technique, benchmarked it only against a self-written baseline, and performed no literature review — there are no citations available]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Every declarative sentence in the draft is one of the four claim kinds: data-derived (points at Figure/Table), cited, definitional/methodological (about this study), or marked speculation in the Discussion",
+        "No uncited prevalence/consensus/priority claims ('most common', 'widely used', 'standard approach', 'typically', 'routinely', 'well known', 'first to') appear anywhere, including the abstract and introduction",
+        "The abstract hook derives from the study's own measured gap or finding, not from an invented state of the field",
+        "World-claims the draft cannot cite are rewritten as claims about this study (e.g. 'our baseline retries every failure blindly'), not asserted"
+      ]
+    },
+    {
       "id": "readability-10th-grade-default",
       "prompt": "Draft a paper on <topic> and get it ready to publish (general audience).",
       "should_trigger": true,
