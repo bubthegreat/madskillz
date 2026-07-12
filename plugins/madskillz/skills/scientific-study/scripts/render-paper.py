@@ -124,13 +124,80 @@ def render(study_dir: Path, out_dir: Path | None = None) -> dict:
     return {"pdf": pdf, "epub": epub, "title": title}
 
 
+def render_short(study_dir: Path, out_dir: Path | None = None) -> dict:
+    """Render paper-short.md to a two-column short-form PDF (no EPUB, no TOC).
+
+    Layout is passed via a metadata file because pandoc's Typst template rejects
+    an inline `-V margin='{...}'` map.
+    """
+    study_dir = study_dir.resolve()
+    paper = study_dir / "paper-short.md"
+    if not paper.exists():
+        raise FileNotFoundError(f"no paper-short.md in {study_dir}")
+
+    missing = [t for t, ok in tools_available().items() if not ok]
+    if missing:
+        raise RuntimeError(f"missing required tools on PATH: {', '.join(missing)}")
+
+    slug = study_dir.name
+    out_dir = out_dir or (study_dir / "build")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    title, body = split_title(paper.read_text(encoding="utf-8"), fallback=slug)
+    author = derive_author(study_dir)
+    date = readme_field(study_dir, "Created")
+
+    src = out_dir / f"{slug}-short.src.md"
+    src.write_text(body, encoding="utf-8")
+    meta = out_dir / f"{slug}-short.meta.yaml"
+    meta_lines = [
+        "margin:",
+        "  x: 1.6cm",
+        "  y: 1.7cm",
+        "fontsize: 10pt",
+        "columns: 2",
+        f"title: {title}",
+    ]
+    if author:
+        meta_lines.append(f"author: {author}")
+    if date:
+        meta_lines.append(f"date: {date}")
+    meta.write_text("\n".join(meta_lines) + "\n", encoding="utf-8")
+
+    pdf = out_dir / f"{slug}-short.pdf"
+    try:
+        subprocess.run(
+            [
+                "pandoc", str(src), "--from", "gfm", "--pdf-engine=typst",
+                "--resource-path", str(study_dir),
+                "--metadata-file", str(meta),
+                "-o", str(pdf),
+            ],
+            cwd=study_dir, check=True, capture_output=True, text=True,
+        )
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"short-form render failed:\n{e.stderr or e.stdout}") from e
+    finally:
+        src.unlink(missing_ok=True)
+        meta.unlink(missing_ok=True)
+
+    return {"pdf": pdf, "title": title}
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) != 2:
-        print("usage: render-paper.py <study_dir>", file=sys.stderr)
+    flags = {a for a in argv[1:] if a.startswith("--")}
+    positional = [a for a in argv[1:] if not a.startswith("--")]
+    if len(positional) != 1 or flags - {"--short"}:
+        print("usage: render-paper.py <study_dir> [--short]", file=sys.stderr)
         return 2
-    out = render(Path(argv[1]))
-    print(f"wrote {out['pdf']}")
-    print(f"wrote {out['epub']}")
+    study_dir = Path(positional[0])
+    if "--short" in flags:
+        out = render_short(study_dir)
+        print(f"wrote {out['pdf']}")
+    else:
+        out = render(study_dir)
+        print(f"wrote {out['pdf']}")
+        print(f"wrote {out['epub']}")
     return 0
 
 
