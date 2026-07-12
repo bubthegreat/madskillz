@@ -115,6 +115,18 @@
       ]
     },
     {
+      "id": "short-form-alongside-full",
+      "prompt": "Produce a study on <topic> and get it ready to publish.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "After the full paper passes the quality gate and renders, also produces a condensed paper-short.md and a two-column build/<slug>-short.pdf (Step 5b) — in ADDITION to the full paper, never replacing it",
+        "The short form is a specialist condensation: drops the glossary, acronyms index, background, and inline definitions; keeps a 1-paragraph abstract, the figures, the 1-2 key tables, and references",
+        "Introduces NO number that is not already in paper.md / data/ (no new analysis)",
+        "Re-gates the short form with the claims-ledger and adversarial reviewers as a compression check and fixes any dropped-caveat / reintroduced-overclaim / mislabeled-metric finding",
+        "Targets <= 5 pages excluding references; if pandoc/typst are unavailable, keeps paper-short.md and skips the PDF with a recorded note, never faking a build"
+      ]
+    },
+    {
       "id": "no-trigger-control",
       "prompt": "What's the capital of France?",
       "should_trigger": false,
