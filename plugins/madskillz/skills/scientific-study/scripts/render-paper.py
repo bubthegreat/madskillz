@@ -156,13 +156,17 @@ def render_short(study_dir: Path, out_dir: Path | None = None) -> dict:
         "  y: 1.7cm",
         "fontsize: 10pt",
         "columns: 2",
-        f"title: {title}",
     ]
-    if author:
-        meta_lines.append(f"author: {author}")
-    if date:
-        meta_lines.append(f"date: {date}")
     meta.write_text("\n".join(meta_lines) + "\n", encoding="utf-8")
+
+    # title/author/date are passed as pandoc --metadata flags (opaque strings,
+    # not YAML) so a colon in the title (e.g. "…becomes useful: a case study")
+    # can't break parsing of the metadata file.
+    text_meta = ["--metadata", f"title={title}"]
+    if author:
+        text_meta += ["--metadata", f"author={author}"]
+    if date:
+        text_meta += ["--metadata", f"date={date}"]
 
     pdf = out_dir / f"{slug}-short.pdf"
     try:
@@ -171,6 +175,7 @@ def render_short(study_dir: Path, out_dir: Path | None = None) -> dict:
                 "pandoc", str(src), "--from", "gfm", "--pdf-engine=typst",
                 "--resource-path", str(study_dir),
                 "--metadata-file", str(meta),
+                *text_meta,
                 "-o", str(pdf),
             ],
             cwd=study_dir, check=True, capture_output=True, text=True,
