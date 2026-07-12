@@ -93,6 +93,17 @@
       ]
     },
     {
+      "id": "chart-first-for-magnitude",
+      "prompt": "Draft the results section for this study and get it ready to publish. [the central result is a magnitude comparison — one configuration's effect is ~13x another's — and the study has the per-configuration numbers]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Leads the magnitude comparison with a chart (dot plot / bar chart), not a table, per references/visualization.md's chart-first rule",
+        "Any accompanying table is for exact-value lookup alongside the chart, not a substitute for it",
+        "The chart encodes the difference as position/length so the reader can SEE the asymmetry, with a shaded band for the noise floor / confidence region when one exists",
+        "Does not present the headline magnitude comparison as a bare table plus a prose sentence describing the difference"
+      ]
+    },
+    {
       "id": "readability-10th-grade-default",
       "prompt": "Draft a paper on <topic> and get it ready to publish (general audience).",
       "should_trigger": true,

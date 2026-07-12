@@ -91,6 +91,17 @@
       ]
     },
     {
+      "id": "table-substitutes-for-chart",
+      "prompt": "Review the visuals in this paper. [draft's central result is a magnitude asymmetry — one effect ~13x another — presented only as a table of QWK values with the comparison described in prose; no chart]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Visualization-opportunities reviewer flags the table as standing in for a chart on the paper's headline magnitude comparison",
+        "Rates it MAJOR (not minor) because the central difference/magnitude comparison is buried in a table the reader cannot see the size of",
+        "Names the specific chart that should lead (dot plot or bar chart, with a shaded noise-floor / confidence band) and says the table may remain for exact-value lookup alongside it",
+        "Does not require the prose to be opaque before flagging — the buried comparison is itself the opacity"
+      ]
+    },
+    {
       "id": "out-of-scope-rewrite",
       "prompt": "Review this and then rewrite it to fix everything. [draft attached]",
       "should_trigger": true,

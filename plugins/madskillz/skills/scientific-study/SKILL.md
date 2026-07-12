@@ -97,7 +97,11 @@ the citation specialist may switch to author–date by field), data-derived valu
 with its caveats — do not assert unsupported claims, and do not invent data or citations. When
 generating data figures, follow the visualization conventions in `references/visualization.md` —
 seaborn is the required default library; see that file for the PEP 723 dependency header, theme
-setup, and when to fall back to matplotlib.
+setup, and when to fall back to matplotlib. **Lead with a chart, not a table, whenever the point
+of a comparison is its magnitude, difference, trend, or ranking** (see visualization.md's
+chart-first rule): a table that lists numbers the reader is meant to *feel the relative size of*
+is a chart rendered illegible. Ship the table too when exact values matter, but let the chart
+carry the comparison.
 
 **Claim discipline (sentence-level contract).** Every declarative sentence in `paper.md` is one
 of exactly four kinds, and shows its support in-line:
