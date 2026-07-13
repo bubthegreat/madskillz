@@ -22,4 +22,9 @@ The story the paper tells. Every section of paper.md must advance this sentence.
 
 ## Abstract spine (10th-grade, 3 sentences)
 Hook → finding → call to action.
+The hook is built from the study's own material — its measured gap, motivating question, or
+finding. A statement about what the field commonly does or believes ("most common," "widely
+used," "standard approach") may serve as the hook only when the paper carries a citation
+supporting it; otherwise the hook states the study's own problem ("our baseline retries
+blindly"), not the world's.
 Becomes the foundation of the abstract in paper.md; body prose is calibrated separately for the intended reader.

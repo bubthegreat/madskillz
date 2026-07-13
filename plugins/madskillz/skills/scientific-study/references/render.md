@@ -96,3 +96,18 @@ End the commit message with the `Co-Authored-By:` trailer per `git-workflow.md`.
 | `pandoc: command not found` inside `uv run` | PATH not inherited | Set `PATH` before running `uv run` |
 | Figures missing from the PDF/EPUB | image paths not resolving | Confirm `assets/…` paths are relative and the files exist in the study folder |
 | PDF render error from typst | Typst version mismatch / unsupported construct | Update typst; check the passed-through error for the offending line |
+
+## Short-form render (two-column condensation)
+
+The condensed `paper-short.md` (see `references/short-form.md`) renders to a dense two-column PDF,
+**no EPUB, no table of contents**:
+
+```bash
+uv run <skill>/scripts/render-paper.py <topic>/<research-short-name> --short
+```
+
+It writes `build/<research-short-name>-short.pdf`. Layout is fixed in the script — `columns: 2`,
+`fontsize: 10pt`, `margin {x: 1.6cm, y: 1.7cm}` — passed via a pandoc `--metadata-file` (an inline
+`-V margin='{...}'` map is rejected by pandoc's Typst template). The full-paper render is unchanged;
+`--short` only adds the condensed PDF. Same fail-closed rule: if `pandoc`/`typst` are missing, skip
+the short PDF and say so — never fake a build.

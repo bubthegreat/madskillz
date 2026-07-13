@@ -97,7 +97,30 @@ the citation specialist may switch to author–date by field), data-derived valu
 with its caveats — do not assert unsupported claims, and do not invent data or citations. When
 generating data figures, follow the visualization conventions in `references/visualization.md` —
 seaborn is the required default library; see that file for the PEP 723 dependency header, theme
-setup, and when to fall back to matplotlib. Write for the expected reader defined in
+setup, and when to fall back to matplotlib. **Lead with a chart, not a table, whenever the point
+of a comparison is its magnitude, difference, trend, or ranking** (see visualization.md's
+chart-first rule): a table that lists numbers the reader is meant to *feel the relative size of*
+is a chart rendered illegible. Ship the table too when exact values matter, but let the chart
+carry the comparison.
+
+**Claim discipline (sentence-level contract).** Every declarative sentence in `paper.md` is one
+of exactly four kinds, and shows its support in-line:
+
+1. **Data-derived** — points at its Figure/Table (or `data/` artifact).
+2. **Cited** — carries a citation that supports the *specific* claim made.
+3. **Definitional / methodological** — defines a term, or states what *this study* did or assumed.
+4. **Marked speculation** — explicitly hedged, and located in the Discussion.
+
+A sentence that fits none of these gets rewritten or cut before commit. Prevalence, consensus,
+and priority claims — "most common," "widely used," "standard approach," "typically,"
+"routinely," "commonly," "well known," "often," "first to" — are claims about the world: they
+are kind 2 (cited) or they are rewritten as kind 3 claims about this study ("our baseline
+retries every failure blindly," not "the standard response is to retry blindly"). The abstract
+and introduction follow the same contract as every other section — they are where unsupported
+world-claims concentrate, and the `claims-ledger` reviewer audits them sentence by sentence in
+Step 3.
+
+Write for the expected reader defined in
 `scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general
 reader** (no specialist background; standard concepts such as p-values are defined, not presumed),
 unless this study is deliberately framed for a specialist audience (see Step 1): the abstract
@@ -146,11 +169,33 @@ embedded. Commit them so they ship in the PR (`render: build PDF + EPUB …`). `
 and `typst` must be on PATH — install per `references/render.md` if missing; if
 neither can be installed, publish without the artifacts and say so. Never fake a build.
 
+## Step 5b — Condensed short form (always, in addition to the full paper)
+
+Produce a specialist short-form summary **alongside** the full paper — never replacing it — per
+`references/short-form.md`:
+
+1. **Author `paper-short.md`** — a specialist condensation of the gated `paper.md`: a 1-paragraph
+   abstract, compressed Introduction/Methods/Discussion, Results that lean on the existing figures
+   and the 1–2 key tables, Limitations in one dense paragraph, References kept; Glossary, Acronyms,
+   Background, and inline definitions dropped. Introduce **no number** not already in `paper.md` /
+   `data/`; preserve every caveat in compressed form.
+2. **Re-gate for compression drift** — run `scientific-peer-review`'s **claims-ledger** and
+   **adversarial** reviewers on `paper-short.md` as a compression check (dropped caveat,
+   reintroduced overclaim, mislabeled metric), plus a numbers-trace check. Fix blocker/major
+   findings; a finding that traces to the full paper is fixed in **both**; disclose residuals.
+3. **Render two-column** — `uv run <skill>/scripts/render-paper.py <topic>/<research-short-name>
+   --short` → `build/<slug>-short.pdf`, target ≤5 pages excluding references. No EPUB. Best-effort:
+   if `pandoc`/`typst` are missing, keep `paper-short.md` and skip the PDF with a recorded note —
+   never fake a build.
+
+Commit `paper-short.md` + `build/<slug>-short.pdf`; the PR (Step 6) ships them in addition to the
+full paper and notes the short form.
+
 ## Step 6 — Publish as a PR
 
 Lay out the folder per `references/repo-layout.md`, push the study branch, and open
 a PR into the default branch of `jmresearch/research` (per `git-workflow.md`). The
-PR description summarizes: the study (and whether it is novel or a
+PR description summarizes: the condensed short form (paper-short.md + build/<slug>-short.pdf), the study (and whether it is novel or a
 replication/validation), how each review cycle changed the paper, any **residual
 findings**, any domain **experts** consulted or minted (and any unmet-expertise halt),
 and the compliance outcomes. If this run **minted or updated** any experts, also open the
@@ -192,6 +237,12 @@ dialogue). The study may also **read** this transcript for refinement context wh
 - Paper needs expertise the panel lacks → the review's domain-coverage triage mints/reuses a
   domain expert via `ask-an-expert`; if adequate expertise cannot be established for a central
   claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
+- Short form must never be more (or less) honest than the full paper → it inherits and discloses the
+  same residuals; a re-gate finding that traces to the full paper is fixed in both (see Step 5b).
+- `pandoc`/`typst` missing for the short render → keep `paper-short.md`, skip the short PDF, say so;
+  never fake (same as the full render).
+- Human-review follow-up (Step 7) that changes claims/numbers → regenerate the short form (re-gate +
+  re-render) so it does not drift from the paper.
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
 - Asked to blog the study / write it up in the owner's voice → out of scope here; use the standalone
   `blog` skill (the study still saves `journey/transcript.md` as provenance, Step 8).

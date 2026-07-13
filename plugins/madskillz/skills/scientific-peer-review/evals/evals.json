@@ -9,7 +9,7 @@
       "grading_criteria": [
         "Skill triggers",
         "Asks for the draft if not actually provided",
-        "Produces the correctness-tier reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity) and the readability-tier reports (plain-language, terminology-acronym, accessibility-background)",
+        "Produces the correctness-tier reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity, claims-ledger) and the readability-tier reports (plain-language, terminology-acronym, accessibility-background)",
         "Each finding has severity + location + required change",
         "Emits one ranked meta-editor revision plan",
         "Includes a coverage statement listing which checks ran"
@@ -57,6 +57,18 @@
       ]
     },
     {
+      "id": "unsupported-consensus-claims",
+      "prompt": "Is this ready to submit? [draft's abstract and intro assert 'the standard approach is X', 'teams typically retry blindly', and 'the most common way to solve this' — none carries a citation; the technique named as 'most common' was invented in this very paper]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Claims-ledger reviewer audits the abstract/intro sentence by sentence and classifies each declarative sentence (data-derived / cited / definitional-methodological / marked speculation / UNSUPPORTED)",
+        "Each uncited prevalence claim ('standard approach', 'typically', 'most common') is flagged as an UNSUPPORTED world-claim at blocker severity, quoted verbatim with its location",
+        "Each flag states the two legal repairs: attach a supporting citation, or rewrite as a claim about this study only",
+        "Calling the paper's own newly invented technique 'the most common way' is caught as fabricated consensus",
+        "The report includes the per-section claims ledger (bucket counts + UNSUPPORTED list)"
+      ]
+    },
+    {
       "id": "readability-tier",
       "prompt": "Review this paper — is it readable for a non-specialist? Check the jargon, acronyms, and whether a reasonably educated reader could follow it. [draft attached: several undefined acronyms, no glossary, dense subfield jargon]",
       "should_trigger": true,
@@ -76,6 +88,17 @@
         "Plain-language reviewer calibrates to the ~10th-grade general-reader default (per expected-reader.md), since no specialist audience is declared",
         "Flags the undefined standard concepts (p-value, confidence interval, regression) as needing a plain-language definition — does NOT treat them as presumable",
         "Findings stay no higher than major and defer to correctness; never blocker"
+      ]
+    },
+    {
+      "id": "table-substitutes-for-chart",
+      "prompt": "Review the visuals in this paper. [draft's central result is a magnitude asymmetry — one effect ~13x another — presented only as a table of QWK values with the comparison described in prose; no chart]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Visualization-opportunities reviewer flags the table as standing in for a chart on the paper's headline magnitude comparison",
+        "Rates it MAJOR (not minor) because the central difference/magnitude comparison is buried in a table the reader cannot see the size of",
+        "Names the specific chart that should lead (dot plot or bar chart, with a shaded noise-floor / confidence band) and says the table may remain for exact-value lookup alongside it",
+        "Does not require the prose to be opaque before flagging — the buried comparison is itself the opacity"
       ]
     },
     {

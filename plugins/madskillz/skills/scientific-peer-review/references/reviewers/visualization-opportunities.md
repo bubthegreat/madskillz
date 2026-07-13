@@ -53,9 +53,21 @@ without naming the specific type and why it fits.
 
 For each section of the manuscript, ask:
 
+0. **Is a table standing in for a chart?** This is the most common and most damaging failure —
+   check it first. When an *existing* table's headline is a comparison the reader is meant to
+   *see the size of* — one effect far larger than another, a jump, a ranking, an outlier — the
+   table is the wrong primary form: reading two cells cannot show that 0.009 and 0.115 are an
+   order of magnitude apart. Flag it, name the chart that should lead (dot plot, bar chart, line;
+   add a shaded band for a noise floor or confidence region when one exists), and say the table
+   may stay for exact-value lookup *alongside* the chart. A table used as a substitute for a
+   difference/magnitude chart is **major** when that comparison is central to the argument (see
+   Severity rules) — not minor. Do not wait for the prose to be opaque: a table that hides the
+   paper's headline comparison is itself the opacity.
+
 1. **Is there a comparison?** Numbers or descriptions compared across two or more categories
-   (modalities, metric families, read types, time periods) belong in a table or chart, not a
-   sentence that lists them.
+   (modalities, metric families, read types, time periods) belong in a chart when the *point is
+   the difference or magnitude*, and in a table only when the reader needs exact-value lookup —
+   never in a sentence that merely lists them.
 
 2. **Is there a process or sequence?** A step-by-step description of how a system works, how a
    metric is calculated, how a feedback loop operates, or how a decision is made belongs in a
@@ -79,10 +91,14 @@ For each section of the manuscript, ask:
 ## Severity rules
 
 - **Major:** A visual is missing for a comparison, framework, or process that is **central to the
-  paper's argument** and that the prose fails to communicate clearly to the expected reader. A
-  reader who cannot follow the argument because of prose density is a major finding.
+  paper's argument** and that the prose — or a table standing in for a chart — fails to
+  communicate clearly to the expected reader. A reader who cannot follow the argument because of
+  prose density **or because a magnitude comparison is buried in a table** is a major finding.
+  Table-as-substitute-for-a-difference-chart on the paper's headline comparison is major, not
+  minor: the numbers being present in a cell does not make the comparison legible.
 - **Minor:** A visual would improve clarity or speed of comprehension for a supporting argument,
-  illustration, or descriptive passage, but the prose is not actually opaque.
+  illustration, or descriptive passage, but the prose (or table) is not actually obscuring a
+  central comparison.
 - Never **blocker:** visual absence cannot block publication on its own; it may amplify a
   correctness finding but cannot create one.
 

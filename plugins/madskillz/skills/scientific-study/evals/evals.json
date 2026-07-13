@@ -82,6 +82,28 @@
       ]
     },
     {
+      "id": "claim-discipline-drafting",
+      "prompt": "Draft the abstract and introduction for this study and get it ready for review. [study invented a brand-new technique, benchmarked it only against a self-written baseline, and performed no literature review — there are no citations available]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Every declarative sentence in the draft is one of the four claim kinds: data-derived (points at Figure/Table), cited, definitional/methodological (about this study), or marked speculation in the Discussion",
+        "No uncited prevalence/consensus/priority claims ('most common', 'widely used', 'standard approach', 'typically', 'routinely', 'well known', 'first to') appear anywhere, including the abstract and introduction",
+        "The abstract hook derives from the study's own measured gap or finding, not from an invented state of the field",
+        "World-claims the draft cannot cite are rewritten as claims about this study (e.g. 'our baseline retries every failure blindly'), not asserted"
+      ]
+    },
+    {
+      "id": "chart-first-for-magnitude",
+      "prompt": "Draft the results section for this study and get it ready to publish. [the central result is a magnitude comparison — one configuration's effect is ~13x another's — and the study has the per-configuration numbers]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Leads the magnitude comparison with a chart (dot plot / bar chart), not a table, per references/visualization.md's chart-first rule",
+        "Any accompanying table is for exact-value lookup alongside the chart, not a substitute for it",
+        "The chart encodes the difference as position/length so the reader can SEE the asymmetry, with a shaded band for the noise floor / confidence region when one exists",
+        "Does not present the headline magnitude comparison as a bare table plus a prose sentence describing the difference"
+      ]
+    },
+    {
       "id": "readability-10th-grade-default",
       "prompt": "Draft a paper on <topic> and get it ready to publish (general audience).",
       "should_trigger": true,
@@ -90,6 +112,18 @@
         "The abstract works as a plain-language summary a general reader can follow on its own",
         "Standard concepts (e.g. p-value, confidence interval) are defined in plain language on first use and carried in the Glossary, not presumed",
         "Calibrates up only if the study explicitly declares a specialist intended audience"
+      ]
+    },
+    {
+      "id": "short-form-alongside-full",
+      "prompt": "Produce a study on <topic> and get it ready to publish.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "After the full paper passes the quality gate and renders, also produces a condensed paper-short.md and a two-column build/<slug>-short.pdf (Step 5b) — in ADDITION to the full paper, never replacing it",
+        "The short form is a specialist condensation: drops the glossary, acronyms index, background, and inline definitions; keeps a 1-paragraph abstract, the figures, the 1-2 key tables, and references",
+        "Introduces NO number that is not already in paper.md / data/ (no new analysis)",
+        "Re-gates the short form with the claims-ledger and adversarial reviewers as a compression check and fixes any dropped-caveat / reintroduced-overclaim / mislabeled-metric finding",
+        "Targets <= 5 pages excluding references; if pandoc/typst are unavailable, keeps paper-short.md and skips the PDF with a recorded note, never faking a build"
       ]
     },
     {
