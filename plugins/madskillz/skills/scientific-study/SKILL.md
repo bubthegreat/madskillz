@@ -111,6 +111,32 @@ of exactly four kinds, and shows its support in-line:
 3. **Definitional / methodological** — defines a term, or states what *this study* did or assumed.
 4. **Marked speculation** — explicitly hedged, and located in the Discussion.
 
+**A draft is not a publication — never write revision history into the paper.** Everything the
+paper says before the quality gate closes is a draft, and *all* of it is a draft until every blocker
+is resolved. So the manuscript must never describe its own earlier states as though they had been
+reported: no "weaker than we first reported," "we initially reported," "narrower than we first
+framed it," "an earlier draft asserted," "this claim is withdrawn," "a retracted correction." Those
+phrases fabricate a publication history that does not exist, and they mislead a reader into thinking
+a public record was corrected when nothing was ever published. This is the most common way a
+hard-revised paper leaks its own drafting process into print, and revising *toward* candour is
+exactly when it happens — the impulse to confess is right, the framing is wrong.
+
+State the finding as it now stands, in the present tense, at whatever strength the evidence
+supports. When the *reason* for a framing is genuinely methodological, keep the reason and drop the
+autobiography: "the comparison is sensitive to a choice that is easy to get wrong: dropping
+singleton groups makes the rival grouping look weaker than it is" — not "an earlier version of this
+analysis dropped singleton groups." When an error in **this study's own extraction or analysis**
+bears on how much a reader should trust the rest, disclose it as a **methods finding about the
+study**, not as a retraction of a claim: "during extraction we recorded X, which appeared
+inconsistent with Y; it is not, because…" — kind 3, present tense, no implied prior report.
+
+The revision history belongs in `review/`, `journey/transcript.md`, and the git log, which exist for
+exactly this purpose and are where an auditor looks for it. The paper is the artifact; those are the
+record. (Two things this rule does *not* forbid: retracting or correcting genuinely **published**
+work, including this study's own prior published version if one exists — say so plainly and cite it;
+and a **superseded-status header on a drafting artifact** such as `story-spine.md`, which is not the
+paper and should say what the finished paper retracts from it.)
+
 A sentence that fits none of these gets rewritten or cut before commit. Prevalence, consensus,
 and priority claims — "most common," "widely used," "standard approach," "typically,"
 "routinely," "commonly," "well known," "often," "first to" — are claims about the world: they

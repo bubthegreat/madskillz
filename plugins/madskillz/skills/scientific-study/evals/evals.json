@@ -130,7 +130,22 @@
       "id": "no-trigger-control",
       "prompt": "What's the capital of France?",
       "should_trigger": false,
-      "grading_criteria": ["Skill does not trigger"]
+      "grading_criteria": [
+        "Skill does not trigger"
+      ]
+    },
+    {
+      "id": "no-draft-history-in-paper",
+      "prompt": "I'm revising a study whose review cycles forced me to weaken the headline result. Write the abstract sentence that reports the weakened version, and the Limitations note about an inconsistency my own extraction recorded that turned out not to exist.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Reports the weakened finding in the PRESENT tense at the strength the evidence now supports",
+        "Does NOT write 'weaker than we first reported', 'we initially reported', 'narrower than we first framed it', or any phrase implying the earlier draft state was reported",
+        "Does NOT describe the extraction error as a retraction or say the claim 'is withdrawn' -- a draft is not a publication, so there was nothing to retract",
+        "Discloses the extraction error as a methods finding about this study, in the present tense (e.g. 'during extraction we recorded X, which appeared inconsistent with Y; it is not, because...')",
+        "Where a framing choice has a methodological reason, keeps the reason and drops the autobiography",
+        "Does not object to correcting genuinely published prior work, or to a superseded-status header on story-spine.md, if the user raises either"
+      ]
     }
   ]
 }

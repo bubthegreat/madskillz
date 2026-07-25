@@ -31,6 +31,12 @@ earned — within-noise / directional-only results, confounds, single-source lim
 residuals — MUST survive in compressed form. The short form must be **neither more nor less honest**
 than the paper it summarizes.
 
+It also must not acquire revision history the full paper does not carry. A short form is authored
+*after* the gate closes, from an already-revised paper, so the drafting sequence is freshest exactly
+when it is written — and "an earlier draft asserted…" is the phrase that shows up. A draft is not a
+publication; see the claim-discipline rule in `SKILL.md`. Compress what the paper now claims, not how
+it got there.
+
 ## Re-gate (required)
 
 Invoke `scientific-peer-review`'s **claims-ledger** and **adversarial** reviewers on
