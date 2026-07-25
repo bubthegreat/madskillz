@@ -5,13 +5,20 @@ and opened as a PR (see `git-workflow.md`):
 
 ```
 <topic>/<research-short-name>/
-  paper.md            # manuscript in markdown — evolves across the review-cycle commits
+  question-register.md # the brief's questions VERBATIM + each one's verdict — see question-register.md
+  story-spine.md      # drafting artifact: hypothesis, what the data showed, the turn
+  paper.md            # THE PAPER: <=4,300 body words, <=4 display items, <=50 refs,
+                      #   <=200-word Summary, ending Data availability -> Code availability -> References
+  methods.md          # <=3,000 words. NO figures, NO tables. Includes 'Deviations from the analysis plan'
+  extended-data.md    # <=10 display items, each cited from paper.md or methods.md
+  supplementary.md    # uncapped detail. NOT a place to paste datasets
   assets/             # figures, plots, diagrams referenced by the paper
   data/               # datasets / results tables — real data, *.reference.md stubs, or a mix
   scripts/            # analysis code / reproducibility scripts / notebooks
     LICENSE           # MIT — covers code (from licenses/MIT.txt)
   review/             # per cycle: the report (cycle-N.md) + the reviewed paper snapshot (cycle-N-paper.md)
-  build/              # rendered manuscript: <slug>.pdf (Typst) + <slug>.epub — see references/render.md
+  build/              # rendered manuscript: <slug>.pdf (Typst) + <slug>.epub — all four documents
+                      #   assembled in order; see references/render.md
   journey/            # human<->assistant dialogue transcript — provenance; NOT part of paper.md
   LICENSE             # CC BY 4.0 — covers paper, data, assets (from licenses/CC-BY-4.0.txt)
   ATTRIBUTIONS.md     # third-party sources, their licenses, what reproduction requires
@@ -185,3 +192,17 @@ Not redistributed here due to: <license / DUA / privacy>. Obtain it as follows.
 - **Retrieval steps:** <how to access, including registration/DUA if any>
 - **License / terms:** <terms>
 ```
+
+
+## The four-document manuscript
+
+`paper.md` is not the whole manuscript — it is the capped, reader-facing part of a four-document
+contract defined in `references/manuscript-structure.md`. The budgets are enforced mechanically by
+`scripts/check-budgets.py`, which must exit 0 before a review cycle closes or a render runs.
+
+Nothing is deleted by the split; material moves to `methods.md`, `extended-data.md` or
+`supplementary.md` and still ships in the PR and in the rendered PDF.
+
+`paper-short.md` was retired in v0.22.0. A 4,300-word paper opening with a 200-word Summary is its
+own digest, and maintaining a second condensed document reliably reacquired overclaims the full paper
+had been forced to drop.
