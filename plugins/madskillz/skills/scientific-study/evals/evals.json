@@ -115,22 +115,68 @@
       ]
     },
     {
-      "id": "short-form-alongside-full",
-      "prompt": "Produce a study on <topic> and get it ready to publish.",
-      "should_trigger": true,
-      "grading_criteria": [
-        "After the full paper passes the quality gate and renders, also produces a condensed paper-short.md and a two-column build/<slug>-short.pdf (Step 5b) — in ADDITION to the full paper, never replacing it",
-        "The short form is a specialist condensation: drops the glossary, acronyms index, background, and inline definitions; keeps a 1-paragraph abstract, the figures, the 1-2 key tables, and references",
-        "Introduces NO number that is not already in paper.md / data/ (no new analysis)",
-        "Re-gates the short form with the claims-ledger and adversarial reviewers as a compression check and fixes any dropped-caveat / reintroduced-overclaim / mislabeled-metric finding",
-        "Targets <= 5 pages excluding references; if pandoc/typst are unavailable, keeps paper-short.md and skips the PDF with a recorded note, never faking a build"
-      ]
-    },
-    {
       "id": "no-trigger-control",
       "prompt": "What's the capital of France?",
       "should_trigger": false,
-      "grading_criteria": ["Skill does not trigger"]
+      "grading_criteria": [
+        "Skill does not trigger"
+      ]
+    },
+    {
+      "id": "no-draft-history-in-paper",
+      "prompt": "I'm revising a study whose review cycles forced me to weaken the headline result. Write the abstract sentence that reports the weakened version, and the Limitations note about an inconsistency my own extraction recorded that turned out not to exist.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Reports the weakened finding in the PRESENT tense at the strength the evidence now supports",
+        "Does NOT write 'weaker than we first reported', 'we initially reported', 'narrower than we first framed it', or any phrase implying the earlier draft state was reported",
+        "Does NOT describe the extraction error as a retraction or say the claim 'is withdrawn' -- a draft is not a publication, so there was nothing to retract",
+        "Discloses the extraction error as a methods finding about this study, in the present tense (e.g. 'during extraction we recorded X, which appeared inconsistent with Y; it is not, because...')",
+        "Where a framing choice has a methodological reason, keeps the reason and drops the autobiography",
+        "Does not object to correcting genuinely published prior work, or to a superseded-status header on story-spine.md, if the user raises either"
+      ]
+    },
+    {
+      "id": "four-document-structure",
+      "should_trigger": true,
+      "prompt": "Do a research study on <topic> and get it ready to publish.",
+      "grading_criteria": [
+        "Writes question-register.md at Step 1 with the brief's questions quoted verbatim, before drafting",
+        "Produces paper.md, methods.md and (where needed) extended-data.md / supplementary.md rather than one long paper",
+        "Keeps paper.md within 4,300 body words, <=4 display items, <=50 references, with a <=200-word Summary",
+        "Puts no figures or tables in methods.md, relocating them to extended-data.md",
+        "methods.md contains a 'Deviations from the analysis plan' section",
+        "paper.md ends with Data availability, then Code availability, then References",
+        "Runs scripts/check-budgets.py and does not close a review cycle while it exits non-zero",
+        "Does NOT produce paper-short.md — the short form was retired in v0.22.0"
+      ]
+    },
+    {
+      "id": "responsiveness-no-declining",
+      "should_trigger": true,
+      "prompt": "Research what makes enterprise AI adoptions succeed or fail and where the ROI is highest and lowest. The evidence on ROI turns out to be thin and mostly vendor-published.",
+      "grading_criteria": [
+        "Registers BOTH questions verbatim, not a reframed methodological version of them",
+        "Records a verdict for every registered question: answered / answered-with-caveat / premise-rejected / evidence-insufficient",
+        "Never writes 'declined' and never leaves a registered question unaddressed",
+        "For the thin-evidence ROI question, gives evidence-insufficient WITH a statement of what evidence would settle it, or answers it with an explicit bound",
+        "If the brief's premise is contradicted by the evidence, uses premise-rejected and states what the reader should ask instead",
+        "Does not let the framing chosen at the novelty gate replace the registered questions",
+        "Word budget is not dominated by material that serves no registered question"
+      ]
+    },
+    {
+      "id": "delegate-production-not-just-review",
+      "should_trigger": true,
+      "prompt": "Do a research study synthesizing published statistics on <topic>, then get it peer reviewed and ready to publish.",
+      "grading_criteria": [
+        "Dispatches multiple parallel extraction agents rather than extracting every source on the main thread",
+        "Extracted rows carry a verbatim quote containing the value, plus denominator and population",
+        "A second agent independently re-extracts a sample; disagreements are quarantined, not averaged",
+        "Analysis code has an author who is not the agent writing the prose",
+        "A stats adversary attacks the headline result BEFORE drafting, not in a later review cycle",
+        "The synthesis agent cites only rows present in the evidence store; no number is introduced in prose",
+        "A mechanical traceability gate runs, rather than relying on reviewers to check arithmetic"
+      ]
     }
   ]
 }

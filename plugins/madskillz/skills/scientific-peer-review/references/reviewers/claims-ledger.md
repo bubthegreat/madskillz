@@ -45,6 +45,22 @@ exactly one bucket:
   prevalence or priority claim it is attached to — **major**; note it for citation-integrity,
   whose Interests cover claim–support fit.
 - Speculation that is unhedged, or hedged but living outside the Discussion — **major**.
+- **Fabricated publication history — the manuscript describing its own draft states as though they
+  had been reported.** "weaker than we first reported," "we initially reported," "narrower than we
+  first framed it," "an earlier draft asserted," "this claim is withdrawn," "a retracted
+  correction." A draft is not a publication, and everything is a draft until the gate closes, so
+  these phrases assert a public record that does not exist and imply it was corrected. **Blocker**
+  when the paper claims to retract or withdraw something (it is asserting a false record);
+  **major** for the milder comparative forms. State the two legal repairs: restate the finding in
+  the present tense at the strength the evidence now supports, or — where the reason is genuinely
+  methodological — keep the reason and drop the autobiography ("the comparison is sensitive to a
+  choice that is easy to get wrong: …", not "an earlier version of this analysis …").
+  Look hardest for this in the **Abstract and Limitations of a heavily revised paper**: revising
+  toward candour is what produces it. Two things are legal and must not be flagged: correcting or
+  retracting genuinely **published** work, including a prior published version of this study, when
+  it is named and cited; and a superseded-status header on a **drafting artifact** such as
+  `story-spine.md`, which is not the manuscript. The revision history belongs in `review/`,
+  `journey/`, and the git log.
 
 ## What NOT to flag
 - Claims about this study's own artifacts, choices, or results that point at their support.

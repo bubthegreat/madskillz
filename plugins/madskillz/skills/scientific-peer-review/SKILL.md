@@ -52,7 +52,12 @@ network/web access for citation resolution?
 Run these reviewers, each reading ONLY its own rubric plus the manuscript and
 available inputs. The panel has two tiers; the coverage statement names which ran.
 
-**Correctness tier (always):**
+**Correctness tier (always).** Note that every reviewer here except one audits *defensibility*.
+That is a one-sided objective with a dominant strategy — narrow until everything is defensible,
+because declining to answer is always more defensible than answering. **Responsiveness** is the
+counterweight: it is the reader's advocate and the only reviewer asking whether the paper answered
+the question it was asked. Dispatch it with `question-register.md`; if that file is missing, that is
+itself a blocker.
 
 | Reviewer | Rubric |
 |---|---|
@@ -63,6 +68,7 @@ available inputs. The panel has two tiers; the coverage statement names which ra
 | Ethics & integrity (can veto) | `references/reviewers/ethics-integrity.md` |
 | Citation-integrity | `references/reviewers/citation-integrity.md` |
 | Claims-ledger (sentence-level support audit) | `references/reviewers/claims-ledger.md` |
+| Responsiveness to the brief | `references/reviewers/responsiveness.md` |
 
 **Readability tier (always, for reader-facing drafts; calibrated to `references/expected-reader.md`):**
 

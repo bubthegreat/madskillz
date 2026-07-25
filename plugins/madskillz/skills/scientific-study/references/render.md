@@ -97,17 +97,25 @@ End the commit message with the `Co-Authored-By:` trailer per `git-workflow.md`.
 | Figures missing from the PDF/EPUB | image paths not resolving | Confirm `assets/…` paths are relative and the files exist in the study folder |
 | PDF render error from typst | Typst version mismatch / unsupported construct | Update typst; check the passed-through error for the offending line |
 
-## Short-form render (two-column condensation)
+## The four-document assembly
 
-The condensed `paper-short.md` (see `references/short-form.md`) renders to a dense two-column PDF,
-**no EPUB, no table of contents**:
+The renderer assembles the whole manuscript, in reading order, into **one** PDF and **one** EPUB:
 
-```bash
-uv run <skill>/scripts/render-paper.py <topic>/<research-short-name> --short
-```
+| Order | File | Rendered as |
+|---|---|---|
+| 1 | `paper.md` | the paper (its H1 becomes the document title) |
+| 2 | `methods.md` | `# Methods` |
+| 3 | `extended-data.md` | `# Extended Data` |
+| 4 | `supplementary.md` | `# Supplementary Information` |
 
-It writes `build/<research-short-name>-short.pdf`. Layout is fixed in the script — `columns: 2`,
-`fontsize: 10pt`, `margin {x: 1.6cm, y: 1.7cm}` — passed via a pandoc `--metadata-file` (an inline
-`-V margin='{...}'` map is rejected by pandoc's Typst template). The full-paper render is unchanged;
-`--short` only adds the condensed PDF. Same fail-closed rule: if `pandoc`/`typst` are missing, skip
-the short PDF and say so — never fake a build.
+Only `paper.md` is required; the others are appended when present and non-empty. Each back document's
+own H1 is dropped and replaced with the part heading, so the table of contents shows four top-level
+parts rather than four merged section trees. The command prints which parts it assembled.
+
+Run `scripts/check-budgets.py` first — it must exit 0. Rendering an over-budget manuscript produces a
+PDF that looks finished and is not.
+
+> `--short` was removed in v0.22.0 along with the condensed short form. A 4,300-word paper opening
+> with a 200-word Summary paragraph is its own digest. Passing `--short` now prints a note and exits
+> non-zero rather than silently doing nothing.
+

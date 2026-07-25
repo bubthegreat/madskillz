@@ -67,6 +67,16 @@ audience, record that intended audience as explicit context in the brief and the
 the same honest-context discipline as a replication/validation study — so the drafting and the
 review panel both calibrate to it.
 
+**Record the question register — before anything else is written.** Extract the brief's questions
+**verbatim** into `question-register.md` per `references/question-register.md`. The framing chosen at
+the novelty gate (e.g. "synthesis + reconciliation") is recorded as the **approach**, in its own
+field; it never replaces or narrows the questions. Every question later carries exactly one verdict —
+**answered**, **answered-with-caveat**, **premise-rejected**, or **evidence-insufficient**.
+*"Declined" is not a verdict and silence is not a verdict*: a question the study did not pursue is
+`evidence-insufficient` with an honest reason and a statement of what evidence would settle it.
+`premise-rejected` is a legitimate and often superior result — but it owes the reader the replacement
+question. This register is what the **responsiveness** reviewer audits every cycle.
+
 Then establish the `<topic>` and a slugified `<research-short-name>` (propose a
 default, ask the user to confirm/override; validate as kebab-case). Resolve the repo
 and create the study branch **in an isolated per-study worktree** per
@@ -89,7 +99,33 @@ Open `paper.md` with `story-spine.md` visible. The abstract must derive from the
 Spine** field. Each Results/Analysis section must advance the **One-Sentence Arc** — a section
 that could be removed without changing the story is either misplaced or should be cut.
 
-Write `paper.md` and produce/organize any `data/`, `scripts/`, `assets/` the study needs. Be
+**The manuscript is four documents, not one — read `references/manuscript-structure.md` before
+drafting.** `paper.md` is capped at **4,300 words of body text, ≤4 display items and ≤50
+references**, opening with a **≤200-word Summary paragraph** that avoids acronyms and measurements.
+`methods.md` (**≤3,000 words, and it may contain no figures or tables**) carries everything needed to
+interpret and replicate, and must include a *Deviations from the analysis plan* section.
+`extended-data.md` holds up to **10** display items, each cited from the paper or the methods.
+`supplementary.md` is uncapped. `paper.md` ends with **Data availability**, then **Code
+availability**, then **References**. Section headings are **structural, never thematic** — `## 2.
+Results`, not `## 3. The statistics are not measuring the same object`; a heading that states a
+thesis is how a paper regrows to forty pages.
+
+Nothing is deleted by this structure; material is relocated and still ships. Run
+`uv run <skill>/scripts/check-budgets.py <study_dir>` — it enforces every cap above as a **build
+gate**. Reviewers must never spend attention on arithmetic a script does perfectly.
+
+**Delegate production, not just criticism — follow `references/evidence-pipeline.md`.** Do not
+research, extract, analyse and write as a single agent and then hand the result to reviewers: in a
+completed run that pattern produced 13 first-cycle blockers of which **zero were retrieval failures
+and all thirteen were consolidator failures**. Instead, dispatch parallel **extraction agents** that
+return structured rows — each row carrying a **verbatim quote containing the value**, plus its
+denominator and population — have a second agent **independently re-extract at least 20%**, give
+**analysis code its own author** who does not write prose, run a **stats adversary against the
+headline result before drafting**, and let the synthesis agent cite **only rows that exist in the
+store**. The mandatory quote field and the traceability gate are the two cheapest mechanisms here and
+prevent the most damaging class of error; keep both at every study size.
+
+Produce/organize any `data/`, `scripts/`, `assets/` the study needs. Be
 provenance-honest, using the **citation, cross-reference & provenance conventions** in
 `references/repo-layout.md`: cited work as numbered `[N]` citations (the default house style;
 the citation specialist may switch to author–date by field), data-derived values pointed to their
@@ -110,6 +146,32 @@ of exactly four kinds, and shows its support in-line:
 2. **Cited** — carries a citation that supports the *specific* claim made.
 3. **Definitional / methodological** — defines a term, or states what *this study* did or assumed.
 4. **Marked speculation** — explicitly hedged, and located in the Discussion.
+
+**A draft is not a publication — never write revision history into the paper.** Everything the
+paper says before the quality gate closes is a draft, and *all* of it is a draft until every blocker
+is resolved. So the manuscript must never describe its own earlier states as though they had been
+reported: no "weaker than we first reported," "we initially reported," "narrower than we first
+framed it," "an earlier draft asserted," "this claim is withdrawn," "a retracted correction." Those
+phrases fabricate a publication history that does not exist, and they mislead a reader into thinking
+a public record was corrected when nothing was ever published. This is the most common way a
+hard-revised paper leaks its own drafting process into print, and revising *toward* candour is
+exactly when it happens — the impulse to confess is right, the framing is wrong.
+
+State the finding as it now stands, in the present tense, at whatever strength the evidence
+supports. When the *reason* for a framing is genuinely methodological, keep the reason and drop the
+autobiography: "the comparison is sensitive to a choice that is easy to get wrong: dropping
+singleton groups makes the rival grouping look weaker than it is" — not "an earlier version of this
+analysis dropped singleton groups." When an error in **this study's own extraction or analysis**
+bears on how much a reader should trust the rest, disclose it as a **methods finding about the
+study**, not as a retraction of a claim: "during extraction we recorded X, which appeared
+inconsistent with Y; it is not, because…" — kind 3, present tense, no implied prior report.
+
+The revision history belongs in `review/`, `journey/transcript.md`, and the git log, which exist for
+exactly this purpose and are where an auditor looks for it. The paper is the artifact; those are the
+record. (Two things this rule does *not* forbid: retracting or correcting genuinely **published**
+work, including this study's own prior published version if one exists — say so plainly and cite it;
+and a **superseded-status header on a drafting artifact** such as `story-spine.md`, which is not the
+paper and should say what the finished paper retracts from it.)
 
 A sentence that fits none of these gets rewritten or cut before commit. Prevalence, consensus,
 and priority claims — "most common," "widely used," "standard approach," "typically,"
@@ -135,14 +197,18 @@ Step 1), frame it as such. Commit the initial draft (`draft: initial <slug>`).
 
 Follow `references/review-loop.md`. For each cycle (max 3):
 
-1. Invoke `scientific-peer-review` on the current paper + artifacts → get the
-   adjudicated, severity-ranked revision plan.
+1. Invoke `scientific-peer-review` on the current paper + artifacts (all four manuscript
+   documents, plus `question-register.md`) → get the adjudicated, severity-ranked revision plan.
+   The panel includes the **responsiveness** reviewer, which audits the paper against the register:
+   a registered question the paper never addresses is a **blocker**, and a paper whose largest
+   section serves no registered question is a **major**.
 2. **Edit the paper** to address blocker/major findings (and minors where cheap).
 3. Commit the revision as its own commit (`review cycle N: address <summary>`),
    and save that cycle's review report under `review/` so the evolution is visible.
 
 **Stop** when the meta-editor reports **no blocker-severity findings**, or after 3
-cycles. Carry the residual (unresolved or disputed) findings forward to the PR
+cycles. A cycle does not close while `check-budgets.py` exits non-zero — being over budget is not a
+finding to disclose, it is a build failure to fix. Carry the residual (unresolved or disputed) findings forward to the PR
 description — never drop them.
 
 ## Step 4 — Compliance & privacy gate
@@ -159,8 +225,12 @@ screen — e-readers, tablets, print — not only as Markdown in the repo. Run t
 renderer (see `references/render.md`):
 
 ```bash
+uv run <skill>/scripts/check-budgets.py <topic>/<research-short-name>   # must exit 0 first
 uv run <skill>/scripts/render-paper.py <topic>/<research-short-name>
 ```
+
+The renderer assembles all four documents in order — `paper.md`, then Methods, Extended Data and
+Supplementary Information as clearly labelled back sections — into one PDF and one EPUB.
 
 It writes `build/<research-short-name>.pdf` (Typst-typeset, no LaTeX) and
 `build/<research-short-name>.epub` (reflowable, adjustable text on an e-reader) into
@@ -169,33 +239,23 @@ embedded. Commit them so they ship in the PR (`render: build PDF + EPUB …`). `
 and `typst` must be on PATH — install per `references/render.md` if missing; if
 neither can be installed, publish without the artifacts and say so. Never fake a build.
 
-## Step 5b — Condensed short form (always, in addition to the full paper)
+## Step 5b — (retired in v0.22.0)
 
-Produce a specialist short-form summary **alongside** the full paper — never replacing it — per
-`references/short-form.md`:
+The condensed short form (`paper-short.md`) is **gone**. It existed because papers ran 30–40 pages
+and needed a reader-facing digest; a 4,300-word paper opening with a 200-word Summary paragraph *is*
+the digest. Keeping both meant a second document to hold in sync, and in practice a fresh compression
+pass reacquired overclaims the full paper had been forced to drop — in one run, of ten caveat
+sentences lost in compression, not one omission made the paper look worse.
 
-1. **Author `paper-short.md`** — a specialist condensation of the gated `paper.md`: a 1-paragraph
-   abstract, compressed Introduction/Methods/Discussion, Results that lean on the existing figures
-   and the 1–2 key tables, Limitations in one dense paragraph, References kept; Glossary, Acronyms,
-   Background, and inline definitions dropped. Introduce **no number** not already in `paper.md` /
-   `data/`; preserve every caveat in compressed form.
-2. **Re-gate for compression drift** — run `scientific-peer-review`'s **claims-ledger** and
-   **adversarial** reviewers on `paper-short.md` as a compression check (dropped caveat,
-   reintroduced overclaim, mislabeled metric), plus a numbers-trace check. Fix blocker/major
-   findings; a finding that traces to the full paper is fixed in **both**; disclose residuals.
-3. **Render two-column** — `uv run <skill>/scripts/render-paper.py <topic>/<research-short-name>
-   --short` → `build/<slug>-short.pdf`, target ≤5 pages excluding references. No EPUB. Best-effort:
-   if `pandoc`/`typst` are missing, keep `paper-short.md` and skip the PDF with a recorded note —
-   never fake a build.
-
-Commit `paper-short.md` + `build/<slug>-short.pdf`; the PR (Step 6) ships them in addition to the
-full paper and notes the short form.
+If a study folder still contains `paper-short.md` from an earlier version, delete it as part of the
+next revision and say so in the PR.
 
 ## Step 6 — Publish as a PR
 
 Lay out the folder per `references/repo-layout.md`, push the study branch, and open
 a PR into the default branch of `jmresearch/research` (per `git-workflow.md`). The
-PR description summarizes: the condensed short form (paper-short.md + build/<slug>-short.pdf), the study (and whether it is novel or a
+PR description summarizes: **the question register with each question's verdict** (so a human sees at
+a glance which of their questions were answered, and how), the study (and whether it is novel or a
 replication/validation), how each review cycle changed the paper, any **residual
 findings**, any domain **experts** consulted or minted (and any unmet-expertise halt),
 and the compliance outcomes. If this run **minted or updated** any experts, also open the
@@ -237,12 +297,19 @@ dialogue). The study may also **read** this transcript for refinement context wh
 - Paper needs expertise the panel lacks → the review's domain-coverage triage mints/reuses a
   domain expert via `ask-an-expert`; if adequate expertise cannot be established for a central
   claim, the gate halts and that is surfaced, never faked (see `review-loop.md`).
-- Short form must never be more (or less) honest than the full paper → it inherits and discloses the
-  same residuals; a re-gate finding that traces to the full paper is fixed in both (see Step 5b).
-- `pandoc`/`typst` missing for the short render → keep `paper-short.md`, skip the short PDF, say so;
-  never fake (same as the full render).
-- Human-review follow-up (Step 7) that changes claims/numbers → regenerate the short form (re-gate +
-  re-render) so it does not drift from the paper.
+- Manuscript over budget → **not** a residual to disclose; `check-budgets.py` must exit 0 before a
+  cycle closes. Relocate material to `methods.md` / `extended-data.md` / `supplementary.md` rather
+  than deleting it (see `references/manuscript-structure.md`).
+- A method section that is mostly tables → Nature's rule that **Methods may contain no figures or
+  tables** is real and is the one most studies violate. Those tables become Extended Data items and
+  Methods references them. Plan for a rewrite, not a move.
+- A registered question the evidence cannot settle → verdict `evidence-insufficient`, **plus what
+  evidence would settle it**. Never omit the question, and never write "declined".
+- The brief's premise turns out to be wrong → verdict `premise-rejected`. This is a finding, often
+  the best one; state what the premise was, what the evidence shows, and what the reader should ask
+  instead.
+- A study folder still carrying `paper-short.md` from before v0.22.0 → delete it in the next
+  revision and note it in the PR.
 - Asked to just review (not produce/revise) → use `scientific-peer-review` directly.
 - Asked to blog the study / write it up in the owner's voice → out of scope here; use the standalone
   `blog` skill (the study still saves `journey/transcript.md` as provenance, Step 8).
