@@ -112,6 +112,12 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
   100-year-old light-shell geometry, the full energy-momentum relation), so a reader can follow
   the same journey through the sources. Claims with no links read as "trust me bro"; the post
   should hand the reader the receipts where each idea shows up.
+- **Close each thought before the transition (owner-corrected 2026-08-08).** When walking
+  through alternatives, finish each one as its own complete concept: state explicitly why it's a
+  dead end and what that means for the question, then move on. Never assume the reader converts
+  an implication ("it's a philosophical position") into the conclusion (unmeasurable by any
+  possible instrument, therefore useless for proving my claim). One closed door per paragraph
+  beats three ajar ones in a sentence.
 - **Narrative, not a fact-dump.** A post tells one story with a throughline; it is never "fact
   after fact after fact." If I can't say what the arc *is*, it isn't ready.
 - **Preserve my coinages.** When I've invented a term or framing on purpose, keep it — don't
@@ -419,6 +425,9 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (transitions) - close each alternative as its own complete thought (why it's a
+    dead end, spelled out) before transitioning; never rely on the reader to convert an
+    implication into the conclusion.
   - 2026-08-08 (quips) - quips get reasoned out with qualifiers, never snapped as tidy
     punchlines; third instance of the unroll-vs-compress pattern.
   - 2026-08-08 (receipts) - two owner-supplied traits: similes get self-countered (devolve into
