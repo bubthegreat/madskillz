@@ -390,7 +390,12 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
   weight: "My rainbow was dead, but I still wanted to know - what *would* it take to tint the
   shell?" Same family: affection-garnish asides ("in a way I love", "which I adore",
   "beautifully") — delight shows through the content or an occasional "freaking cool," never
-  through a clause rating my own delight.
+  through a clause rating my own delight. Also same family: verdict sentences that add nothing
+  ("Which is so much better than my version") — pure slop, cut them; the comparison already
+  made its own case.
+- **Self-help nouns ("the reframe", "the takeaway", "the insight")** — flagged 2026-08-08.
+  Packaging what I learned into a labeled noun is AI vocabulary. Say what changed plainly:
+  "What stuck with me is…"
 - **Polished self-deprecation ("mildly embarrassing")** — too groomed. My version is blunt and
   concrete: "which would sound stupid in real life."
 - **Aphoristic metaphor as a punchline ("you can't vary a crutch you don't know you're leaning
@@ -445,6 +450,8 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (slop) - no-value verdict sentences ("Which is so much better than my version")
+    and self-help nouns ("the reframe") added to AI-tells.
   - 2026-08-08 (simile mapping) - similes must map element-by-element to the target mechanism;
     decorative no-parallel similes are AI tells.
   - 2026-08-08 (garnish) - affection-garnish asides ("in a way I love") added to the pre-rating
