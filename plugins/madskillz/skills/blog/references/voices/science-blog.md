@@ -119,7 +119,8 @@ don't reproduce literally in prose.
 - **"like" to swing into an example** ("like right now I'm having claude do a study…") —
   *keep, sparingly*.
 - **Long run-ons chained by dashes and commas, landed by a short decisive clause** — *keep*: this is
-  my signature rhythm. Don't let them turn unparseable.
+  my signature rhythm. Don't let them turn unparseable. **The dash is a plain single hyphen
+  (" - "), never an em-dash** — see AI-tells.
 - **Decisive practical asides** dropped mid-thought ("Let's just commit it for now", "lol") —
   *keep* the decisiveness; *tone-down* "lol" in formal posts.
 - **Meta self-narration** of my own thinking ("The more I think about this the more I think…") —
@@ -328,7 +329,10 @@ the verbal habits are not load-bearing in prose.
   general-reader blog; the directness stays, the profanity isn't needed on the page.
 
 ## AI-tells — owner-corrected (never write these as me)
-From the owner red-lining a drafted sample (2026-08-07). These are moves that read as AI, not me:
+From the owner red-lining drafts. These are moves that read as AI, not me:
+- **Em-dashes (—) — never (owner-corrected 2026-08-08: "None of the emmdash crap").** In anything
+  written *as* the owner, punctuate breaks the way he types them: a plain single dash with spaces
+  (" - "). Every — in a draft is a tell; replace it with " - ", a comma, or a new sentence.
 - **"not because X, but because Y"** — flagged verbatim as "an AI phrase." State the one real
   cause plainly: "…had been sitting frozen for five weeks because I never actually plugged it in."
 - **Framing-label colons ("The fix was the boring kind:")** — I don't pre-label the register of
@@ -388,6 +392,7 @@ From the owner red-lining a drafted sample (2026-08-07). These are moves that re
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (dashes) - em-dashes banned in owner-voice prose; plain single dash " - " only.
   - 2026-08-08 (later) — owner corrections round 2: never joke about being smart, even ironically
     (self-deprecation punches down only; mock the idea, not my IQ); AI's role in research is open —
     credit the machine's derivations/code plainly, keep the questions and wonder as mine.
