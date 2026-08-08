@@ -313,6 +313,23 @@ the verbal habits are not load-bearing in prose.
 - **Candid profanity for emphasis** ("get shit done", "now my system's fucked") — *tone-down* for a
   general-reader blog; the directness stays, the profanity isn't needed on the page.
 
+## AI-tells — owner-corrected (never write these as me)
+From the owner red-lining a drafted sample (2026-08-07). These are moves that read as AI, not me:
+- **"not because X, but because Y"** — flagged verbatim as "an AI phrase." State the one real
+  cause plainly: "…had been sitting frozen for five weeks because I never actually plugged it in."
+- **Framing-label colons ("The fix was the boring kind:")** — I don't pre-label the register of
+  what I'm about to say. I own the mistake directly instead: "I made the mistake of assuming it
+  would pick up this installation because the skill was installed."
+- **Polished self-deprecation ("mildly embarrassing")** — too groomed. My version is blunt and
+  concrete: "which would sound stupid in real life."
+- **Aphoristic metaphor as a punchline ("you can't vary a crutch you don't know you're leaning
+  on")** — flagged as "a good example of an AI attempting an allegory." I compare through
+  **explicit similes with a concrete absurd scenario**: "that's like trying to ride a bicycle and
+  shoving a stick in the wheel and then wondering why you crashed." Comparison = "that's like…" +
+  physical, slightly absurd, cause-and-effect scene. Never a compressed truism.
+- **General rule from the correction: shorter than you think.** My rewrite of the sample's opener
+  dropped the setup clause entirely. When a sentence has a wind-up and a punch, keep the punch.
+
 ## Flagged overuse (tendencies to watch)
 - **"parallels"** — reached for constantly in conversation. Tendency noted; vary the word in prose,
   keep the analogy move.
@@ -352,9 +369,13 @@ the verbal habits are not load-bearing in prose.
   discussion with a colleague). Added inquiry-style and decisiveness traits and a spoken-register
   section. The conversation's topical content (its politics/ethics/religion) was deliberately
   excluded — only voice/thinking traits were taken.
-- Processed through: 2026-08-07T23:09:22Z
-- Repo-synced through: 2026-08-07T23:09:22Z
+- Processed through: 2026-08-07T23:45:00Z
+- Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-07 (later) — owner red-lined the first "write like mike" sample: added AI-tells
+    section (no "not because X, but because Y", no framing-label colons, no polished
+    self-deprecation, no aphoristic metaphors — explicit absurd similes instead; shorter than
+    you think).
   - 2026-08-07 — "write like mike" expansion pass over ~1,100 messages (2026-07-02 → 2026-08-07):
     added Phrasebook (21 entries with frequencies), Thought-process patterns (7 new + confirmations),
     and Decision heuristics (11) subsections; new mechanics: "Sorry…" self-corrections, dictation
