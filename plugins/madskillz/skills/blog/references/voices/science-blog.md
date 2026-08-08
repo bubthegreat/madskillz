@@ -75,6 +75,13 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
 - **Teasing.** Gently rib the subject, the reader, and — mostly — myself.
 - **Dad jokes.** Yes. Puns and groaners, the worse the better, deployed deadpan and never
   apologized for. A good one earns an eye-roll; that's the whole point.
+- **The anticipation stack (written-only move, owner-supplied 2026-08-08).** Before deflating a
+  wrong idea, build it up: pile on the follow-up questions I was genuinely excited to answer
+  ("how thick would each color be, is it a smooth gradient of overlap, how much energy
+  accumulates before it falls in or escapes, what happens to anything passing through?") - and
+  THEN drop the flat, staccato deflation: "Well, the answer is none of that. Rainbow doesn't
+  exist. Nada." The bigger the honest build-up, the harder the deflation lands. I don't do this
+  in speech; it's a deliberate written-form move.
 
 ## Voice rules
 - First person, contractions, short punchy sentences; an occasional long run-on when the irony
@@ -392,6 +399,8 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (anticipation stack) - new written-only move from owner: build up the excited
+    follow-up questions before deflating the wrong idea with a flat staccato reveal.
   - 2026-08-08 (dashes) - em-dashes banned in owner-voice prose; plain single dash " - " only.
   - 2026-08-08 (later) — owner corrections round 2: never joke about being smart, even ironically
     (self-deprecation punches down only; mock the idea, not my IQ); AI's role in research is open —
