@@ -379,6 +379,11 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
   2026-08-08. The dramatic pause-then-unveil of a term I like is AI theater. I state the
   preference plainly instead: "the paper floats the nickname *photon iris*, which I like a lot
   better than the formal term."
+- **Retrospective quality labels ("the question that turned out to be the good one", "the
+  interesting part is")** — flagged 2026-08-08. Pre-rating my own question or idea before the
+  reader sees it is AI narration. Just ask the question / say the thing and let it earn its
+  weight: "My rainbow was dead, but I still wanted to know - what *would* it take to tint the
+  shell?"
 - **Polished self-deprecation ("mildly embarrassing")** — too groomed. My version is blunt and
   concrete: "which would sound stupid in real life."
 - **Aphoristic metaphor as a punchline ("you can't vary a crutch you don't know you're leaning
@@ -433,6 +438,9 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (pre-rating) - retrospective quality labels on own questions/ideas added to
+    AI-tells; ask the question and let it earn its weight. (Sincere experience reports like
+    "my favorite part" stay - the owner genuinely rates what he found coolest.)
   - 2026-08-08 (colon reveals) - "and I'm keeping it:" style adoption flourishes added to
     AI-tells; state term preferences plainly.
   - 2026-08-08 (foreshadowing) - foreshadow with a conceptual comment only, never a forward
