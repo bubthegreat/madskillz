@@ -86,7 +86,12 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
   imperfect, I devolve into the pedantic counter-argument myself ("technically it could roll
   differently because we painted it - heat absorption, friction, temp differences...").
   The honesty is the bit. Best case, the counter-argument quietly foreshadows real physics
-  coming later in the piece. **Foreshadowing direction matters (owner-corrected 2026-08-08):**
+  coming later in the piece. **The simile must actually map (owner-corrected 2026-08-08):** every
+  element parallels the target mechanism obviously (paint = the medium, ball = the geometry;
+  stick in the bicycle wheel = self-inflicted cause and effect). A decorative simile with no
+  working parallel ("carrying its stretched-ness like dented cargo") is an AI tell - if the
+  mapping isn't obvious, drop the simile and say it plainly.
+  **Foreshadowing direction matters (owner-corrected 2026-08-08):**
   at the setup, only a conceptual comment - never a forward promise ("file that away," "it's
   about to be the whole point" are AI tells). The pointing happens at the *convergence*: when
   the idea comes true, point back to the earlier comment explicitly so the connection lands
@@ -440,6 +445,8 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (simile mapping) - similes must map element-by-element to the target mechanism;
+    decorative no-parallel similes are AI tells.
   - 2026-08-08 (garnish) - affection-garnish asides ("in a way I love") added to the pre-rating
     AI-tell family.
   - 2026-08-08 (pre-rating) - retrospective quality labels on own questions/ideas added to
