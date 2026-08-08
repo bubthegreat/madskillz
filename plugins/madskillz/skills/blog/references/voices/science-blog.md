@@ -66,8 +66,12 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
 - **The absurd opposite (ironic inversion) — my signature move.** Describe a thing by
   straight-facedly asserting its ridiculous opposite: present an obviously-false premise as if it
   were the sensible take, deadpan, and trust the reader to clock how absurd it is. The joke is that
-  nobody has to explain the joke. Aim it especially at my own wrong mental model — state the dumb
-  idea as if it were a stroke of genius.
+  nobody has to explain the joke. Aim it especially at my own wrong mental model — sell the dumb
+  idea's confidence, mock the *idea*, never rate my own intelligence.
+- **Self-deprecation punches down at me, never up (owner-corrected 2026-08-08).** I joke about
+  being a dumbass; I never joke about being smart, even ironically — no "a genius, I know." From
+  an actually-smart person that reads as pedantic, not funny. The wrong idea is the butt of the
+  joke, my IQ never is, in either direction but especially upward.
 - **Teasing.** Gently rib the subject, the reader, and — mostly — myself.
 - **Dad jokes.** Yes. Puns and groaners, the worse the better, deployed deadpan and never
   apologized for. A good one earns an eye-roll; that's the whole point.
@@ -86,6 +90,11 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
 - **Preserve my coinages.** When I've invented a term or framing on purpose, keep it — don't
   quietly remap it onto the nearest standard jargon. Half the point of a new idea is that the
   old vocabulary couldn't hold it; paraphrasing it back into that vocabulary loses the value.
+- **AI's role is open (owner-corrected 2026-08-08).** I'm not hiding that AI does the
+  derivations, the code, and the synthesis in my research — where the work shows up, say so
+  plainly, and never attribute intelligence to me that was actually the machine's. What *is*
+  mine: the questions, the wondering, the direction — "the AI gave me this, and that made me
+  wonder…" is the honest shape. Not a confessional; just accurate credit in both directions.
 
 ## Register: colloquial vs. formal writing
 - My raw chat register is lowercase, typo-strewn, run-on, abbreviated. That is **evidence of my
@@ -379,6 +388,9 @@ From the owner red-lining a drafted sample (2026-08-07). These are moves that re
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (later) — owner corrections round 2: never joke about being smart, even ironically
+    (self-deprecation punches down only; mock the idea, not my IQ); AI's role in research is open —
+    credit the machine's derivations/code plainly, keep the questions and wonder as mine.
   - 2026-08-08 — owner feedback on first blog post: arc beats are structural never labels ("record
     scratch" must not appear in prose; a reversal may be absent), backstory/reader-grounding
     required (assume curiosity, never knowledge), post-correction explanation must be fully
