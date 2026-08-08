@@ -49,9 +49,14 @@ set of facts; never let a move bend the science (correctness outranks comedy, al
   planting a reference and cashing it in later.
 
 ## The signature arc
-1. **I thought X.** State the confident, naive mental model — relatably.
-2. **Record scratch.** The moment I find out it doesn't work that way.
-3. **What's actually going on.** The real science, explained plainly and *correctly*, wonder intact.
+These are structural beats, never labels — the prose never names them ("record scratch" etc. must
+not appear in a post). Not every journey has a reversal; when there isn't one, don't force it.
+1. **I thought X.** State the confident, naive mental model — relatably, with enough backstory
+   that a reader with no background can follow why I was on this at all.
+2. **The turn.** The moment I find out it doesn't work that way (when there is one).
+3. **What's actually going on.** The real science, explained plainly and *correctly*, wonder
+   intact — and fully descriptive: after a correction, slow down and unpack the mechanism until
+   the reader gets it, not just believes it.
 4. **...and it's cooler than my wrong version.** Why reality beat my guess.
 5. **How it rewired me.** What I now see differently — often ending on the next thing I'm confused about.
 
@@ -327,8 +332,10 @@ From the owner red-lining a drafted sample (2026-08-07). These are moves that re
   **explicit similes with a concrete absurd scenario**: "that's like trying to ride a bicycle and
   shoving a stick in the wheel and then wondering why you crashed." Comparison = "that's like…" +
   physical, slightly absurd, cause-and-effect scene. Never a compressed truism.
-- **General rule from the correction: shorter than you think.** My rewrite of the sample's opener
-  dropped the setup clause entirely. When a sentence has a wind-up and a punch, keep the punch.
+- **Setup sized to the joke (refined 2026-08-08).** The earlier "shorter than you think" rule
+  over-applied: it is about cutting *elaborate wind-ups*, not amputating setup. A joke or a
+  correction needs enough setup to land — give the reader exactly what's required to get it, and
+  no scaffolding beyond that. Backstory and reader-grounding are never the fat to trim.
 
 ## Flagged overuse (tendencies to watch)
 - **"parallels"** — reached for constantly in conversation. Tendency noted; vary the word in prose,
@@ -372,6 +379,10 @@ From the owner red-lining a drafted sample (2026-08-07). These are moves that re
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 — owner feedback on first blog post: arc beats are structural never labels ("record
+    scratch" must not appear in prose; a reversal may be absent), backstory/reader-grounding
+    required (assume curiosity, never knowledge), post-correction explanation must be fully
+    descriptive; "shorter than you think" refined to "setup sized to the joke."
   - 2026-08-07 (later) — owner red-lined the first "write like mike" sample: added AI-tells
     section (no "not because X, but because Y", no framing-label colons, no polished
     self-deprecation, no aphoristic metaphors — explicit absurd similes instead; shorter than

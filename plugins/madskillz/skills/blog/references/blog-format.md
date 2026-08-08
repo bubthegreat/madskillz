@@ -5,17 +5,26 @@ Shapes the `blog` skill produces. The **voice** lives in `voice.md` (seed) and t
 
 ## The post
 
-Follow this arc (the voice file's signature arc, as sections):
+Follow this arc (the voice file's signature arc, as sections). These are **structural beats, not
+labels** — never name a beat in the prose (no "record scratch moment", no "here's the hook").
 
 1. **Hook** — a vivid wrong intuition, a dumb-on-purpose question, or a "so I asked…" cold open.
-2. **The mental model I walked in with** — what I assumed; relatable and usually wrong.
-3. **The record scratch** — the moment it turns out that's not how it works. The correction.
-4. **What's actually going on** — the real thing, plain and *correct*, wonder intact. A gloss for
+2. **Backstory** — why I was even on this, and enough plain-language grounding that a reader with
+   **no background at all** can follow. Assume curiosity, never knowledge. If the topic needs a
+   concept to make sense (what a black hole *is*, what "orbit" means here), build it before using it.
+3. **The mental model I walked in with** — what I assumed; relatable and usually wrong.
+4. **The turn** — where it turns out that's not how it works. Arrives naturally, in the flow of the
+   story. **Not every journey has one** — some are "it's more subtle than I thought" or "it's true
+   but for the wrong reason"; don't force a reversal that didn't happen.
+5. **What's actually going on** — the real thing, plain and *correct*, wonder intact. This is the
+   heart of the post: after a correction, **slow down and be fully descriptive** — unpack the
+   mechanism step by step until a general reader actually gets it, not just believes it. A gloss for
    every technical term; a real source or an honest "read up on X" where background is needed.
-5. **Why it's cool / how it reframed me** — the payoff: reality beat my guess.
-6. **Kicker** — a punchy close; often "…and now I'm confused about *this* next."
+6. **Why it's cool / how it reframed me** — the payoff: reality beat my guess.
+7. **Kicker** — a punchy close; often "…and now I'm confused about *this* next."
 
-Length: whatever the journey earns — usually 500–1200 words. No padding.
+Length: whatever the journey earns — usually 500–1200 words. No padding, but backstory and the
+post-correction explanation are **not** padding; cutting them to hit a word count is the failure mode.
 
 ## blog-notes
 
