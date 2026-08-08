@@ -408,6 +408,9 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
   through a clause rating my own delight. Also same family: verdict sentences that add nothing
   ("Which is so much better than my version") — pure slop, cut them; the comparison already
   made its own case.
+- **Escalation flourishes ("and it's a big one:") (owner-flagged 2026-08-08)** — pre-rating a
+  bound/caveat before stating it is the colon-reveal family again. State the bound; its size shows
+  itself: "One bound: every number here compares two separate firms under contracts."
 - **Self-help nouns ("the reframe", "the takeaway", "the insight")** — flagged 2026-08-08.
   Packaging what I learned into a labeled noun is AI vocabulary. Say what changed plainly:
   "What stuck with me is…"
@@ -465,6 +468,8 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-08T10:37:32Z
 - Repo-synced through: 2026-08-08T10:37:32Z
 - Changelog:
+  - 2026-08-08 (escalation flourish) - "and it's a big one:" added to AI-tells (colon-reveal
+    family); state the bound plainly.
   - 2026-08-08 (professional register) - prescriptive: research/professional writing carries no
     sarcasm or colloquialism; humor moves are blog-register only. Directness and structure carry
     over; irony does not.
