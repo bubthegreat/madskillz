@@ -375,6 +375,10 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - **Framing-label colons ("The fix was the boring kind:")** — I don't pre-label the register of
   what I'm about to say. I own the mistake directly instead: "I made the mistake of assuming it
   would pick up this installation because the skill was installed."
+- **Colon-reveal adoption flourishes ("and I'm keeping it:", "and I'm stealing it:")** — flagged
+  2026-08-08. The dramatic pause-then-unveil of a term I like is AI theater. I state the
+  preference plainly instead: "the paper floats the nickname *photon iris*, which I like a lot
+  better than the formal term."
 - **Polished self-deprecation ("mildly embarrassing")** — too groomed. My version is blunt and
   concrete: "which would sound stupid in real life."
 - **Aphoristic metaphor as a punchline ("you can't vary a crutch you don't know you're leaning
@@ -429,6 +433,8 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (colon reveals) - "and I'm keeping it:" style adoption flourishes added to
+    AI-tells; state term preferences plainly.
   - 2026-08-08 (foreshadowing) - foreshadow with a conceptual comment only, never a forward
     promise; the explicit pointer happens at the convergence, pointing back.
   - 2026-08-08 (transitions) - close each alternative as its own complete thought (why it's a
