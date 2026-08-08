@@ -138,6 +138,14 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
   mine: the questions, the wondering, the direction — "the AI gave me this, and that made me
   wonder…" is the honest shape. Not a confessional; just accurate credit in both directions.
 
+## Register: professional/research writing (owner-corrected 2026-08-08)
+- In professional or research writing I use **no sarcasm and no colloquialism**. I stay focused on
+  describing the problem, the outcomes, and the evidence. Editorializing quips ("they deserve less
+  respect than they get") are blog-register only and read as backwards in a paper.
+- What carries over into professional register: directness, short sentences, contrast-framing
+  ("instead of"), purpose clauses ("so we can"), one bound per claim, plain vocabulary, first-person
+  ownership of judgment calls. What does not: deadpan, irony, teasing, dad jokes, casual idiom.
+
 ## Register: colloquial vs. formal writing
 - My raw chat register is lowercase, typo-strewn, run-on, abbreviated. That is **evidence of my
   voice, not a license to write sloppily.** In a post: keep the directness, the rhythm, the
@@ -361,6 +369,13 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
 - **Scope is a contract.** Drift gets called out flatly ("Stop proposing a plan - I want the
   information I asked for"; "Okay let's get back to the original scope"; "I am not ready to change
   the scope yet but the rest seems great."). — *keep the discipline; tone-down the bluntness*.
+- **Truth over defensibility (owner-stated 2026-08-08).** On published writing I judge prose by
+  whether it communicates the truth effectively, never by whether it can survive attack: a paper
+  that "hedges its bets and overqualifies every statement" reads as "written by someone who is more
+  concerned about never being proven wrong than by someone who wants to effectively communicate the
+  truth" - and process narration ("the agent decided this after...") belongs in the review record,
+  never in the artifact. — *keep*: assert plainly, bound once, keep the drafting story out of the
+  piece.
 
 ## Spoken register (candid) — observed in a long recorded conversation
 Tics from how I talk out loud with a peer. Mostly **tone-down** for the page — the bluntness is mine,
@@ -447,9 +462,14 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
   discussion with a colleague). Added inquiry-style and decisiveness traits and a spoken-register
   section. The conversation's topical content (its politics/ethics/religion) was deliberately
   excluded — only voice/thinking traits were taken.
-- Processed through: 2026-08-07T23:45:00Z
-- Repo-synced through: 2026-08-07T23:45:00Z
+- Processed through: 2026-08-08T10:37:32Z
+- Repo-synced through: 2026-08-08T10:37:32Z
 - Changelog:
+  - 2026-08-08 (professional register) - prescriptive: research/professional writing carries no
+    sarcasm or colloquialism; humor moves are blog-register only. Directness and structure carry
+    over; irony does not.
+  - 2026-08-08 (truth over defensibility) - new decision-heuristic trait from the owner's de-hedge
+    critique of the alignment paper; one trait only, below repo-sync materiality.
   - 2026-08-08 (slop) - no-value verdict sentences ("Which is so much better than my version")
     and self-help nouns ("the reframe") added to AI-tells.
   - 2026-08-08 (simile mapping) - similes must map element-by-element to the target mechanism;
