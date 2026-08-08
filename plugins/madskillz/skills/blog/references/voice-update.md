@@ -74,8 +74,9 @@ after that the gated auto-sync runs as part of this step.
 - **Keep it usable.** The profile stays a tight, voice-defining brief — not a transcript dump.
 
 ## Background auto-sync — the SessionEnd gate (optional)
-To sync without ever running the skill by hand, install the **gate hook** `hooks/voice-sync-gate.sh`
-(tested by `hooks/voice-sync-gate.test.sh`) as a **SessionEnd** hook. It is the cheap tier of the
+To sync without ever running the skill by hand, install the **gate hook**
+`plugins/madskillz/hooks/voice-sync-gate.sh` (tested by its sibling `voice-sync-gate.test.sh`) as a
+**SessionEnd** hook. It is the cheap tier of the
 materiality check: on each session end it counts new corpus entries since `Repo-synced through` and,
 only when that count ≥ `VOICE_SYNC_MIN_COUNT` (default 15) **and** at least
 `VOICE_SYNC_MIN_INTERVAL_SECONDS` (default 720 = 12 min) have passed since the last attempt, it
@@ -83,9 +84,10 @@ only when that count ≥ `VOICE_SYNC_MIN_COUNT` (default 15) **and** at least
 materiality-gated push. A lockfile prevents overlapping runs; the gate never blocks session teardown
 and writes only to `~/.madskillz/voice/sync.log`. Tunables are env vars (see the script header).
 
-Install: copy `hooks/voice-sync-gate.sh` to `~/.claude/hooks/`, make it executable, and add a
-`SessionEnd` hook to `~/.claude/settings.json`. Recommended command (pushes from a dedicated
-`main`-pinned worktree and keeps it current):
+Install: run the skill's installer, `scripts/install_voice_pipeline.sh` — it copies the hook to
+`~/.claude/hooks/`, makes it executable, and wires the `SessionEnd` hook into
+`~/.claude/settings.json` with the recommended command (pushes from a dedicated `main`-pinned
+clone and keeps it current):
 `VOICE_SYNC_REPO="$HOME/.madskillz/voice/madskillz-sync" VOICE_SYNC_AUTOREFRESH=1 bash "$HOME/.claude/hooks/voice-sync-gate.sh"`.
 
 Notes:
@@ -104,13 +106,23 @@ Notes:
   here only because the dedicated repo holds nothing precious (the live profile is the source of
   truth). Do **not** enable it against a non-dedicated checkout.
 
-## Setup — the capture hook (global, always-on)
-The corpus is fed by a **global** `UserPromptSubmit` hook in `~/.claude/settings.json` that runs
-`~/.claude/hooks/capture-voice.sh` on every prompt in every session — independent of any plugin, so it
-records the owner's writing no matter which prompt or project they are in. The canonical script lives
-in this repo at `hooks/capture-voice.sh` (tested by `hooks/capture-voice.test.sh`); install it by
-copying to `~/.claude/hooks/capture-voice.sh` and adding the hook to `~/.claude/settings.json`. It
-appends each message as `{ts,text}` to `~/.madskillz/voice/corpus.jsonl`, never blocking the prompt and
-emitting no stdout. It is deliberately **not** a plugin hook — a plugin-scoped hook would only fire
-when this plugin is loaded, and would double-record alongside the global one. The updater can also run
-on demand over whatever messages are present in the current session.
+## Setup — the installer and the capture hook (global, always-on)
+On a fresh machine, run the skill's one-shot idempotent installer:
+`bash scripts/install_voice_pipeline.sh`. It creates `~/.madskillz/voice/`, seeds the live profile
+from the committed voice, installs both hook scripts to `~/.claude/hooks/`, wires the
+`UserPromptSubmit` + `SessionEnd` hooks into `~/.claude/settings.json` (never clobbering existing
+hooks), and creates the dedicated sync clone at `~/.madskillz/voice/madskillz-sync`. Then fold in
+the writing the machine already holds with `python3 scripts/backfill_corpus.py` — it mines
+`~/.claude/history.jsonl` plus user turns from `~/.claude/projects/*/` session transcripts into the
+corpus, honoring the profile's `Processed through:` marker and deduping across sources; re-runs
+append nothing.
+
+The corpus is fed ongoing by that **global** `UserPromptSubmit` hook running
+`~/.claude/hooks/capture-voice.sh` on every prompt in every session — independent of any plugin, so
+it records the owner's writing no matter which prompt or project they are in. The canonical script
+lives at `plugins/madskillz/hooks/capture-voice.sh` (tested by its sibling `capture-voice.test.sh`).
+It appends each message as `{ts,text}` to `~/.madskillz/voice/corpus.jsonl`, never blocking the
+prompt and emitting no stdout. It is deliberately installed as a **global** hook, not left
+plugin-scoped — a plugin-scoped hook would only fire when this plugin is loaded, and would
+double-record alongside the global one. The updater can also run on demand over whatever messages
+are present in the current session.

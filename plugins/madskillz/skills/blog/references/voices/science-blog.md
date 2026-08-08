@@ -135,6 +135,12 @@ don't reproduce literally in prose.
   sarcastic use (see rules), not earnest emphasis.
 - **Casual openers** ("Hey…", "Allright…", "Okay…", "Oh I meant…"). — *tone-down*: chat throat-
   clearing; start the sentence on the actual point.
+- **Rapid "Sorry…" self-corrections** in a follow-up message ("Sorry I meant do #3 after that",
+  "Sorry the filter was supposed to be for argo not for github", "Sorry I meant sqllite to mysql";
+  ×12 this corpus). — *tone-down*: chat artifact; in prose just say the right thing once.
+- **Dictation noise on mobile** — phone messages carry speech-to-text mangles ("Chan link" for
+  chain link, "open bow" for openbao, "Asian statistic style stacking" for Bayesian). — *tone-down*:
+  transcription artifact, not voice; never reproduce.
 
 ## Inquiry style — how I chew on an idea
 - **Question stacking**: I fire 3–5 chained questions in one breath; the pile-up *is* the thinking —
@@ -184,6 +190,121 @@ don't reproduce literally in prose.
   empire to do whatever they wanted"). — *keep*: grounding abstractions in vivid, funny specifics
   is a strength; it's the thought-experiment move with a comic edge.
 
+## Phrasebook — recurring phrases, openers, go-aheads (frequencies from the 2026-07/08 corpus)
+Counts are messages containing the phrase out of ~1,100 authored messages.
+- **"I'd like …"** (×86) — my default request opener; whole sessions run on it. — *tone-down*:
+  keep the polite-directive energy, vary the surface.
+- **"It looks like …"** (×46) — my bug-report opener: lead with the observation, not the
+  accusation ("It looks like it broke staging", "It looks like the pvc might not be attaching
+  properly?"). — *keep the evidence-first framing; tone-down the literal phrase*.
+- **"etc."** (×50, often mid-list, sometimes stacked) — *tone-down*: confirmed crutch.
+- **"instead of"** (×38) — I define what I want by contrasting it with the wrong version ("just
+  pushing up the changes… instead of walking the entire tree"). — *keep*: the contrast-frame is a
+  genuinely mine explanatory move.
+- **"so we can …"** (×25) — nearly every ask carries its downstream purpose clause. — *keep*:
+  purpose-first justification is core voice.
+- **"seems like / It seems like"** (×24) — hedge-opener for a hypothesis I want checked. — *keep
+  the move, vary the phrase*.
+- **"makes sense"** (×23) — still my landing/approval phrase. — *tone-down* (already flagged).
+- **"for now"** (×23) — provisional-decision marker ("Let's just stick with 1.9.1 as is and add a
+  todo item to upgrade the minors later"). — *keep*: signature scope discipline.
+- **"brainstorm"** (×21) — my word for a design conversation ("Let's make this an actual
+  brainstorm on this and make a plan"). — *keep*.
+- **"essentially"** (×20) — new filler on the rise. — *tone-down*.
+- **"add a todo"** (×16) — the parking formula ("Just add the URL for now"). — *keep*.
+- **"Go time"** (×15) — signature go-ahead; family includes "green light go", "go to town",
+  "do your magic", "Let's fuckin' go, M3", "write that spec baby". — *keep, sparingly*: the
+  playfulness is real flavor; the profanity variant stays out of prose.
+- **"go ahead and …"** (×15) — softened imperative. — *tone-down*: padding in prose.
+- **Bare-numeral picks** — "1", "1 plz", "2", "A" as a full message (×17) when offered options. —
+  *keep the decisiveness; N/A as prose*.
+- **Status polls** — "Status?", "Where we at?", "How we doing?", "What's next?", "and now?"
+  (×~17). — *N/A in prose; evidence of impatience-with-idle, see heuristics*.
+- **"help me understand"** (×10) — collaborative-challenge phrase ("can you help me understand
+  better the difference and why they're distinct"). — *keep*: how I disagree without attacking.
+- **"please validate / verify" + "please make sure"** (×20 combined) — the verification reflex
+  ("Did you verify the backups were in AWS, not just that the tasks fired?"). — *keep*: ethos, not
+  tic.
+- **"holistically"** (×7) — favored word for whole-system passes ("I need you to holistically
+  crawl through this"). — *keep, sparingly*.
+- **"walk me through"** (×3, plus existing "walk the dog") — request for mechanism-level detail
+  ("I'd like to know the guts of how you're planning to do that"). — *keep*.
+- **"am I crazy?" / "or am I misunderstanding"** — invite-the-correction tag ("am I crazy in
+  reading that right?", "or am I misunderstanding what those overlays mean?"). — *keep, sparingly*:
+  honest epistemic humility with a grin.
+
+## Thought-process patterns — how I work an idea (observed)
+- **Edge-case forecasting.** I play the failure scenario forward before accepting a design ("does
+  that currently have a scenario where you can never truly delete a file from the device without
+  the sync just pushing them right back up?"; "What happens if we delete the deleted folder, will
+  it error or recreate without blowing up?"). — *keep*: my sharpest design instinct; question
+  stacking in service of a stress test.
+- **Hypothesis, then "challenge me."** I state a mechanistic guess and explicitly invite attack
+  ("please challenge my understanding/assumptions there"; "please assess what I just said, and if
+  I am completely misunderstanding… I'd like to understand where"). — *keep*: the operational form
+  of delighted-to-be-wrong.
+- **No black boxes — a fix isn't done until the why is known.** ("Whatever you did fixed the
+  refresh issue fwiw, but not understanding why is a problem"; "There we go - the status line is
+  back now. What did we have to change?"). — *keep*: drives the learning-journey arc.
+- **Refuse the "can't" without a mechanism.** When told something's impossible I demand the causal
+  story ("if you're telling me we literally can't detect shape on one but we can on another, then
+  you need to explain why to me, not just give up"; "Your continued insistence that geometry isn't
+  transferable goes against common sense… so we are missing something that links the two"). —
+  *keep*: first-principles push-back, now aimed at tools as much as theories.
+- **Spatial/geometric visualization.** I reason in shapes and transforms, at length ("could we
+  essentially take a 3d 'average bone' model and use matrix math to get the transforms that would
+  produce similar overlap for intensities…"; the centroid-triangle features sketch). — *keep*: the
+  thought-experiment move in its most concrete form.
+- **Analogy to a known tool.** New designs get anchored to something I already run ("Kind of like
+  a terraform root with the terraform command"; "basically the same idea but we're using a helm
+  chart here"). — *keep*: reaching-for-parallels, infrastructure edition.
+- **Generalize after the win.** Once a thing works I immediately ask how to abstract it ("break
+  down our entire process into something we can generalize as a skill and apply to chest X-ray
+  study data"). — *keep*: a real arc-ender — "and now I see the pattern everywhere."
+- (Confirmed from prior passes: question-stacking, park-the-tangent, hypothesis-from-lived-
+  experience, first-principles interrogation, coinage ownership — all still heavily present, e.g.
+  fresh coinage discipline: "I think I'd like to change the nomenclature, a chain link adds
+  features, a chain split means we can branch… and a chain head would be the downstream result.")
+
+## Decision heuristics — how I decide and say so (observed)
+- **Terse commit, then out of the way.** Once convinced: "Do it" (×7), "Go time" (×15), "1",
+  "approve", "Merged - please monitor and tell me next steps". — *keep the conviction; expand the
+  words in prose*.
+- **Decide small now, park the rest.** "for now" + a todo is the standard shape ("It's not ideal,
+  but until I deal with the storage issues I want to stop worrying about every volume"). — *keep*.
+- **Staging-first, reversible paths.** I sequence changes so every step can be undone ("Id rather
+  split the PRs, validate staging works, then do prod as a separate PR"; "Let's restore a
+  rehearsal before we put it in production, that way we can validate our DR path before it becomes
+  load bearing"; the dump→validate→quiesce→cutover→revertable chain). — *keep*: risk thinking is
+  load-bearing voice.
+- **Prove-it gates over trust.** Nothing merges on claim alone ("unless we can prove demonstrably
+  that it improves the accuracy and recall then it should be branch -> test -> decide for each
+  thing"; "Don't just trust tests, please actually run a pipeline"). — *keep*.
+- **Real numbers or no numbers.** Estimates get rejected when actuals exist ("you're using
+  est_30_d as the basis for cost… give me a defensible provable spreadsheet that is coherent with
+  itself"). — *keep*.
+- **Price the risk out loud, then accept it.** ("We don't care about the password historically in
+  those logs for now, it's not critical or sensitive, risk is low"; "We can lose the data for kbk
+  at this point, it hasn't been used for quite some time."). — *keep*: explicit, owned trade-offs.
+- **Re-anchor on the whole point.** Confirmed and stronger ("The whole point of this was to get a
+  more scaleable inference architecture - why did we support another path that circumvents the
+  entire purpose of the repo?"; "The whole point of this is to not be limited by tokens"). — *keep*.
+- **Complexity is guilty until proven useful.** ("Composition it is, I just am wary of adding
+  extra layers without a clear scope and value for each one to compare against the complexity
+  increase.") And when a design flails, I collapse it to the simple version ("I just want it
+  simple… In fact - let's just go ahead and do that - just filter on teams… that's it."). — *keep*.
+- **Match the tool to the stakes.** I assign capability tiers deliberately ("I don't want to
+  delegate research review to a less capable model"; "I'd like one review from fable on high,
+  you've been missing too much lately"). — *keep the judgment; the model-name shorthand is
+  context-bound*.
+- **Delegate the night, review in the morning.** I hand off with an explicit judgment mandate and
+  a reporting contract ("make the best judgement you can while I'm sleeping but document them in
+  an 'afk summary' for me to read and review"; "do your magic and let me see it in the morning").
+  — *keep*: trust-but-audit, time-shifted.
+- **Scope is a contract.** Drift gets called out flatly ("Stop proposing a plan - I want the
+  information I asked for"; "Okay let's get back to the original scope"; "I am not ready to change
+  the scope yet but the rest seems great."). — *keep the discipline; tone-down the bluntness*.
+
 ## Spoken register (candid) — observed in a long recorded conversation
 Tics from how I talk out loud with a peer. Mostly **tone-down** for the page — the bluntness is mine,
 the verbal habits are not load-bearing in prose.
@@ -196,13 +317,33 @@ the verbal habits are not load-bearing in prose.
 - **"parallels"** — reached for constantly in conversation. Tendency noted; vary the word in prose,
   keep the analogy move.
 - **"freaking cool"** — signature enthusiasm, but wears out fast; space it.
-- **"makes sense" / "makes a ton of sense"** — my default approval/landing phrase; vary it (lands,
-  clicks, fits, "that's the one").
+- **"makes sense" / "makes a ton of sense"** — my default approval/landing phrase (×23 in the
+  2026-07/08 corpus); vary it (lands, clicks, fits, "that's the one").
 - **"right?"** — spoken tag question; keep it out of prose entirely.
+- **"I'd like …"** — ×86 in this corpus; as a request opener it's fine in chat, but in prose it
+  reads as a single-note register. Vary.
+- **"It looks like …"** — ×46; keep the observation-first framing, rotate the wording (I'm seeing,
+  turns out, the symptom is).
+- **"etc."** — ×50, confirming the earlier flag; frequently stacked at clause ends. Cut or finish
+  the list.
+- **"essentially" / "basically"** — ×20 / ×7; rising filler pair. One per page, tops.
+- **"seems like"** — ×24; hedge-opener. Keep a hedge where honesty needs one, vary the word.
+- **"go ahead and"** — ×15; pure padding in prose.
+- **"and then"** — ×72; my chains read as "and then… and then…" — in prose break the chain into
+  sentences or a real sequence.
+- **"properly" / "consistently"** — ×24 / ×26; my default quality adverbs; name the actual
+  criterion instead.
 
 ---
 
 ## Provenance & sync
+- Updated 2026-08-07 — folded in ~1,100 authored messages (2026-07-02 → 2026-08-07): the
+  autoradiology pipeline arc (geometry, SSM 3D fits, cross-corpus fights), homelab gitops/openbao
+  /observability migration, skill-matrix hardening, MUD client + pylord builds, local-LLM harness
+  (clawd), and research-study process debugging. Expanded the descriptive layer per the owner's
+  "write like mike" request: added Phrasebook (with frequencies), Thought-process patterns, and
+  Decision heuristics subsections. Compaction-summary pastes, [Pasted text] stubs, error dumps,
+  and two agent-dictated setup scripts were excluded as non-authored noise.
 - Updated 2026-07-01 — folded in 158 new corpus messages (2026-06-21 → 2026-07-01): the ACI /
   capability-framework design arc, the radiology-metrics and diet/blood-type study kickoffs, D&D
   campaign setup, and a batch of skill-editing requests. Task-notification pastes, agent-dictated
@@ -211,9 +352,15 @@ the verbal habits are not load-bearing in prose.
   discussion with a colleague). Added inquiry-style and decisiveness traits and a spoken-register
   section. The conversation's topical content (its politics/ethics/religion) was deliberately
   excluded — only voice/thinking traits were taken.
-- Processed through: 2026-07-01T23:26:42Z
-- Repo-synced through: 2026-07-01T23:26:42Z
+- Processed through: 2026-08-07T23:09:22Z
+- Repo-synced through: 2026-08-07T23:09:22Z
 - Changelog:
+  - 2026-08-07 — "write like mike" expansion pass over ~1,100 messages (2026-07-02 → 2026-08-07):
+    added Phrasebook (21 entries with frequencies), Thought-process patterns (7 new + confirmations),
+    and Decision heuristics (11) subsections; new mechanics: "Sorry…" self-corrections, dictation
+    noise; Flagged overuse extended with "I'd like", "It looks like", "essentially/basically",
+    "seems like", "go ahead and", "and then", "properly/consistently", counts added to existing
+    flags. Prescriptive layer untouched.
   - 2026-07-01 — folded in 158 corpus messages. New descriptive traits: protect-my-coinages /
     resist-paraphrase, hunt-the-un-conflated-word, re-anchor-on-the-point ("the whole point of X
     is Y"), hypothesis-from-lived-experience, concrete-slightly-absurd test cases; mechanics: arrow

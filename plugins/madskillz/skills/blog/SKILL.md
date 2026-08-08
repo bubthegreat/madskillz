@@ -41,6 +41,12 @@ voice, **never** presented as the owner.
    wrote; never fabricate a stylistic trait. A pass that finds nothing new changes nothing.
 5. **No fabricated citations.** A real, resolvable source, or an honest "read up on X."
 
+### Machine setup (once per machine)
+`scripts/install_voice_pipeline.sh` installs the whole capture/auto-sync pipeline (voice dir, seeded
+live profile, both hooks, settings wiring, dedicated sync clone) — idempotent, safe to re-run.
+`scripts/backfill_corpus.py` then folds pre-existing local history (`~/.claude/history.jsonl` +
+project transcripts) into the corpus. Details: `references/voice-update.md` (Setup).
+
 ## Step 0 — Refresh the voice (always, before writing)
 Run the voice updater per `references/voice-update.md`: ensure `~/.madskillz/voice/voice.md` exists
 (seed it from the owner's committed `references/voices/science-blog.md` on first run — falling back to
