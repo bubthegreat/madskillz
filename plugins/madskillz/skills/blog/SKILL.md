@@ -71,8 +71,10 @@ guidance so conversational tics and overused phrases don't leak into the prose. 
 term; keep the wonder; keep honest open threads.
 
 ## Step 3 — Deliver
-Save the post (default `~/.madskillz/voice/posts/<slug>.md`, or a path the owner gives) and show it. The
-human publishes it. This skill does not post to any platform.
+Save the post to the owner's blog folder (default `~/blog/<slug>/<slug>.md`, or a path the owner
+gives) along with any rendered artifacts (PDF etc.) for that post, and show it. Finished posts are
+the owner's documents — they do **not** live in `~/.madskillz/` (skill state) or any repo checkout.
+The human publishes it. This skill does not post to any platform.
 
 ## Blogging an existing study (optional)
 Point the skill at a study folder to blog it retroactively: reconstruct the journey from its
