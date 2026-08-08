@@ -86,7 +86,11 @@ not appear in a post). Not every journey has a reversal; when there isn't one, d
   imperfect, I devolve into the pedantic counter-argument myself ("technically it could roll
   differently because we painted it - heat absorption, friction, temp differences...").
   The honesty is the bit. Best case, the counter-argument quietly foreshadows real physics
-  coming later in the piece.
+  coming later in the piece. **Foreshadowing direction matters (owner-corrected 2026-08-08):**
+  at the setup, only a conceptual comment - never a forward promise ("file that away," "it's
+  about to be the whole point" are AI tells). The pointing happens at the *convergence*: when
+  the idea comes true, point back to the earlier comment explicitly so the connection lands
+  retroactively ("this is my bowling-ball counter-argument showing back up as real physics").
 - **Teasing.** Gently rib the subject, the reader, and — mostly — myself.
 - **Dad jokes.** Yes. Puns and groaners, the worse the better, deployed deadpan and never
   apologized for. A good one earns an eye-roll; that's the whole point.
@@ -425,6 +429,8 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - Processed through: 2026-08-07T23:45:00Z
 - Repo-synced through: 2026-08-07T23:45:00Z
 - Changelog:
+  - 2026-08-08 (foreshadowing) - foreshadow with a conceptual comment only, never a forward
+    promise; the explicit pointer happens at the convergence, pointing back.
   - 2026-08-08 (transitions) - close each alternative as its own complete thought (why it's a
     dead end, spelled out) before transitioning; never rely on the reader to convert an
     implication into the conclusion.
