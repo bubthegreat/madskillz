@@ -19,7 +19,9 @@ labels** — never name a beat in the prose (no "record scratch moment", no "her
 5. **What's actually going on** — the real thing, plain and *correct*, wonder intact. This is the
    heart of the post: after a correction, **slow down and be fully descriptive** — unpack the
    mechanism step by step until a general reader actually gets it, not just believes it. A gloss for
-   every technical term; a real source or an honest "read up on X" where background is needed.
+   every technical term. **Real sources as inline hyperlinks, crediting the people who figured it
+   out**, placed where each idea shows up — the reader should be able to walk the same journey
+   through the sources; unlinked claims read as "trust me bro."
 6. **Why it's cool / how it reframed me** — the payoff: reality beat my guess.
 7. **Kicker** — a punchy close; often "…and now I'm confused about *this* next."
 
