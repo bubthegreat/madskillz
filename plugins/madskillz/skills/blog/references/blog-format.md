@@ -28,6 +28,11 @@ labels** — never name a beat in the prose (no "record scratch moment", no "her
 Length: whatever the journey earns — usually 500–1200 words. No padding, but backstory and the
 post-correction explanation are **not** padding; cutting them to hit a word count is the failure mode.
 
+**Posts based on a study must link the actual published study** (footer at minimum) so genuinely
+interested readers can go read the full work. Prefer the public location
+(`jmresearch/research-public`) when the study has been promoted; otherwise link the study's home
+repo and swap in the public link once it exists.
+
 ## blog-notes
 
 One entry per genuinely-interesting question/correction, ranked by merit (best first):
