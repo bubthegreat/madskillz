@@ -1,0 +1,22 @@
+characters:
+  elena:
+    lockup: >-
+      ELENA, early thirties, sharp jaw, dark curls tied back, faint scar through the
+      left eyebrow, olive canvas field jacket over a grey henley, brass pendant at the
+      throat, no makeup
+    plate: bible/plates/elena-03.png
+  marcus:
+    lockup: >-
+      MARCUS, sixties, heavy grey beard, wire-rim glasses, brown cardigan with elbow
+      patches, ink-stained fingers
+    plate: bible/plates/marcus-01.png
+
+locations:
+  study:
+    lockup: >-
+      A cramped book-lined study, rain-streaked sash window, one brass desk lamp, papers
+      in drifts across an oak desk
+
+voices:
+  elena_vo:
+    ref: bible/voices/elena.wav

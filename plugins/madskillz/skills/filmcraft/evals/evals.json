@@ -1,0 +1,82 @@
+{
+  "skill": "filmcraft",
+  "description": "Trigger and behavior evals for the generative-film skill: co-design, casting lockups, shot-list validation, cost gating, generation, continuity QA, and assembly.",
+  "tests": [
+    {
+      "id": "trigger-make-a-movie",
+      "prompt": "I want to make a short film with Grok",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on generative film request",
+        "Starts with Phase 1 co-design (logline, runtime, look book, audio strategy)",
+        "States the projected generation cost before any shots are written",
+        "Does not skip to generating clips"
+      ]
+    },
+    {
+      "id": "trigger-storyboard",
+      "prompt": "Storyboard this scene into shots I can generate",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on storyboard/shot-list request",
+        "Produces shots.yaml rows with size, angle, move, screen_dir, duration, and edit points",
+        "Runs shot_check.py and resolves blockers before proposing generation"
+      ]
+    },
+    {
+      "id": "trigger-adapt-book",
+      "prompt": "Turn chapter one of my goblin book into a film",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on adaptation request",
+        "Follows storycraft-handoff: imports the story bible rather than re-running co-design",
+        "Surfaces added visual canon (features the book never described) for user approval",
+        "Never edits the storycraft stories repo"
+      ]
+    },
+    {
+      "id": "trigger-character-drift",
+      "prompt": "My character's face keeps changing between clips",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers on continuity drift",
+        "Diagnoses generation mode first (text vs reference) per casting.md",
+        "Recommends locked lockups and reference plates, not prompt tinkering",
+        "Suggests trimming within handles before paying for a re-take"
+      ]
+    },
+    {
+      "id": "behavior-cost-gate",
+      "prompt": "Just generate all 60 shots now",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Runs estimate_cost.py and reports the projected spend before generating",
+        "Requires explicit confirmation (--yes) before spending",
+        "Refuses to exceed budget_usd rather than warning and proceeding",
+        "Does not fabricate generated clips"
+      ]
+    },
+    {
+      "id": "behavior-no-api-key",
+      "prompt": "Generate the first scene",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Detects missing XAI_API_KEY and falls back to packet mode",
+        "States plainly that prompts were written, not clips generated",
+        "Does not present packet output as finished film"
+      ]
+    },
+    {
+      "id": "no-trigger-write-a-story",
+      "prompt": "Write me a short story about a goblin",
+      "should_trigger": false,
+      "grading_criteria": ["Routes to storycraft, not filmcraft — no film is being produced"]
+    },
+    {
+      "id": "no-trigger-edit-existing-video",
+      "prompt": "Trim 10 seconds off this mp4",
+      "should_trigger": false,
+      "grading_criteria": ["Plain ffmpeg task; no shot list, generation, or film production involved"]
+    }
+  ]
+}
