@@ -61,7 +61,7 @@ available; say so honestly when you cannot).
   paper's framing) and continue — the study is then framed honestly as a
   replication/validation, not as novel work.
 
-**Audience.** The study is written for a **~10th-grade general reader** by default (see Step 2 and
+**Audience.** The study is written for a **~9th-grade general reader** by default (see Step 2 and
 `scientific-peer-review/references/expected-reader.md`). If it is deliberately aimed at a specialist
 audience, record that intended audience as explicit context in the brief and the paper's framing —
 the same honest-context discipline as a replication/validation study — so the drafting and the
@@ -90,7 +90,7 @@ colliding on a shared checkout.
 After gathering evidence (from Step 1 deep-research or initial synthesis), write `story-spine.md`
 in the study folder using the template in `references/story-spine.md`. Complete all five fields:
 starting hypothesis, what the data showed, the turn, the one-sentence arc, and the abstract spine
-(3 sentences, 10th-grade). Commit `story-spine.md` alone as `narrative: story spine for <slug>`
+(3 sentences, 9th-grade). Commit `story-spine.md` alone as `narrative: story spine for <slug>`
 before writing any prose in `paper.md`.
 
 ### Step 2b — Draft the paper
@@ -183,15 +183,62 @@ world-claims concentrate, and the `claims-ledger` reviewer audits them sentence 
 Step 3.
 
 Write for the expected reader defined in
-`scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general
+`scientific-peer-review/references/expected-reader.md` — by default a **~9th-grade general
 reader** (no specialist background; standard concepts such as p-values are defined, not presumed),
 unless this study is deliberately framed for a specialist audience (see Step 1): the abstract
-doubles as the plain-language summary, define every acronym on first use and every specialized
-term in the glossary, and end the manuscript with the required back-matter — an **Acronyms**
-index, a **Glossary**, and an optional **Background / further reading** section (see
-`references/repo-layout.md`). Background readings must be verified sources or clearly-marked
-topic suggestions, never fabricated citations. If this is a replication/validation study (per
-Step 1), frame it as such. Commit the initial draft (`draft: initial <slug>`).
+doubles as the plain-language summary, and every acronym is defined on first use and every
+specialized term is glossed in-line where it first appears. The back-matter — an **Acronyms**
+index, a **Glossary**, and an optional **Background / further reading** section — sits at the
+**end of `extended-data.md`**, not in `paper.md`; `paper.md` ends at **References** (see
+`references/manuscript-structure.md`). Background readings must be verified sources or
+clearly-marked topic suggestions, never fabricated citations. If this is a replication/validation
+study (per Step 1), frame it as such.
+
+### Step 2c — The house writing standards (the default register)
+
+These are the owner's standing standards. They are the default for every study, and they apply to
+all four manuscript documents unless a rule names one document.
+
+**1 — 9th-grade prose.** Follow `scientific-peer-review/references/expected-reader.md` in full,
+including its register rules: short declarative sentences carrying one idea each; every technical
+term glossed in-line at first use; no sarcasm and no colloquialism; clear referents, so no pronoun
+ever points at two possible things; and **one bound per claim, stated once, next to the claim** —
+never a stack of qualifiers.
+
+**2 — Minimal citations.** Each point cites **the single best source that proves or disproves it**.
+One point, one citation. Do not pile on agreeing sources to look thorough; a stack of citations
+hides which source the claim actually rests on. A point may carry more than one citation **only
+when the text states the reason** — for example, "four samples set that range, one of them a
+synthesis of the others' field, which is why four sources are cited," or "two sources are cited
+because each half of the sentence rests on different evidence." If the reason cannot be written
+into the sentence, the extra citations do not belong there. **Every other source in the store is
+still inventoried** — in the supplementary documents, each with a one-line reason it carries no
+claim in the paper. Nothing is dropped; it is relocated.
+
+**3 — No process or iteration narrative, anywhere in the manuscript.** The manuscript reports what
+is true, not how the work got there. Nothing in `paper.md`, `methods.md`, `extended-data.md` or
+`supplementary.md` describes how agents were organized, how a draft changed, what a review round
+asked for, or what an earlier version said. That record belongs in `review/`, `journey/` and the
+git log, which exist for it. This is broader than the draft-history rule above: **`methods.md`
+describes the procedure that produced the result, not the history of the writing.** "A second
+agent re-extracted 20% of the rows" is procedure and belongs in Methods. "After cycle 2 a reviewer
+asked for the re-check" is history and belongs in `review/`.
+
+**4 — Banned phrasings.** Each of these is a build defect, not a style note:
+
+- **Invented jargon dressed as a standard term.** Do not coin a phrase — "the priced seam," "the
+  accountability gap" — and then use it as though the field already uses it. If a term is this
+  study's own shorthand, say so in the sentence that introduces it, or use plain words instead.
+- **A comparison against an unquantified foil.** "Smaller than the popular claim" is not a
+  comparison until the popular claim carries a number. Quantify both sides, or drop the comparison
+  and state the measured value on its own.
+- **Pre-rating flourishes.** "And it's a big one," "the interesting part is," "strikingly,"
+  "notably." These tell the reader how to feel before the reader has the number. State the number
+  and let it rate itself.
+- **Hedge stacking.** "May possibly suggest, in some cases, that…" is not caution. It is an
+  unfalsifiable sentence. Write the one real bound, once (standard 1).
+
+Commit the initial draft (`draft: initial <slug>`).
 
 ## Step 3 — Agentic peer-review quality-gate loop
 
@@ -229,15 +276,21 @@ uv run <skill>/scripts/check-budgets.py <topic>/<research-short-name>   # must e
 uv run <skill>/scripts/render-paper.py <topic>/<research-short-name>
 ```
 
-The renderer assembles all four documents in order — `paper.md`, then Methods, Extended Data and
-Supplementary Information as clearly labelled back sections — into one PDF and one EPUB.
+**One run produces two builds, and both are committed.** They serve two different readers.
 
-It writes `build/<research-short-name>.pdf` (Typst-typeset, no LaTeX) and
-`build/<research-short-name>.epub` (reflowable, adjustable text on an e-reader) into
-the study folder, with a table of contents and the `assets/` figures and tables
-embedded. Commit them so they ship in the PR (`render: build PDF + EPUB …`). `pandoc`
-and `typst` must be on PATH — install per `references/render.md` if missing; if
-neither can be installed, publish without the artifacts and say so. Never fake a build.
+| Build | Files | Contents | Table of contents | For |
+|---|---|---|---|---|
+| **Paper only** | `build/<research-short-name>-paper-only.pdf` / `.epub` | `paper.md` alone | **No** | Reading. It is short, so it needs no contents page |
+| **Full assembly** | `build/<research-short-name>.pdf` / `.epub` | `paper.md`, then Methods, Extended Data and Supplementary Information as clearly labelled back sections | Yes | Checking the work |
+
+The paper-only build is the one a person actually reads. The full assembly is the one a person
+opens to verify a number, so it keeps its table of contents and its back sections.
+
+Both are Typst-typeset PDFs (no LaTeX) and reflowable EPUBs (adjustable text on an e-reader), with
+the `assets/` figures and tables embedded, written into the study folder's `build/`. Commit all
+four files so they ship in the PR (`render: build PDF + EPUB …`). `pandoc` and `typst` must be on
+PATH — install per `references/render.md` if missing; if neither can be installed, publish without
+the artifacts and say so. Never fake a build.
 
 ## Step 5b — (retired in v0.22.0)
 

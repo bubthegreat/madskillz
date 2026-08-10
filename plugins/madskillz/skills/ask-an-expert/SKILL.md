@@ -66,7 +66,7 @@ inputs it needs — within its stated Scope. If the question falls in its **Boun
 and recommend (or find, via Step 2) the right expertise instead of guessing.
 
 - **Answering directly:** a clear, sourced answer with stated confidence and any caveats,
-  written for a **~10th-grade general reader** by default — define specialist terms in plain
+  written for a **~9th-grade general reader** by default — define specialist terms in plain
   language (see `scientific-peer-review/references/expected-reader.md`) — unless the user is
   clearly asking at a specialist level or requests specialist depth, in which case match their
   level.

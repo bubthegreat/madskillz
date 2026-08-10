@@ -4,8 +4,13 @@
 # ///
 """Render a scientific-study manuscript to PDF + EPUB.
 
-Assembles the four-document contract -- paper.md, then Methods, Extended Data
-and Supplementary Information -- into one PDF and one EPUB.
+One run produces two builds, because they serve two different readers:
+
+* the **paper-only** build -- paper.md alone, no table of contents -- which is
+  what a person reads; it is short enough not to need a contents page;
+* the **full assembly** -- paper.md, then Methods, Extended Data and
+  Supplementary Information, with a table of contents -- which is what a person
+  opens to check a number.
 
 PDF via pandoc's Typst engine (no LaTeX); EPUB via pandoc. Pure stdlib; the
 external tools `pandoc` and `typst` must be on PATH.
@@ -16,7 +21,9 @@ present. pandoc runs with the study folder as its working directory so the
 paper's relative `assets/…` image paths and tables resolve.
 
 Run: `uv run render-paper.py <study_dir>`  (study_dir contains paper.md)
-Writes: `<study_dir>/build/<slug>.pdf` and `<study_dir>/build/<slug>.epub`.
+Writes into `<study_dir>/build/`:
+    <slug>-paper-only.pdf  <slug>-paper-only.epub   (paper.md alone, no toc)
+    <slug>.pdf             <slug>.epub              (full assembly, with toc)
 """
 from __future__ import annotations
 
@@ -118,43 +125,58 @@ def render(study_dir: Path, out_dir: Path | None = None) -> dict:
     author = derive_author(study_dir)
     date = readme_field(study_dir, "Created")
 
-    # Temp source with the H1 removed; rendered with study_dir as cwd so relative
-    # `assets/…` paths resolve. Kept inside build/ and removed afterward.
-    src = out_dir / f"{slug}.src.md"
-    src.write_text(assemble(study_dir, body), encoding="utf-8")
-    pdf = out_dir / f"{slug}.pdf"
-    epub = out_dir / f"{slug}.epub"
-
     meta = ["--metadata", f"title={title}"]
     if author:
         meta += ["--metadata", f"author={author}"]
     if date:
         meta += ["--metadata", f"date={date}"]
 
-    common = [
-        "pandoc", str(src),
-        "--from", "gfm",            # authored for GitHub; treats lone `$` as literal currency
-        "--toc", "--number-sections",
-        "--resource-path", str(study_dir),
-        *meta,
+    # Two builds, one run. The paper-only build gets no table of contents: the
+    # paper is short, and a contents page in front of it is noise.
+    #   (markdown source, output stem, table of contents)
+    builds = [
+        (body.rstrip() + "\n", f"{slug}-paper-only", False),
+        (assemble(study_dir, body), slug, True),
     ]
-    try:
-        subprocess.run(
-            [*common, "-o", str(pdf), "--pdf-engine=typst"],
-            cwd=study_dir, check=True, capture_output=True, text=True,
-        )
-        subprocess.run(
-            [*common, "-o", str(epub)],
-            cwd=study_dir, check=True, capture_output=True, text=True,
-        )
-    except subprocess.CalledProcessError as e:
-        # Surface the real pandoc/typst failure; never swallow it.
-        raise RuntimeError(f"render failed:\n{e.stderr or e.stdout}") from e
-    finally:
-        src.unlink(missing_ok=True)
 
-    included = [h for f, h in BACK_SECTIONS if (study_dir / f).exists()]
-    return {"pdf": pdf, "epub": epub, "title": title, "parts": included}
+    out = {"title": title, "parts": [h for f, h in BACK_SECTIONS if (study_dir / f).exists()]}
+    for text, stem, toc in builds:
+        # Temp source with the H1 removed; rendered with study_dir as cwd so relative
+        # `assets/…` paths resolve. Kept inside build/ and removed afterward.
+        src = out_dir / f"{stem}.src.md"
+        src.write_text(text, encoding="utf-8")
+        pdf = out_dir / f"{stem}.pdf"
+        epub = out_dir / f"{stem}.epub"
+
+        common = [
+            "pandoc", str(src),
+            "--from", "gfm",        # authored for GitHub; treats lone `$` as literal currency
+            *(["--toc"] if toc else []),
+            "--number-sections",
+            "--resource-path", str(study_dir),
+            *meta,
+        ]
+        try:
+            subprocess.run(
+                [*common, "-o", str(pdf), "--pdf-engine=typst"],
+                cwd=study_dir, check=True, capture_output=True, text=True,
+            )
+            subprocess.run(
+                [*common, "-o", str(epub)],
+                cwd=study_dir, check=True, capture_output=True, text=True,
+            )
+        except subprocess.CalledProcessError as e:
+            # Surface the real pandoc/typst failure; never swallow it.
+            raise RuntimeError(f"{stem} render failed:\n{e.stderr or e.stdout}") from e
+        finally:
+            src.unlink(missing_ok=True)
+
+        # Full-assembly paths keep the bare `pdf`/`epub` keys they have always had.
+        prefix = "" if toc else "paper_"
+        out[f"{prefix}pdf"] = pdf
+        out[f"{prefix}epub"] = epub
+
+    return out
 
 
 def main(argv: list[str]) -> int:
@@ -167,6 +189,9 @@ def main(argv: list[str]) -> int:
                   "a 4,300-word paper is its own digest.", file=sys.stderr)
         return 2
     out = render(Path(positional[0]))
+    print(f"wrote {out['paper_pdf']}")
+    print(f"wrote {out['paper_epub']}")
+    print("  paper only, no table of contents — the reading copy")
     print(f"wrote {out['pdf']}")
     print(f"wrote {out['epub']}")
     if out["parts"]:

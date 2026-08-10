@@ -81,11 +81,11 @@
       ]
     },
     {
-      "id": "readability-10th-grade-default",
+      "id": "readability-9th-grade-default",
       "prompt": "Review this paper for readability. [draft attached: a general-audience study that uses \"p-value\", \"confidence interval\", and \"regression\" without ever defining them, and makes no specialist-audience declaration]",
       "should_trigger": true,
       "grading_criteria": [
-        "Plain-language reviewer calibrates to the ~10th-grade general-reader default (per expected-reader.md), since no specialist audience is declared",
+        "Plain-language reviewer calibrates to the ~9th-grade general-reader default (per expected-reader.md), since no specialist audience is declared",
         "Flags the undefined standard concepts (p-value, confidence interval, regression) as needing a plain-language definition — does NOT treat them as presumable",
         "Findings stay no higher than major and defer to correctness; never blocker"
       ]

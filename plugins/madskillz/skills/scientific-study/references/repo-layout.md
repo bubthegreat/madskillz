@@ -44,16 +44,18 @@ and opened as a PR (see `git-workflow.md`):
   fill `<YEAR>` and `<COPYRIGHT HOLDER>`. CC BY 4.0 legal code is used as-is; the
   attribution/copyright line lives in `README.md` and `ATTRIBUTIONS.md`.
 
-## paper.md structure (required back-matter)
+## Required back-matter (at the end of `extended-data.md`)
 
 The manuscript is written for the expected reader defined in
-`scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general reader**
+`scientific-peer-review/references/expected-reader.md` — by default a **~9th-grade general reader**
 with no specialist background (standard concepts such as p-values are defined in plain language, not
 presumed), unless the study explicitly declares a specialist intended audience. The **abstract**
 doubles as the plain-language summary — a reader at that level grasps what was done and found from
 it alone. There is no separate lay-summary section.
 
-End the manuscript with this back-matter, in this order:
+**`paper.md` ends at References.** The back-matter below sits at the **end of `extended-data.md`**,
+after the last display item, and does not count against that file's 10-item cap (see
+`references/manuscript-structure.md`). End `extended-data.md` with these sections, in this order:
 
 ```markdown
 ## Acronyms
@@ -115,12 +117,15 @@ carry a `[C]/[D]/[A]` provenance legend in the published paper.
 - **Status:** <in-review (PR open) | merged>
 
 ## Contents
-- `paper.md` — manuscript (ends with Acronyms, Glossary, and optional Background / further reading)
+- `paper.md` — the paper (ends at References)
+- `methods.md`, `extended-data.md`, `supplementary.md` — the back documents; `extended-data.md`
+  ends with Acronyms, Glossary, and optional Background / further reading
 - `assets/` — <one line>
 - `data/` — <one line; note any reference-only datasets>
 - `scripts/` — <one line>
 - `review/` — per review cycle: the report (`cycle-N.md`) and the reviewed paper snapshot (`cycle-N-paper.md`)
-- `build/` — rendered `<slug>.pdf` (Typst) and `<slug>.epub` of the manuscript
+- `build/` — `<slug>-paper-only.pdf`/`.epub` (the paper alone, for reading) and `<slug>.pdf`/`.epub`
+  (the full assembly, for checking the work)
 
 ## Licensing
 - Paper, data, and assets: **CC BY 4.0** (`LICENSE`).

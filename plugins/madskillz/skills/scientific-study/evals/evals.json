@@ -104,11 +104,11 @@
       ]
     },
     {
-      "id": "readability-10th-grade-default",
+      "id": "readability-9th-grade-default",
       "prompt": "Draft a paper on <topic> and get it ready to publish (general audience).",
       "should_trigger": true,
       "grading_criteria": [
-        "Writes for a ~10th-grade general reader by default (per scientific-peer-review/references/expected-reader.md), without sacrificing correctness",
+        "Writes for a ~9th-grade general reader by default (per scientific-peer-review/references/expected-reader.md), without sacrificing correctness",
         "The abstract works as a plain-language summary a general reader can follow on its own",
         "Standard concepts (e.g. p-value, confidence interval) are defined in plain language on first use and carried in the Glossary, not presumed",
         "Calibrates up only if the study explicitly declares a specialist intended audience"

@@ -39,6 +39,11 @@ their attention on whether the claims are true.
 ## References
 ```
 
+**`paper.md` ends at References.** Nothing follows the reference list. The reader-facing
+back-matter — the **Acronyms** index, the **Glossary**, and any **Background / further reading** —
+lives at the **end of `extended-data.md`** (see below). Keeping it out of `paper.md` is what makes
+the paper short enough to read in one sitting, which is the whole point of the budget.
+
 **Summary paragraph — ≤200 words.** Per Nature: *"a fully referenced summary paragraph, ideally of
 no more than 200 words … aimed at readers outside the field"*, and it **avoids numbers,
 abbreviations, acronyms and measurements unless essential**. That constraint is the point: a summary
@@ -63,6 +68,24 @@ Maintain one master list at the end of `paper.md`.
 > **Generate the numbering; never hand-maintain it.** A four-document manuscript with a shared
 > sequential reference list is exactly the artifact where hand-maintained numbering drifts, and
 > drift here is a citation-integrity defect, not a formatting nit.
+
+**Minimal citations — the paper's list carries only what the paper cites.** Each point in the
+paper cites the single best source that proves or disproves it. A point carries more than one
+citation only when the text states the reason, in the sentence itself. So the reference list at
+the end of `paper.md` holds **only sources actually cited in `paper.md`** — nothing is listed
+there for completeness.
+
+Every other source in the store is **displaced, not dropped**. Displaced sources get **numbered
+continuations of the same sequence** in the supplementary documents, each with **a one-line reason
+it carries no claim in the paper** — superseded by a better source, agrees with a source already
+cited, background only, could not be verified, and so on. The numbering runs on from the paper's
+last reference, so a reference number means one source across the whole manuscript. Close the
+paper's list with one line pointing at the continuation, for example: *"Every other source in the
+store is listed in Supplementary S1, with the reason it carries no claim in this paper."*
+
+This is what keeps the ≤50 cap honest. A paper that stacks four agreeing citations on one sentence
+is not better supported than one that cites the best of the four; it has only hidden which source
+the claim rests on.
 
 ## `methods.md` — structure
 
@@ -106,6 +129,27 @@ in the printed version due to space constraints or being of interest only to a f
 Every item must be cited from `paper.md` or `methods.md`. An uncited Extended Data item is either
 unnecessary or a symptom that the main text is missing something.
 
+### Reader back-matter — at the end of `extended-data.md`
+
+`extended-data.md` **ends** with the reader-facing back-matter, after the last display item:
+
+```
+## Acronyms                        (every acronym used in any document, expanded)
+## Glossary                        (every specialized term, defined for the expected reader)
+## Background / further reading    (optional; verified sources or clearly-marked suggestions)
+```
+
+**These do not count against the 10-display-item cap.** They are reference apparatus for the
+reader, not evidence, even when the Acronyms index is shaped like a table. `check-budgets.py`
+counts only headings of the form `Extended Data Fig. N` / `Extended Data Table N`, so back-matter
+tables are already outside the count.
+
+Why they sit here and not in `paper.md`: a reader looking up a term is no longer reading the
+paper, and the paper is meant to be readable straight through. Everything the term-lookup reader
+needs is in one place, next to the detail they will look up next. The in-line gloss at first use
+(see `scientific-peer-review/references/expected-reader.md`) is what serves the straight-through
+reader, so the Glossary is the second copy, not the first.
+
 ## `supplementary.md`
 
 Uncapped. Long-form limitations, per-row provenance notes, full source inventories, sensitivity
@@ -142,7 +186,12 @@ been forced to drop.
 - [ ] `paper.md` body ≤4,300 words
 - [ ] Summary ≤200 words, no acronyms or measurements unless essential
 - [ ] ≤4 display items in `paper.md`; every figure legend <300 words and free of methods detail
-- [ ] ≤50 references cited in `paper.md`
+- [ ] ≤50 references cited in `paper.md`, and the list holds **only** sources cited in `paper.md`
+- [ ] Every point cites one source, or states in the text why it cites more than one
+- [ ] Displaced sources are numbered on from the paper's list in the supplementary documents, each
+      with a one-line reason
+- [ ] `paper.md` ends at References — no Acronyms, Glossary or Background section after it
+- [ ] `extended-data.md` ends with Acronyms, Glossary, and optional Background / further reading
 - [ ] No section heading states a thesis; no subheading over 40 characters
 - [ ] `methods.md` ≤3,000 words and contains **no** figures or tables
 - [ ] `methods.md` has a *Deviations from the analysis plan* section, filled honestly

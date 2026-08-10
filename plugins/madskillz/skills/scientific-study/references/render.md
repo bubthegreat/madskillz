@@ -64,12 +64,18 @@ uv run plugins/madskillz/skills/scientific-study/scripts/render-paper.py <study_
 2. Runs `pandoc` with the **study folder as the working directory**, so the paper's
    relative `assets/…` image paths and pipe tables resolve. Reader is `gfm` (the
    papers are authored for GitHub; a lone `$` stays literal currency, not math).
-3. Writes, with a table of contents and numbered sections:
+3. Writes **two builds**, four files, with numbered sections:
 
-| File | Format | Purpose |
-|---|---|---|
-| `<study_dir>/build/<slug>.pdf` | PDF via Typst | Fixed-layout / print; figures embedded |
-| `<study_dir>/build/<slug>.epub` | EPUB 3 (reflowable) | E-reader target; adjustable text |
+| File | Format | Contents | Table of contents | Purpose |
+|---|---|---|---|---|
+| `build/<slug>-paper-only.pdf` | PDF via Typst | `paper.md` alone | **No** | Reading; fixed-layout / print |
+| `build/<slug>-paper-only.epub` | EPUB 3 (reflowable) | `paper.md` alone | **No** | Reading on an e-reader |
+| `build/<slug>.pdf` | PDF via Typst | full assembly | Yes | Checking the work |
+| `build/<slug>.epub` | EPUB 3 (reflowable) | full assembly | Yes | Checking the work |
+
+The paper-only build is the copy a person reads. The paper is short, so a contents page in front of
+it is noise. The full assembly is the copy a person opens to verify a number, so it keeps its
+contents page and its back sections. Commit all four.
 
 The script exits non-zero if either tool is missing or either render fails, passing
 through the underlying pandoc/typst error so the failure is visible.
@@ -85,6 +91,8 @@ git -C "$WT" add "<topic>/<research-short-name>/build"
 git -C "$WT" commit -m "render: build PDF + EPUB for <research-short-name>"
 ```
 
+Commit **all four files** — both builds ship in the PR.
+
 End the commit message with the `Co-Authored-By:` trailer per `git-workflow.md`.
 
 ## Troubleshooting
@@ -99,7 +107,8 @@ End the commit message with the `Co-Authored-By:` trailer per `git-workflow.md`.
 
 ## The four-document assembly
 
-The renderer assembles the whole manuscript, in reading order, into **one** PDF and **one** EPUB:
+The **full** build assembles the whole manuscript, in reading order, into one PDF and one EPUB
+(the paper-only build skips all of this and renders `paper.md` by itself):
 
 | Order | File | Rendered as |
 |---|---|---|

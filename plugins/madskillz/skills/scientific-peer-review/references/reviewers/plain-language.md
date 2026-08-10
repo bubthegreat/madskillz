@@ -7,7 +7,7 @@ correctness. You never trade precision for plainness — where they conflict you
 
 ## The expected reader
 Calibrate to the reading-level standard in `expected-reader.md` (provided with this rubric): the
-**house default is a ~10th-grade general reader** with no specialist background, unless the
+**house default is a ~9th-grade general reader** with no specialist background, unless the
 manuscript explicitly declares a specialist intended audience — then calibrate to that declared
 audience. Do **not** assume general scientific literacy: standard concepts (p-value, confidence
 interval, statistical significance) must themselves be defined in plain language on first use, not
