@@ -96,8 +96,57 @@ def test_assemble_prompt_order_and_not_prefix(book):
 
 def test_only_approved_briefs_selected(book):
     approve(book, "01-brief.md")  # 02 stays draft
-    todo = generate.select_briefs(book)
+    todo, malformed = generate.select_briefs(book)
     assert [p.name for p in todo] == ["01-brief.md"]
+    assert malformed == []
+
+
+def test_malformed_brief_reported_not_crashing(book, capsys):
+    approve(book, "01-brief.md")
+    bad = book / "video" / "01-the-sneeze" / "02-brief.md"
+    bad.write_text("---\nstatus: approved\n## Scene\nno closing fence")
+    api = FakeAPI()
+    rc = run(book, api)
+    assert rc == 1
+    assert "malformed brief skipped" in capsys.readouterr().err
+    assert api.submits == 1  # the good brief still generated
+    assert (book / "video" / "01-the-sneeze" / "01.mp4").exists()
+
+
+def test_submit_http_error_marks_failed(book):
+    brief = approve(book)
+
+    def handler(request):
+        return httpx.Response(500, text="server exploded")
+
+    client = httpx.Client(base_url="https://api.test",
+                          transport=httpx.MockTransport(handler))
+    with client:
+        rc = generate.process(book, client=client, sleep=lambda s: None)
+    assert rc == 1
+    front, _ = generate.parse_brief(brief)
+    assert front["status"] == "failed"
+    assert "500" in front["error"]
+
+
+def test_disk_write_error_marks_failed(book, monkeypatch):
+    import pathlib as _pl
+
+    brief = approve(book)
+    orig = _pl.Path.write_bytes
+
+    def flaky(self, data):
+        if self.suffix == ".mp4":
+            raise OSError("disk full")
+        return orig(self, data)
+
+    monkeypatch.setattr(_pl.Path, "write_bytes", flaky)
+    api = FakeAPI()
+    rc = run(book, api)
+    assert rc == 1
+    front, _ = generate.parse_brief(brief)
+    assert front["status"] == "failed"
+    assert "disk full" in front["error"]
 
 
 def test_dry_run_touches_nothing(book, capsys):

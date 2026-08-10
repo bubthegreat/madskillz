@@ -36,10 +36,10 @@ DOWNLOAD_RETRIES = 3
 
 def parse_brief(path: Path) -> tuple[dict, str]:
     text = path.read_text(encoding="utf-8")
-    if not text.startswith("---"):
-        raise RuntimeError(f"{path}: brief has no frontmatter")
-    _, front_text, body = text.split("---", 2)
-    return yaml.safe_load(front_text) or {}, body.lstrip("\n")
+    parts = text.split("---", 2)
+    if not text.startswith("---") or len(parts) < 3:
+        raise RuntimeError(f"{path}: brief has no closed frontmatter block")
+    return yaml.safe_load(parts[1]) or {}, parts[2].lstrip("\n")
 
 
 def write_brief(path: Path, front: dict, body: str) -> None:
@@ -75,16 +75,24 @@ def assemble_prompt(style_block: str, sections: dict[str, str]) -> str:
     return "\n\n".join(p for p in parts if p)
 
 
-def select_briefs(book_dir: Path, chapter: str | None = None) -> list[Path]:
+def select_briefs(
+    book_dir: Path, chapter: str | None = None
+) -> tuple[list[Path], list[tuple[Path, str]]]:
+    """Return (approved briefs, [(malformed brief, reason), ...])."""
     video_dir = book_dir / "video"
-    briefs = []
+    briefs: list[Path] = []
+    malformed: list[tuple[Path, str]] = []
     for path in sorted(video_dir.glob("*/[0-9][0-9]-brief.md")):
         if chapter and path.parent.name != chapter:
             continue
-        front, _ = parse_brief(path)
+        try:
+            front, _ = parse_brief(path)
+        except (RuntimeError, yaml.YAMLError) as e:
+            malformed.append((path, str(e)))
+            continue
         if front.get("status") == "approved":
             briefs.append(path)
-    return briefs
+    return briefs, malformed
 
 
 def mp4_path(brief: Path) -> Path:
@@ -133,6 +141,8 @@ def download(client: httpx.Client, url: str, dest: Path, sleep) -> str | None:
             last = f"download HTTP {resp.status_code}"
         except httpx.HTTPError as e:
             last = f"download error: {e}"
+        except OSError as e:
+            return f"could not write {dest}: {e}"
         sleep(2)
     return last
 
@@ -149,10 +159,13 @@ def process(
     book_dir = Path(book_dir)
     style_path = book_dir / "video" / "style-block.md"
     style_block = style_path.read_text(encoding="utf-8") if style_path.exists() else ""
-    briefs = select_briefs(book_dir, chapter)
+    briefs, malformed = select_briefs(book_dir, chapter)
+    for path, reason in malformed:
+        print(f"malformed brief skipped: {path.relative_to(book_dir)}: {reason}",
+              file=sys.stderr)
     if not briefs:
         print("no approved briefs to generate")
-        return 0
+        return 1 if malformed else 0
     if len(briefs) > max_clips:
         print(f"capping at --max-clips {max_clips}: {len(briefs)} approved, "
               f"{len(briefs) - max_clips} deferred to a later run")
@@ -173,13 +186,25 @@ def process(
             results.append((brief, "dry-run"))
             continue
 
-        request_id = front.get("request_id") or ""
-        if not request_id:
-            request_id = submit(client, prompt, front)
-            front["request_id"] = request_id
-            write_brief(brief, front, body)  # saved before polling: crash-safe resume
-
-        data = poll(client, request_id, poll_timeout, sleep)
+        try:
+            request_id = front.get("request_id") or ""
+            if not request_id:
+                request_id = submit(client, prompt, front)
+                front["request_id"] = request_id
+                write_brief(brief, front, body)  # saved before polling: crash-safe resume
+            data = poll(client, request_id, poll_timeout, sleep)
+        except httpx.HTTPStatusError as e:
+            front["status"] = "failed"
+            front["error"] = f"API HTTP {e.response.status_code}: {e.response.text[:200]}"
+            write_brief(brief, front, body)
+            results.append((brief, f"failed: {front['error']}"))
+            continue
+        except (httpx.HTTPError, KeyError, ValueError) as e:
+            front["status"] = "failed"
+            front["error"] = f"API error: {e}"
+            write_brief(brief, front, body)
+            results.append((brief, f"failed: {front['error']}"))
+            continue
         status = data.get("status")
         if status == "pending":
             results.append((brief, f"still pending (request_id {request_id}); re-run to resume"))
@@ -208,7 +233,7 @@ def process(
     for brief, outcome in results:
         print(f"  {brief.relative_to(book_dir)}: {outcome}")
     bad = [o for _, o in results if o.startswith("failed") or o.startswith("still pending")]
-    return 1 if bad else 0
+    return 1 if bad or malformed else 0
 
 
 def main(argv: list[str]) -> int:
