@@ -23,6 +23,7 @@ generation.
 | `done` response: `video.url` is a **temporary** URL — download promptly | **Live-verified 2026-08-10** | official docs |
 | Generation takes up to several minutes per clip | **Docs-verified 2026-08-10** | official docs |
 | `POST /v1/videos/extensions` — `video` is a **struct** `{"url": ...}` (bare string → 422 `expected struct VideoUrl`); model must be **`grok-imagine-video`** (1.5 → 400 "not supported for this model"); `duration` = length of the added portion; **output is cumulative** — the delivered clip contains all footage so far, so the last extension in a chain is the whole film | **Live-verified 2026-08-10** | live run + docs |
+| Extension **input cap: source ≤ 15s** (400 "Input video must not exceed 15 seconds"), so one chain maxes out around 15–19s and longer films need multiple chain segments; the poll response's `video.duration` reports only the **added portion**, not the cumulative length — track chain length locally | **Live-verified 2026-08-10** | live run |
 | Separate `POST /v1/videos/edits` endpoint exists | **Docs-verified 2026-08-10** | official docs — not used by filmcraft yet |
 | Native synchronized audio, no surcharge | High | xAI pricing |
 | $0.07/sec at 720p | Medium — 1.0 pricing; re-check for 1.5 | DeepLearning.AI, OpenRouter |
