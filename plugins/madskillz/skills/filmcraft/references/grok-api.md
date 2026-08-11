@@ -13,14 +13,14 @@ generation.
 
 | Fact | Confidence | Source |
 |---|---|---|
-| `POST /v1/videos/generations` → `{"request_id": ...}` | **Docs-verified 2026-08-10** | official docs |
-| `GET /v1/videos/{request_id}` → `status: pending\|done\|expired\|failed` | **Docs-verified 2026-08-10** | official docs |
-| Model `grok-imagine-video-1.5` | **Docs-verified 2026-08-10** | official docs |
+| `POST /v1/videos/generations` → `{"request_id": ...}` | **Live-verified 2026-08-10** | official docs |
+| `GET /v1/videos/{request_id}` → `status: pending\|done\|expired\|failed` | **Live-verified 2026-08-10** | official docs |
+| Model `grok-imagine-video-1.5` | **Live-verified 2026-08-10** | official docs |
 | Clip duration 1–15s (integer) | **Docs-verified 2026-08-10** | official docs |
 | `resolution`: `480p` (default) / `720p` / `1080p` | **Docs-verified 2026-08-10** | official docs |
 | `aspect_ratio`: `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3` (default `16:9`) | **Docs-verified 2026-08-10** | official docs — earlier mirror conflict resolved |
 | Request keys `image` (image-to-video), `reference_images`, `reference_audios` (max 3) | **Docs-verified 2026-08-10** | official docs; `image_url`/`voice` from mirrors were wrong and are fixed in `build_payload` |
-| `done` response: `video.url` is a **temporary** URL — download promptly | **Docs-verified 2026-08-10** | official docs |
+| `done` response: `video.url` is a **temporary** URL — download promptly | **Live-verified 2026-08-10** | official docs |
 | Generation takes up to several minutes per clip | **Docs-verified 2026-08-10** | official docs |
 | Native synchronized audio, no surcharge | High | xAI pricing |
 | $0.07/sec at 720p | Medium — 1.0 pricing; re-check for 1.5 | DeepLearning.AI, OpenRouter |
