@@ -1,2 +1,6 @@
 # Superpowers worktrees — isolated parallel-work checkouts (see CLAUDE.md)
 .worktrees/
+
+# Python test/build caches
+__pycache__/
+.pytest_cache/

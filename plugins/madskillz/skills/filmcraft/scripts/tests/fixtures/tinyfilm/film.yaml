@@ -1,0 +1,16 @@
+title: The Pendant
+slug: tinyfilm
+logline: A woman discovers the heirloom she inherited was never her mother's.
+target_runtime_seconds: 25
+resolution: 720p
+aspect_ratio: "16:9"
+fps: 24
+width: 1280
+height: 720
+model: grok-imagine-video-1.5
+takes: 2
+audio_strategy: native
+budget_usd: 25.00
+max_clip_seconds: 15
+max_extend_chain: 3
+status: shot-list

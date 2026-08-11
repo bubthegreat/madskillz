@@ -1,0 +1,86 @@
+shots:
+  - id: s01-001
+    scene: 1
+    beat: Rain against the study window; the desk lamp is the only light
+    location: study
+    mode: reference
+    refs:
+      characters: [elena]
+    size: WS
+    angle: eye
+    move: slow push in
+    screen_dir: neutral
+    duration: 8
+    edit_in: 1.0
+    edit_out: 5.5
+    takes: 2
+
+  - id: s01-002
+    scene: 1
+    beat: Elena turns the pendant over in the lamplight, thumb across the hallmark
+    location: study
+    mode: reference
+    refs:
+      characters: [elena]
+      voice: elena_vo
+    size: CU
+    angle: eye
+    move: static
+    screen_dir: L→R
+    duration: 8
+    edit_in: 0.5
+    edit_out: 4.0
+    takes: 2
+
+  - id: s01-003
+    scene: 1
+    beat: Elena registers the wrong hallmark and goes still
+    location: study
+    mode: extend
+    extend_from: s01-002
+    refs:
+      characters: [elena]
+    size: MCU
+    angle: low
+    move: static
+    screen_dir: L→R
+    speaker: ELENA
+    dialogue: This isn't hers. It never was.
+    duration: 8
+    edit_in: 1.2
+    edit_out: 6.0
+    takes: 2
+
+  - id: s02-001
+    scene: 2
+    beat: Marcus in the doorway, backlit from the hall, watching her work it out
+    location: study
+    mode: reference
+    refs:
+      characters: [marcus]
+    size: MWS
+    angle: eye
+    move: static
+    screen_dir: R→L
+    duration: 6
+    edit_in: 0.5
+    edit_out: 4.5
+    takes: 2
+
+  - id: s02-002
+    scene: 2
+    beat: Marcus lowers his glasses, decides to tell her the truth
+    location: study
+    mode: reference
+    refs:
+      characters: [marcus]
+    size: CU
+    angle: eye
+    move: slow push in
+    screen_dir: R→L
+    speaker: MARCUS
+    dialogue: I should have told you thirty years ago.
+    duration: 8
+    edit_in: 1.0
+    edit_out: 6.0
+    takes: 2
