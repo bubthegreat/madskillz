@@ -35,10 +35,12 @@ class FakeAPI:
     """Fake grok_client transport: submit -> poll (pending, then done) -> download."""
 
     def __init__(self, poll_statuses=("pending", "done"), download_ok=True,
-                 submit_error=None):
+                 submit_error=None, durations=None):
         self.poll_statuses = list(poll_statuses)
         self.download_ok = download_ok
         self.submit_error = submit_error
+        self.durations = list(durations) if durations else []
+        self.dones = 0
         self.submits = 0
         self.polls = 0
         self.fetches = 0
@@ -58,7 +60,10 @@ class FakeAPI:
             self.polls += 1
             resp = {"status": status}
             if status == "done":
-                resp["video"] = {"url": "https://vidgen.test/files/clip.mp4", "duration": 4}
+                dur = (self.durations[self.dones]
+                       if self.dones < len(self.durations) else 4)
+                self.dones += 1
+                resp["video"] = {"url": "https://vidgen.test/files/clip.mp4", "duration": dur}
             if status == "failed":
                 resp["error"] = "moderation block"
             return resp
@@ -283,6 +288,34 @@ def test_already_generated_brief_restarts_fresh_when_url_gone(book):
     rc = run(book, api)
     assert rc == 0
     assert api.submitted[0]["url"].endswith("/v1/videos/generations")  # fresh restart
+
+
+def test_chain_restarts_fresh_at_15s_input_cap(book, monkeypatch, capsys):
+    import shutil as _sh
+
+    def set_duration(name, secs):
+        p = book / "video" / "01-the-sneeze" / name
+        front, body = cg.parse_brief(p)
+        front["duration"] = secs
+        cg.write_brief(p, front, body)
+
+    approve(book, "01-brief.md")
+    approve(book, "02-brief.md")
+    set_duration("01-brief.md", 14)  # fresh: chain = 14s
+    set_duration("02-brief.md", 4)   # extend ok (input 14 ≤ 15): chain = 18s
+    third = book / "video" / "01-the-sneeze" / "03-brief.md"
+    third.write_text((book / "video" / "01-the-sneeze" / "01-brief.md").read_text()
+                     .replace("scene: 1", "scene: 3"))
+    api = FakeAPI(poll_statuses=("done",))
+    monkeypatch.setattr(_sh, "which", lambda name: None)  # no ffmpeg in test env
+    rc = run(book, api)
+    assert rc == 0
+    endpoints = [s["url"].rsplit("/", 1)[-1] for s in api.submitted]
+    # scene 3 must restart fresh: extending would need an 18s input (> 15s cap)
+    assert endpoints == ["generations", "extensions", "generations"]
+    out = capsys.readouterr().out
+    assert "not assembled" in out  # two segments, no ffmpeg to join them
+    assert not (book / "video" / "tinybook.mp4").exists()
 
 
 def test_max_clips_caps_submissions(book):

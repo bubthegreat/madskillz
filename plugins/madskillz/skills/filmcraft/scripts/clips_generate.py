@@ -42,6 +42,7 @@ SECTION_ORDER = [
     "Audio",
 ]
 DOWNLOAD_RETRIES = 3
+MAX_EXTEND_INPUT = 15.0  # API limit: extend source must not exceed 15s (live-verified)
 
 
 def parse_brief(path: Path) -> tuple[dict, str]:
@@ -170,15 +171,22 @@ def process(
 
     results: list[tuple[Path, str]] = []
     chain_url: str | None = None  # previous segment's delivered URL, this run only
+    chain_seconds = 0.0           # length of the clip behind chain_url
     chain_broken = False
     submitted = 0
-    final_dest: Path | None = None  # last chained segment = the whole film so far
+    final_dest: Path | None = None      # last success in the current chain segment
+    segment_finals: list[Path] = []     # closed chain segments' final clips
     for brief in briefs:
         front, body = parse_brief(brief)
         prompt = assemble_prompt(style_block, parse_sections(body))
         dest = mp4_path(brief)
 
         if dest.exists() or front.get("status") == "generated":
+            # Track the chain length from the briefs' own records — the API's
+            # poll response reports only the extension portion, not cumulative.
+            clip_len = int(front.get("duration", 4))
+            chain_seconds = (chain_seconds + clip_len
+                             if front.get("mode") == "extend" else clip_len)
             # Try to recover a still-valid delivered URL by re-polling the saved
             # request id — one free GET. If it works, the chain continues from
             # this scene's real final frame instead of restarting fresh.
@@ -191,6 +199,7 @@ def process(
                     if str(old.get("status", "")).lower() in grok_client.TERMINAL_OK and urls:
                         chain_url = urls[0]
                         note = "chain continues from it"
+                        final_dest = dest
                 except GenerationFailed:
                     pass
             results.append((brief, f"skipped (already generated; {note})"))
@@ -203,7 +212,13 @@ def process(
             # generated scene and keeps extending from its final frame.
             results.append((brief, f"deferred (--max-clips {max_clips})"))
             continue
-        mode = "extend" if (chain_url and not independent) else "fresh"
+        mode = "extend" if (chain_url and not independent
+                            and chain_seconds <= MAX_EXTEND_INPUT) else "fresh"
+        if mode == "fresh" and final_dest is not None and not independent:
+            # The chain hit the 15s input cap (or lost its URL): close the
+            # segment at this scene boundary and start a new one.
+            segment_finals.append(final_dest)
+            final_dest = None
         if dry_run:
             print(f"--- {brief.relative_to(book_dir)} (dry run, would be {mode}) ---")
             print(prompt)
@@ -278,6 +293,9 @@ def process(
         write_brief(brief, front, body)
         results.append((brief, f"generated {dest.name} ({front.get('mode', mode)})"))
         chain_url = urls[0]
+        clip_len = int(front.get("duration", 4))
+        chain_seconds = (chain_seconds + clip_len
+                         if front.get("mode", mode) == "extend" else clip_len)
         final_dest = dest
 
     print("\nsummary:")
@@ -287,12 +305,37 @@ def process(
            if o.startswith(("failed", "still pending", "not attempted"))]
 
     # Extension output is cumulative (live-verified): each segment contains all
-    # footage so far, so the last chained segment is the film to date.
-    if final_dest and not independent:
+    # footage so far, so a chain segment's last clip is that whole segment.
+    # The 15s extend-input cap forces a new segment every ~4 scenes; multiple
+    # segments are concatenated with ffmpeg (a cut at a scene boundary).
+    if final_dest is not None and not independent:
+        segment_finals.append(final_dest)
+    if segment_finals and not independent:
         film = book_dir / "video" / f"{book_dir.name}.mp4"
-        shutil.copyfile(final_dest, film)
         state = "complete" if not (bad or malformed) else "partial — chain incomplete"
-        print(f"film ({state}): {film.relative_to(book_dir)}")
+        if len(segment_finals) == 1:
+            shutil.copyfile(segment_finals[0], film)
+            print(f"film ({state}): {film.relative_to(book_dir)}")
+        elif shutil.which("ffmpeg"):
+            listfile = book_dir / "video" / "segments.txt"
+            listfile.write_text(
+                "".join(f"file '{p.resolve()}'\n" for p in segment_finals),
+                encoding="utf-8",
+            )
+            import subprocess
+            subprocess.run(
+                ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(listfile),
+                 "-c", "copy", str(film)],
+                check=True, capture_output=True,
+            )
+            listfile.unlink()
+            print(f"film ({state}, {len(segment_finals)} chain segments): "
+                  f"{film.relative_to(book_dir)}")
+        else:
+            print(f"film not assembled: {len(segment_finals)} chain segments and no "
+                  "ffmpeg on PATH. Concatenate these in order:")
+            for p in segment_finals:
+                print(f"  {p.relative_to(book_dir)}")
 
     return 1 if bad or malformed else 0
 
