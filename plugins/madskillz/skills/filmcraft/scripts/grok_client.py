@@ -147,7 +147,7 @@ class GrokVideoClient:
 
     def __post_init__(self) -> None:
         if self.api_key is None:
-            self.api_key = os.environ.get("XAI_API_KEY")
+            self.api_key = os.environ.get("XAI_API_KEY") or os.environ.get("GROK_API_KEY")
 
     @property
     def available(self) -> bool:
@@ -157,7 +157,8 @@ class GrokVideoClient:
     def _headers(self) -> dict:
         if not self.api_key:
             raise MissingAPIKey(
-                "XAI_API_KEY is not set. Export it, or run the skill in packet mode to "
+                "Neither XAI_API_KEY nor GROK_API_KEY is set. Export one, or run the "
+                "skill in packet mode to "
                 "produce paste-ready prompts instead."
             )
         return {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}

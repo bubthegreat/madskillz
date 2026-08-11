@@ -127,7 +127,7 @@ approves the spend before anything is generated.
 
 ## Phase 5 — Generate
 
-Run `generate.py` (see Scripts). With `XAI_API_KEY` set it submits, polls, downloads takes,
+Run `generate.py` (see Scripts). With `XAI_API_KEY` (or `GROK_API_KEY`) set it submits, polls, downloads takes,
 and appends to the spend ledger. Without a key it writes a paste-ready prompt packet
 instead — the manual fallback.
 
@@ -184,7 +184,7 @@ uv run scripts/generate.py <film_dir> [--shots s01-001,s01-002] [--packet] [--ye
 ```
 
 `--yes` is required to spend. `--packet` forces prompt-packet output even when a key is
-present. Without `XAI_API_KEY` it falls back to packet mode automatically.
+present. Without a key it falls back to packet mode automatically.
 
 **Assemble** (Phase 7):
 
@@ -219,7 +219,7 @@ uv run --with pytest --with pyyaml python -m pytest scripts/tests/ -q
 - **Clips-mode user needs matched cuts, dialogue timing, or assembly** → they have
   outgrown clips mode; offer the full pipeline via `storycraft-handoff.md`.
 - **No films repo configured** → resolve per `repo-layout.md`; offer to create and init it.
-- **No `XAI_API_KEY`** → packet mode. Say so plainly; do not present packet output as
+- **No `XAI_API_KEY` / `GROK_API_KEY`** → packet mode. Say so plainly; do not present packet output as
   generated film.
 - **API parameter rejected at generation time** → the wire format is quarantined in
   `grok_client.build_payload`. Fix it there and in `grok-api.md`; do not scatter workarounds.

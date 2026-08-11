@@ -247,7 +247,8 @@ def main(argv: list[str]) -> int:
         return process(args.book_dir, client, args.chapter, dry_run=True,
                        max_clips=args.max_clips)
     if not client.available:
-        print("XAI_API_KEY is not set; export it before generating videos", file=sys.stderr)
+        print("Neither XAI_API_KEY nor GROK_API_KEY is set; export one before "
+              "generating videos", file=sys.stderr)
         return 2
     return process(args.book_dir, client, args.chapter, max_clips=args.max_clips)
 

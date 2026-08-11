@@ -31,7 +31,7 @@ generation.
 
 Do this before generating a whole film. It costs one clip.
 
-1. `echo $XAI_API_KEY` — confirm credentials are present.
+1. `echo ${XAI_API_KEY:-$GROK_API_KEY}` — confirm credentials are present (either variable works).
 2. Fetch the live docs: <https://docs.x.ai/developers/model-capabilities/video/generation>
 3. Diff the request keys in `grok_client.build_payload` against the documented body.
    Correct any mismatch **in that function only**.

@@ -228,6 +228,7 @@ def test_max_clips_caps_submissions(book):
 
 def test_missing_key_exits_2(book, monkeypatch, capsys):
     monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.delenv("GROK_API_KEY", raising=False)
     rc = cg.main(["clips_generate.py", str(book)])
     assert rc == 2
     assert "XAI_API_KEY" in capsys.readouterr().err

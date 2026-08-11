@@ -48,7 +48,7 @@ Commits use storycraft's message form: `book: <slug> video briefs ch.NN (draft)`
 ## Phase C0 — Locate & preflight
 
 Resolve the stories repo, pick the book, check it has `chapters/*.md`. Check
-`XAI_API_KEY` is set; if not, say so now — briefs can still be drafted, but generation is
+`XAI_API_KEY` (or `GROK_API_KEY`) is set; if not, say so now — briefs can still be drafted, but generation is
 blocked until the key is exported. Resumable from on-disk state: existing briefs and mp4s
 under `video/` show what is drafted, approved, and generated. Never redo finished work.
 

@@ -6,9 +6,9 @@
 
 Two modes, chosen by whether credentials exist:
 
-  packet mode  (no XAI_API_KEY) — writes paste-ready prompt files. Zero cost, zero
+  packet mode  (no API key) — writes paste-ready prompt files. Zero cost, zero
                                   network. This is also the manual fallback.
-  live mode    (XAI_API_KEY set) — submits, polls, downloads clips, appends to the
+  live mode    (XAI_API_KEY or GROK_API_KEY set) — submits, polls, downloads clips, appends to the
                                   spend ledger.
 
 Prompt compilation is deterministic: the same shot plus the same bible always yields
@@ -266,7 +266,7 @@ def main(argv: list[str]) -> int:
 
     if "--packet" in flags or not client.available:
         out = write_packet(film_dir, shots, bible, film)
-        why = "requested" if "--packet" in flags else "no XAI_API_KEY set"
+        why = "requested" if "--packet" in flags else "no API key set"
         print(f"packet mode ({why}): wrote {len(shots)} prompts to {out}")
         return 0
 

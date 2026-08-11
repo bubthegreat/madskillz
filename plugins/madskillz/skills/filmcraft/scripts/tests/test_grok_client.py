@@ -81,6 +81,14 @@ def test_api_key_is_read_from_environment(monkeypatch):
     assert gc.GrokVideoClient().available is True
 
 
+def test_grok_api_key_accepted_as_fallback(monkeypatch):
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    monkeypatch.setenv("GROK_API_KEY", "from-grok-env")
+    c = gc.GrokVideoClient()
+    assert c.available is True
+    assert c.api_key == "from-grok-env"
+
+
 def test_extend_passes_the_source_video_through():
     t = FakeTransport([DONE])
     client(t).extend("prev.mp4", "she goes still", duration=8)
