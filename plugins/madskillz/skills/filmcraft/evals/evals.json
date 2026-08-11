@@ -1,7 +1,38 @@
 {
   "skill": "filmcraft",
-  "description": "Trigger and behavior evals for the generative-film skill: co-design, casting lockups, shot-list validation, cost gating, generation, continuity QA, and assembly.",
+  "description": "Trigger and behavior evals for the generative-film skill: clips-mode routing, co-design, casting lockups, shot-list validation, cost gating, generation, continuity QA, and assembly.",
   "tests": [
+    {
+      "id": "trigger-clips-from-story",
+      "prompt": "Make videos from my sock goblin story",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Skill triggers and routes to clips mode, not the full pipeline",
+        "Does not run co-design, casting, or shot listing",
+        "Resolves the storycraft stories repo and checks XAI_API_KEY",
+        "Drafts per-scene briefs and stops at the human review gate before generating"
+      ]
+    },
+    {
+      "id": "trigger-animate-chapter",
+      "prompt": "Animate chapter 2 of my book",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Routes to clips mode scoped to chapter 02 only",
+        "Runs scene_split.py for the inventory and lets the user pick scenes",
+        "Confirms clip count and cost before running clips_generate.py"
+      ]
+    },
+    {
+      "id": "behavior-clips-outgrown",
+      "prompt": "My clips don't cut together — the goblin looks different in every one and I want it as one video",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Recognizes the clips-mode user has outgrown clips mode",
+        "Offers the full pipeline (lockups, plates, assembly) via storycraft-handoff",
+        "Does not bolt reference plates onto clips-mode briefs"
+      ]
+    },
     {
       "id": "trigger-make-a-movie",
       "prompt": "I want to make a short film with Grok",

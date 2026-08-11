@@ -95,8 +95,14 @@ def test_build_payload_omits_unset_options():
 def test_build_payload_carries_reference_and_voice():
     payload = gc.build_payload("a shot", reference_images=["p.png"], voice="v.wav", n=3)
     assert payload["reference_images"] == ["p.png"]
-    assert payload["voice"] == "v.wav"
+    assert payload["reference_audios"] == ["v.wav"]  # docs-verified wire key
     assert payload["n"] == 3
+
+
+def test_build_payload_image_uses_docs_verified_key():
+    payload = gc.build_payload("a shot", image_url="frame.png")
+    assert payload["image"] == "frame.png"
+    assert "image_url" not in payload
 
 
 def test_extract_video_urls_finds_nested_and_deduplicates():

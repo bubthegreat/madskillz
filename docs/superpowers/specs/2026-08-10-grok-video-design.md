@@ -1,7 +1,13 @@
 # grok-video design — storycraft books → per-scene video clips via xAI API
 
 **Date:** 2026-08-10
-**Status:** approved, implementing
+**Status:** superseded — folded into `filmcraft` as its clips mode (same day). The
+standalone `grok-video` skill shipped briefly, then a parallel session's `filmcraft`
+skill (full generative-film pipeline) landed; the owner chose to fold this design in as
+filmcraft's lightweight lane. See `plugins/madskillz/skills/filmcraft/references/clips-mode.md`.
+Scripts became `filmcraft/scripts/scene_split.py` and `clips_generate.py` (rebuilt on
+filmcraft's `grok_client.py` wire-format quarantine). The verified API facts below were
+merged into filmcraft's `grok-api.md`.
 
 ## Problem
 

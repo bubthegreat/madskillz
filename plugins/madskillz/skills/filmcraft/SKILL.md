@@ -1,15 +1,17 @@
 ---
 name: filmcraft
 description: >-
-  Use when the user wants to make a film, short, music video, or animated sequence with
-  generative video — "make a movie," "storyboard this," "turn my story into a film,"
+  Use when the user wants generative video from a story — a full film or quick clips.
+  Full pipeline: "make a movie," "storyboard this," "turn my story into a film,"
   "generate this scene with Grok," "build me a shot list," or "adapt my book into a
-  short." Co-designs the look book and casting with the user, decomposes scenes into a
-  validated shot list, locks character/location references so the same actor survives
-  every cut, estimates spend before generating, drives the xAI Grok Imagine video API,
-  then QAs continuity and cuts the result with ffmpeg. Adapts from a storycraft book or
-  works standalone. Storage is a configurable repo the user owns; the skill commits but
-  never pushes.
+  short" — co-designs the look book and casting, decomposes scenes into a validated shot
+  list, locks character/location references so the same actor survives every cut,
+  estimates spend before generating, drives the xAI Grok Imagine video API, then QAs
+  continuity and cuts the result with ffmpeg. Clips mode: "make videos from my story,"
+  "animate chapter 2," "grok video," "turn my book into clips" — per-scene prompt briefs
+  from a storycraft book, human approval gate, cheap short mp4s, no shot list or
+  assembly. Adapts from a storycraft book or works standalone. Storage is a configurable
+  repo the user owns; the skill commits but never pushes.
 ---
 
 # filmcraft: a production crew for generative film
@@ -17,6 +19,21 @@ description: >-
 Turn a story into a **shot-listed, continuity-locked, assembled film** — co-designed with
 the user, decomposed by a crew of specialist agents, generated clip by clip through the
 Grok Imagine video API, and cut together with ffmpeg.
+
+## Two lanes — route first
+
+Before Phase 0, decide which lane the request is:
+
+- **Clips mode** — "make videos from my story," "animate chapter 2," quick per-scene
+  clips from a storycraft book. Lightweight: scene briefs, approval gate, cheap 4s/480p
+  defaults, no shot list, no assembly. Delegate entirely to **`clips-mode.md`** and skip
+  the phases below. The integrity stance still applies.
+- **Full pipeline** — "make a film/short/movie," "build a shot list," anything needing
+  an assembled cut or shot-to-shot continuity. Phases 0–7 below.
+
+When in doubt, ask: "Quick per-scene clips, or a shot-listed film with an assembled
+cut?" A clips-mode user asking for matched cuts, dialogue timing, or assembly has
+outgrown clips mode — offer the full pipeline (`storycraft-handoff.md`).
 
 The skill addresses the recurring failures of AI-generated film: the protagonist's face
 changing between cuts, wardrobe and lighting drifting scene to scene, dialogue that gets
@@ -49,8 +66,10 @@ deterministic check or a dedicated specialist.
 5. **Lockups are verbatim.** A character lockup is pasted into prompts exactly as written.
    Paraphrasing a lockup recasts the character — treat any rewording as a canon change
    that needs user approval.
-6. Raw generated clips are **never committed** (see `repo-layout.md`). Only the YAML,
-   prompts, reference plates, and the final cut are versioned.
+6. Raw generated clips are **never committed** in the full pipeline (see
+   `repo-layout.md`). Only the YAML, prompts, reference plates, and the final cut are
+   versioned. Clips mode is the deliberate exception: its few small mp4s are committed
+   in the book's stories repo — see `clips-mode.md`.
 
 ## Phase 0 — Setup / resume
 
@@ -176,6 +195,17 @@ uv run scripts/assemble.py <film_dir> [--dry-run]
 `--dry-run` prints the ffmpeg commands without running them — use it to inspect the edit,
 or on a machine without ffmpeg installed.
 
+**Clips mode** (see `clips-mode.md`; `<book_dir>` is a storycraft book folder):
+
+```
+uv run scripts/scene_split.py <book_dir> [chapter-prefix]
+uv run scripts/clips_generate.py <book_dir> [--chapter NN-slug] [--dry-run] [--max-clips N]
+```
+
+`scene_split.py` prints the JSON scene inventory (splits at `---`, skips frontmatter and
+code fences). `clips_generate.py` generates approved briefs only; `--dry-run` prints the
+assembled prompts and touches nothing; `--max-clips` defaults to 5.
+
 **Tests:**
 
 ```
@@ -184,6 +214,10 @@ uv run --with pytest --with pyyaml python -m pytest scripts/tests/ -q
 
 ## Edge cases
 
+- **User wants quick clips, not a film** → clips mode (`clips-mode.md`); do not run
+  co-design, casting, or shot listing for a clips request.
+- **Clips-mode user needs matched cuts, dialogue timing, or assembly** → they have
+  outgrown clips mode; offer the full pipeline via `storycraft-handoff.md`.
 - **No films repo configured** → resolve per `repo-layout.md`; offer to create and init it.
 - **No `XAI_API_KEY`** → packet mode. Say so plainly; do not present packet output as
   generated film.

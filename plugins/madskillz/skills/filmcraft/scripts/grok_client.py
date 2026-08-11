@@ -71,12 +71,12 @@ def build_payload(
 ) -> dict:
     """Assemble a generation request.
 
-    ---------------------------------------------------------------------------
-    VERIFY BEFORE FIRST LIVE RUN. These key names are taken from published docs and
-    third-party mirrors, not from an authenticated call. Confirm each against
-    https://docs.x.ai/developers/model-capabilities/video/generation and correct
-    here — this function is the single point of truth.
-    ---------------------------------------------------------------------------
+    Key names checked against the published docs at
+    https://docs.x.ai/developers/model-capabilities/video/generation on 2026-08-10:
+    `model`, `prompt`, `duration` (1-15), `aspect_ratio`, `resolution`,
+    `image` (image-to-video), `reference_images`, `reference_audios` (max 3).
+    `video_url`, `n`, and `seed` did not appear in that page — still unverified;
+    confirm on the first live run and correct here, the single point of truth.
     """
     payload: dict[str, Any] = {"model": model, "prompt": prompt}
     if duration is not None:
@@ -86,18 +86,24 @@ def build_payload(
     if aspect_ratio is not None:
         payload["aspect_ratio"] = aspect_ratio
     if image_url is not None:
-        payload["image_url"] = image_url          # image-to-video
+        payload["image"] = image_url              # image-to-video (docs: `image`)
     if reference_images:
         payload["reference_images"] = reference_images  # reference-to-video
     if voice is not None:
-        payload["voice"] = voice
+        payload["reference_audios"] = [voice]     # docs: list, max 3 voices
     if source_video is not None:
-        payload["video_url"] = source_video       # extend-from-frame
+        payload["video_url"] = source_video       # extend-from-frame — UNVERIFIED
     if n is not None:
-        payload["n"] = n                          # takes: n seeds, one call
+        payload["n"] = n                          # takes: n seeds, one call — UNVERIFIED
     if seed is not None:
-        payload["seed"] = seed
+        payload["seed"] = seed                    # UNVERIFIED
     return payload
+
+
+def fetch_binary(url: str) -> bytes:
+    """Download a delivered clip. Output URLs are temporary — fetch promptly."""
+    with urllib.request.urlopen(url) as resp:
+        return resp.read()
 
 
 def extract_video_urls(result: dict) -> list[str]:
@@ -162,6 +168,11 @@ class GrokVideoClient:
         if not request_id:
             raise GenerationFailed(f"No request_id in submit response: {json.dumps(resp)[:300]}")
         return request_id
+
+    def poll_once(self, request_id: str) -> dict:
+        """Single status check — for callers that manage their own resume loop."""
+        url = f"{self.base_url}{POLL_PATH.format(request_id=request_id)}"
+        return self.transport("GET", url, None, self._headers())
 
     def poll(self, request_id: str) -> dict:
         url = f"{self.base_url}{POLL_PATH.format(request_id=request_id)}"

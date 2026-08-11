@@ -1,7 +1,9 @@
-# Brief format & lifecycle
+# Clips mode: brief format & lifecycle
 
 A "brief" is one Markdown file that describes the video for one scene. The user reviews
-briefs before any generation. `generate.py` reads them and turns approved ones into clips.
+briefs before any generation. `clips_generate.py` reads them and turns approved ones into
+clips. This is the clips-mode counterpart of the full pipeline's `shots.yaml` — see
+`clips-mode.md` for when to use which.
 
 ## Location
 
@@ -15,7 +17,7 @@ chapter naming rule in storycraft's `repo-layout.md`.
     style-block.md            # shared style prefix (see consistency.md)
     01-<chapter-slug>/
       01-brief.md             # brief for scene 1
-      01.mp4                  # generated clip (added by generate.py)
+      01.mp4                  # generated clip (added by clips_generate.py)
       02-brief.md
       02.mp4
 ```
@@ -62,8 +64,8 @@ Do not show the sock goblin yet.
 | `aspect_ratio` | Default `"16:9"`. The API also accepts `9:16`, `1:1`, `4:3`, `3:4`, `3:2`, `2:3`. |
 | `resolution` | `480p` (default), `720p`, or `1080p`. |
 | `status` | Lifecycle state. See below. |
-| `request_id` | Filled by `generate.py` right after submitting, so a crash can resume by polling. |
-| `error` | Filled by `generate.py` when generation fails. Empty otherwise. |
+| `request_id` | Filled by `clips_generate.py` right after submitting, so a crash can resume by polling. |
+| `error` | Filled by `clips_generate.py` when generation fails. Empty otherwise. |
 
 ## Status lifecycle
 
@@ -83,7 +85,7 @@ infers approval from silence.
 
 ## Prompt assembly order
 
-`generate.py` builds the API prompt from each brief in this fixed order:
+`clips_generate.py` builds the API prompt from each brief in this fixed order:
 
 1. The full text of `video/style-block.md`.
 2. The **Scene** section.

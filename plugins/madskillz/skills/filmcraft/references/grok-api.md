@@ -5,26 +5,27 @@
 
 ## Provenance and confidence
 
-The details below were gathered from published documentation, xAI announcements, and
-third-party API mirrors — **not** from an authenticated call. Treat every parameter name
-as unverified until the first successful live run.
+The details below come from published documentation. On **2026-08-10** the official docs
+page (<https://docs.x.ai/developers/model-capabilities/video/generation>) was read
+directly and the table updated. Docs-verified is still not live-verified — no
+authenticated call has been made yet, so run the checklist below before the first real
+generation.
 
 | Fact | Confidence | Source |
 |---|---|---|
-| `POST /v1/videos/generations` → `request_id` | High | xAI docs, multiple mirrors |
-| `GET /v1/videos/{request_id}` → poll until `status: done` | High | xAI docs |
-| Model `grok-imagine-video-1.5` | High | xAI announcement, Vercel AI Gateway |
-| Clip duration 1–15s | High | Grok Imagine Video 1.5 announcement |
-| 24fps, 480p/720p, 1080p available | High | 1.5 announcement |
+| `POST /v1/videos/generations` → `{"request_id": ...}` | **Docs-verified 2026-08-10** | official docs |
+| `GET /v1/videos/{request_id}` → `status: pending\|done\|expired\|failed` | **Docs-verified 2026-08-10** | official docs |
+| Model `grok-imagine-video-1.5` | **Docs-verified 2026-08-10** | official docs |
+| Clip duration 1–15s (integer) | **Docs-verified 2026-08-10** | official docs |
+| `resolution`: `480p` (default) / `720p` / `1080p` | **Docs-verified 2026-08-10** | official docs |
+| `aspect_ratio`: `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3` (default `16:9`) | **Docs-verified 2026-08-10** | official docs — earlier mirror conflict resolved |
+| Request keys `image` (image-to-video), `reference_images`, `reference_audios` (max 3) | **Docs-verified 2026-08-10** | official docs; `image_url`/`voice` from mirrors were wrong and are fixed in `build_payload` |
+| `done` response: `video.url` is a **temporary** URL — download promptly | **Docs-verified 2026-08-10** | official docs |
+| Generation takes up to several minutes per clip | **Docs-verified 2026-08-10** | official docs |
 | Native synchronized audio, no surcharge | High | xAI pricing |
 | $0.07/sec at 720p | Medium — 1.0 pricing; re-check for 1.5 | DeepLearning.AI, OpenRouter |
 | Extend-from-frame adds 6–10s | Medium | 1.5 announcement |
-| Request key names (`image_url`, `reference_images`, `voice`, `n`, …) | **Low — verify first** | mirrors only |
-| Supported video aspect ratios | **Low — sources conflict** | see below |
-
-**Known conflict:** one mirror lists video aspect ratios as only `1:1`, `2:3`, `3:2`,
-which would exclude `16:9`. That is very likely wrong or provider-specific, but confirm
-before committing a film to an aspect ratio.
+| Request keys `video_url` (extend), `n`, `seed` | **Low — verify first** | mirrors only; not on the docs page read 2026-08-10 |
 
 ## Verification checklist — run once, at the start of the first live session
 
