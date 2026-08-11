@@ -42,13 +42,16 @@ class FakeAPI:
         self.submits = 0
         self.polls = 0
         self.fetches = 0
+        self.submitted = []
 
     def transport(self, method, url, body, headers):
         assert headers.get("Authorization") == "Bearer test-key"
-        if method == "POST" and url.endswith("/v1/videos/generations"):
+        if method == "POST" and url.endswith(("/v1/videos/generations",
+                                             "/v1/videos/extensions")):
             if self.submit_error:
                 raise GenerationFailed(self.submit_error)
             self.submits += 1
+            self.submitted.append({"url": url, "body": body})
             return {"request_id": f"req-{self.submits}"}
         if method == "GET" and "/v1/videos/" in url:
             status = self.poll_statuses[min(self.polls, len(self.poll_statuses) - 1)]
@@ -201,7 +204,7 @@ def test_idempotent_skips_generated(book):
     api = FakeAPI()
     rc = run(book, api)
     assert rc == 0
-    assert api.submits == 0 and api.polls == 0
+    assert api.submits == 0  # never regenerates; chain-recovery re-poll is a free GET
     assert (book / "video" / "01-the-sneeze" / "01.mp4").read_bytes() == b"OLD"
 
 
@@ -215,6 +218,71 @@ def test_resume_polls_saved_request_id_without_resubmit(book):
     assert api.polls >= 1
     front, _ = cg.parse_brief(brief)
     assert front["status"] == "generated"
+
+
+def test_chain_second_brief_extends_first(book):
+    approve(book, "01-brief.md")
+    approve(book, "02-brief.md")
+    api = FakeAPI()
+    rc = run(book, api)
+    assert rc == 0
+    assert api.submits == 2
+    assert api.submitted[0]["url"].endswith("/v1/videos/generations")
+    assert api.submitted[1]["url"].endswith("/v1/videos/extensions")
+    # Live-verified: the API wants a VideoUrl struct, not a bare string.
+    assert api.submitted[1]["body"]["video"] == {"url": "https://vidgen.test/files/clip.mp4"}
+    f1, _ = cg.parse_brief(book / "video" / "01-the-sneeze" / "01-brief.md")
+    f2, _ = cg.parse_brief(book / "video" / "01-the-sneeze" / "02-brief.md")
+    assert f1["mode"] == "fresh"
+    assert f2["mode"] == "extend"
+    # Cumulative extension: the last segment is copied out as the film.
+    assert (book / "video" / "tinybook.mp4").read_bytes() == b"FAKEMP4"
+
+
+def test_independent_flag_disables_chaining(book):
+    approve(book, "01-brief.md")
+    approve(book, "02-brief.md")
+    api = FakeAPI()
+    rc = run(book, api, independent=True)
+    assert rc == 0
+    assert all(s["url"].endswith("/v1/videos/generations") for s in api.submitted)
+
+
+def test_chain_breaks_on_failure(book):
+    approve(book, "01-brief.md")
+    approve(book, "02-brief.md")
+    api = FakeAPI(poll_statuses=("failed",))
+    rc = run(book, api)
+    assert rc == 1
+    assert api.submits == 1  # second scene never attempted
+    f2, _ = cg.parse_brief(book / "video" / "01-the-sneeze" / "02-brief.md")
+    assert f2["status"] == "approved"  # untouched, retryable
+
+
+def test_already_generated_brief_recovers_chain_via_repoll(book):
+    b1 = approve(book, "01-brief.md")
+    set_status(b1, "generated", request_id="req-old")
+    (book / "video" / "01-the-sneeze" / "01.mp4").write_bytes(b"OLD")
+    approve(book, "02-brief.md")
+    api = FakeAPI(poll_statuses=("done",))  # re-poll of req-old still says done
+    rc = run(book, api)
+    assert rc == 0
+    assert api.submits == 1
+    # URL recovered from the old request id → scene 2 extends instead of fresh.
+    assert api.submitted[0]["url"].endswith("/v1/videos/extensions")
+    assert api.submitted[0]["body"]["video"] == {"url": "https://vidgen.test/files/clip.mp4"}
+
+
+def test_already_generated_brief_restarts_fresh_when_url_gone(book):
+    b1 = approve(book, "01-brief.md")
+    set_status(b1, "generated", request_id="req-old")
+    (book / "video" / "01-the-sneeze" / "01.mp4").write_bytes(b"OLD")
+    approve(book, "02-brief.md")
+    # First GET: re-poll of req-old is expired. Second GET: scene 2's own poll.
+    api = FakeAPI(poll_statuses=("expired", "done"))
+    rc = run(book, api)
+    assert rc == 0
+    assert api.submitted[0]["url"].endswith("/v1/videos/generations")  # fresh restart
 
 
 def test_max_clips_caps_submissions(book):

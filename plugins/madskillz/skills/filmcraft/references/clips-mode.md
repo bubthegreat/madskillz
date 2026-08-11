@@ -1,17 +1,20 @@
 # Clips mode — the lightweight lane
 
-Clips mode turns a storycraft book into short per-scene video clips without the full
-production pipeline. No shot list, no casting plates, no assembly. One brief per scene,
-a human approval gate, then cheap 4-second clips. Use it to see a story move, iterate on
-look and feel fast, or preview scenes before committing to a full film.
+Clips mode turns a storycraft book into one continuous per-scene video without the full
+production pipeline. No shot list, no casting plates. One brief per scene, a human
+approval gate, then generation builds the video **intentionally**: the first scene is a
+fresh generation and every following scene **extends** the previous one from its final
+frame, so motion and look flow scene to scene. Segments concatenate into one film with
+no jump cuts. Use it to see a story move, iterate on look fast, or preview before
+committing to a full film. `--independent` opts out of chaining for isolated clips.
 
 ## Clips mode vs full pipeline
 
 | | Clips mode | Full pipeline |
 |---|---|---|
 | Input | A storycraft book's chapters | Beat sheet + shot list (`shots.yaml`) |
-| Unit | One clip per scene (`---` breaks) | One clip per shot |
-| Continuity | Shared style block prepended to every prompt | Lockups + reference plates + QA |
+| Unit | One segment per scene (`---` breaks), extend-chained | One clip per shot |
+| Continuity | Extend chain (last-frame continuation) + shared style block | Lockups + reference plates + QA |
 | Cost control | 4s/480p defaults, `--max-clips` cap, approval gate | `estimate_cost.py` + `budget_usd` hard stop |
 | Storage | The book's own stories repo, `video/` folder | Separate films repo |
 | Output | Loose per-scene mp4s | An assembled, conformed cut |
@@ -103,20 +106,42 @@ Generate now?"
 uv run scripts/clips_generate.py <book_dir> [--chapter NN-slug] [--max-clips N]
 ```
 
-The script submits each approved brief through `grok_client` (the wire-format quarantine
-applies here too), saves the `request_id` into the brief immediately, polls, downloads
-the mp4 next to the brief, and flips the status. Idempotent: re-running skips generated
-clips and resumes pending ones without paying twice. `--dry-run` prints the assembled
-prompts and touches nothing — useful at the C4 checkpoint.
+The script submits briefs in story order through `grok_client` (the wire-format
+quarantine applies here too). The first scene is a fresh generation; each later scene is
+submitted to `/v1/videos/extensions` with the previous segment's delivered URL, so it
+continues from that segment's final frame. The `request_id` is saved into the brief
+immediately; each segment downloads next to its brief; `mode: fresh|extend` is recorded
+in the frontmatter. `--dry-run` prints the assembled prompts and which mode each scene
+would use — useful at the C4 checkpoint.
 
-Report the script's real per-scene summary. Failed briefs keep `status: failed` and the
-API's error text until the user asks to retry (flip back to `approved`).
+Chain rules, stated honestly in the summary output:
+
+- **Failure breaks the chain.** A failed or still-pending scene stops everything after
+  it (`not attempted (chain broken upstream)`) — extending from a missing segment is
+  impossible, and silently restarting fresh would break the intentional build.
+- **Delivered URLs are temporary**, so chains cannot cross runs. A scene generated in an
+  earlier run is skipped and the chain restarts fresh at the next scene. For one fully
+  continuous film, generate the whole scene list in one run.
+- Extensions add the brief's `duration` seconds to the film; `resolution` follows the
+  chain root, so only the first (fresh) brief's `resolution` matters.
+- Extensions use the base `grok-imagine-video` model — `grok-imagine-video-1.5` refuses
+  extension (live-verified). `grok_client.EXTEND_MODEL` owns this.
+
+Failed briefs keep `status: failed` and the API's error text until the user asks to
+retry (flip back to `approved`).
+
+**No assembly needed.** Extension output is cumulative (live-verified): each delivered
+segment contains all footage so far, so the last chained segment is the whole film.
+`clips_generate.py` copies it to `video/<book-slug>.mp4` automatically ("complete" when
+every scene chained, "partial" when the chain stopped early). Per-scene mp4s are kept as
+resumable checkpoints — scene N's file is the film through scene N.
 
 Commit briefs + mp4s: `book: <slug> video ch.NN`. Never push.
 
 ## Continuity upgrades (use the full pipeline instead)
 
-The style block is clips mode's only continuity tool, by design. Image-to-video anchors,
-per-character reference images, extend-chains, and voice all exist in the full pipeline
-(`casting.md`, `grok-api.md` modes table). If a clips-mode user needs them, that is the
-outgrown-it signal — route to the full pipeline rather than bolting plates onto briefs.
+The extend chain plus the style block are clips mode's continuity tools, by design.
+Per-character reference images, casting plates, multi-take QA, and voice all live in the
+full pipeline (`casting.md`, `grok-api.md` modes table). If a clips-mode user needs
+those, that is the outgrown-it signal — route to the full pipeline rather than bolting
+plates onto briefs.

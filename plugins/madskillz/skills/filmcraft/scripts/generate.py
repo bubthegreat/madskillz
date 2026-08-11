@@ -127,8 +127,8 @@ def shot_request(shot: dict, film: dict, bible: dict) -> dict:
     elif mode == "image":
         if shot.get("image"):
             kwargs["image_url"] = shot["image"]
-    elif mode == "extend":
-        kwargs["source_video"] = shot.get("_resolved_source")
+    # mode "extend" goes through client.extend() with the source shot's
+    # delivered URL — the extensions endpoint takes no duration/resolution/n.
 
     return {k: v for k, v in kwargs.items() if v is not None}
 
@@ -188,18 +188,24 @@ def run_live(film_dir: Path, shots: list[dict], bible: dict, film: dict,
 
     for shot in shots:
         sid = shot.get("id")
+        source_url = None
         if shot.get("mode") == "extend":
             src = by_id.get(shot.get("extend_from"), {})
-            selected = src.get("_selected_path")
-            if not selected:
-                print(f"warn: {sid} extends {shot.get('extend_from')} which has no generated "
-                      f"clip yet — skipping.", file=sys.stderr)
+            # Extension needs the source's delivered URL, this run — the URLs
+            # are temporary, so a cross-run extend must regenerate the source.
+            source_url = src.get("_selected_url")
+            if not source_url:
+                print(f"warn: {sid} extends {shot.get('extend_from')} which has no delivered "
+                      f"clip this run — skipping.", file=sys.stderr)
                 continue
-            shot["_resolved_source"] = str(selected)
 
         prompt = compile_prompt(shot, bible)
         try:
-            result = client.generate(prompt, **shot_request(shot, film, bible))
+            if source_url:
+                result = client.extend(source_url, prompt,
+                                       duration=shot.get("duration"))
+            else:
+                result = client.generate(prompt, **shot_request(shot, film, bible))
         except Exception as exc:  # surface the real failure; never fake a clip
             print(f"error: {sid} failed to generate: {exc}", file=sys.stderr)
             log_generation(film_dir, {"shot": sid, "status": "failed", "error": str(exc),
@@ -224,6 +230,8 @@ def run_live(film_dir: Path, shots: list[dict], bible: dict, film: dict,
         log_generation(film_dir, record)
         if paths:
             shot["_selected_path"] = paths[0]
+        if result["urls"]:
+            shot["_selected_url"] = result["urls"][0]
         produced.append(record)
         print(f"ok: {sid} — {len(paths)} take(s), ${record['cost_usd']:.2f}")
 

@@ -89,10 +89,14 @@ def test_grok_api_key_accepted_as_fallback(monkeypatch):
     assert c.api_key == "from-grok-env"
 
 
-def test_extend_passes_the_source_video_through():
+def test_extend_uses_extensions_endpoint_with_video_field():
     t = FakeTransport([DONE])
-    client(t).extend("prev.mp4", "she goes still", duration=8)
-    assert t.calls[0]["body"]["video_url"] == "prev.mp4"
+    client(t).extend("https://cdn.example/prev.mp4", "she goes still")
+    assert t.calls[0]["url"].endswith("/v1/videos/extensions")
+    # Live-verified: bare string is rejected with `expected struct VideoUrl`.
+    assert t.calls[0]["body"]["video"] == {"url": "https://cdn.example/prev.mp4"}
+    assert t.calls[0]["body"]["prompt"] == "she goes still"
+    assert "duration" not in t.calls[0]["body"]  # extensions take no override
 
 
 def test_build_payload_omits_unset_options():

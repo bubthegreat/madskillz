@@ -22,10 +22,12 @@ generation.
 | Request keys `image` (image-to-video), `reference_images`, `reference_audios` (max 3) | **Docs-verified 2026-08-10** | official docs; `image_url`/`voice` from mirrors were wrong and are fixed in `build_payload` |
 | `done` response: `video.url` is a **temporary** URL — download promptly | **Live-verified 2026-08-10** | official docs |
 | Generation takes up to several minutes per clip | **Docs-verified 2026-08-10** | official docs |
+| `POST /v1/videos/extensions` — `video` is a **struct** `{"url": ...}` (bare string → 422 `expected struct VideoUrl`); model must be **`grok-imagine-video`** (1.5 → 400 "not supported for this model"); `duration` = length of the added portion; **output is cumulative** — the delivered clip contains all footage so far, so the last extension in a chain is the whole film | **Live-verified 2026-08-10** | live run + docs |
+| Separate `POST /v1/videos/edits` endpoint exists | **Docs-verified 2026-08-10** | official docs — not used by filmcraft yet |
 | Native synchronized audio, no surcharge | High | xAI pricing |
 | $0.07/sec at 720p | Medium — 1.0 pricing; re-check for 1.5 | DeepLearning.AI, OpenRouter |
 | Extend-from-frame adds 6–10s | Medium | 1.5 announcement |
-| Request keys `video_url` (extend), `n`, `seed` | **Low — verify first** | mirrors only; not on the docs page read 2026-08-10 |
+| Request keys `n`, `seed` on generations | **Low — verify first** | mirrors only; not on the docs page read 2026-08-10. (`video_url`-in-generations from mirrors was wrong — extend is its own endpoint, fixed in `grok_client`.) |
 
 ## Verification checklist — run once, at the start of the first live session
 

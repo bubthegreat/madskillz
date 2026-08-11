@@ -72,9 +72,10 @@ def test_reference_mode_sends_plates_and_voice():
     assert kwargs["voice"] == "bible/voices/elena.wav"
 
 
-def test_extend_mode_sends_resolved_source():
-    shot = {**SHOT, "mode": "extend", "_resolved_source": "generated/s01-001_t01.mp4"}
-    assert gen.shot_request(shot, {}, BIBLE)["source_video"] == "generated/s01-001_t01.mp4"
+def test_extend_mode_not_in_shot_request():
+    shot = {**SHOT, "mode": "extend"}
+    kwargs = gen.shot_request(shot, {}, BIBLE)
+    assert "source_video" not in kwargs  # extend goes through client.extend()
 
 
 def test_image_mode_sends_image_url():

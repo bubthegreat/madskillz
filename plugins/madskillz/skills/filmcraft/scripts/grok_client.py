@@ -24,9 +24,11 @@ from typing import Any, Callable, Protocol
 
 BASE_URL = os.environ.get("XAI_BASE_URL", "https://api.x.ai")
 SUBMIT_PATH = "/v1/videos/generations"
+EXTEND_PATH = "/v1/videos/extensions"
 POLL_PATH = "/v1/videos/{request_id}"
 
 DEFAULT_MODEL = "grok-imagine-video-1.5"
+EXTEND_MODEL = "grok-imagine-video"  # 1.5 refuses extension (live-verified 2026-08-10)
 
 TERMINAL_OK = frozenset({"done", "succeeded", "completed"})
 TERMINAL_FAIL = frozenset({"failed", "expired", "cancelled", "canceled"})
@@ -65,7 +67,6 @@ def build_payload(
     image_url: str | None = None,
     reference_images: list[str] | None = None,
     voice: str | None = None,
-    source_video: str | None = None,
     n: int | None = None,
     seed: int | None = None,
 ) -> dict:
@@ -91,12 +92,33 @@ def build_payload(
         payload["reference_images"] = reference_images  # reference-to-video
     if voice is not None:
         payload["reference_audios"] = [voice]     # docs: list, max 3 voices
-    if source_video is not None:
-        payload["video_url"] = source_video       # extend-from-frame — UNVERIFIED
     if n is not None:
         payload["n"] = n                          # takes: n seeds, one call — UNVERIFIED
     if seed is not None:
         payload["seed"] = seed                    # UNVERIFIED
+    return payload
+
+
+def build_extend_payload(
+    prompt: str,
+    video: str,
+    *,
+    model: str = EXTEND_MODEL,
+    duration: int | None = None,
+) -> dict:
+    """Assemble an extension request for `POST /v1/videos/extensions`.
+
+    Live-verified 2026-08-10: the `video` field is a struct — a bare URL string
+    is rejected with `expected struct VideoUrl` (HTTP 422) — and the model must
+    be `grok-imagine-video`; `grok-imagine-video-1.5` answers "Video extension
+    is not supported for this model" (HTTP 400). Pass the previous generation's
+    delivered video URL (docs also allow base64 data URI or file_id). Per docs,
+    `duration` controls the length of the extended portion only. The extension
+    starts from the source clip's final frame.
+    """
+    payload: dict[str, Any] = {"model": model, "prompt": prompt, "video": {"url": video}}
+    if duration is not None:
+        payload["duration"] = duration
     return payload
 
 
@@ -163,12 +185,15 @@ class GrokVideoClient:
             )
         return {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
 
-    def submit(self, payload: dict) -> str:
-        resp = self.transport("POST", f"{self.base_url}{SUBMIT_PATH}", payload, self._headers())
+    def submit(self, payload: dict, path: str = SUBMIT_PATH) -> str:
+        resp = self.transport("POST", f"{self.base_url}{path}", payload, self._headers())
         request_id = resp.get("request_id") or resp.get("id")
         if not request_id:
             raise GenerationFailed(f"No request_id in submit response: {json.dumps(resp)[:300]}")
         return request_id
+
+    def submit_extend(self, payload: dict) -> str:
+        return self.submit(payload, path=EXTEND_PATH)
 
     def poll_once(self, request_id: str) -> dict:
         """Single status check — for callers that manage their own resume loop."""
@@ -207,6 +232,24 @@ class GrokVideoClient:
         self._log.append(record)
         return record
 
-    def extend(self, source_video: str, prompt: str, **kwargs: Any) -> dict:
-        """Continue an existing clip from its final frame."""
-        return self.generate(prompt, source_video=source_video, **kwargs)
+    def extend(self, source_video: str, prompt: str,
+               duration: int | None = None, **kwargs: Any) -> dict:
+        """Continue an existing clip from its final frame.
+
+        `source_video` must be a delivered (still-valid, temporary) video URL
+        from a prior generation. Always uses EXTEND_MODEL unless overridden —
+        the session model (1.5) does not support extension.
+        """
+        payload = build_extend_payload(prompt, source_video,
+                                       model=kwargs.pop("model", EXTEND_MODEL),
+                                       duration=duration)
+        request_id = self.submit_extend(payload)
+        result = self.poll(request_id)
+        record = {
+            "request_id": request_id,
+            "status": "done",
+            "urls": extract_video_urls(result),
+            "payload": payload,
+        }
+        self._log.append(record)
+        return record
