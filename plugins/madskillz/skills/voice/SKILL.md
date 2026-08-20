@@ -39,7 +39,8 @@ The CLI does everything deterministic; the model only judges traits:
    the path of the live core.
 2. Judge per `references/voice-update.md`: is anything **genuinely new** about how the owner
    writes? Merge real findings into the live core's descriptive sections (write the full
-   revised core to a temp file). A no-change pass is valid: skip to step 4.
+   revised core to a temp file). A no-change pass is valid: apply the unchanged core anyway so
+   the marker advances.
 3. `voicectl update-apply <tempfile>` - validates and installs it atomically, bumping the
    marker.
 4. `voicectl sync` - materiality-gated: pushes the live profiles to the committed library on

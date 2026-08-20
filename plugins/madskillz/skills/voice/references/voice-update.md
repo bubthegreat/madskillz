@@ -30,7 +30,8 @@ how to judge.
 7. **Incremental, not a rewrite.** Tighten or extend existing entries; do not restart or bloat.
    Keep the profile a tight, voice-defining brief.
 8. **Don't force findings.** Most passes add little or nothing; a no-change pass is valid and
-   honest - then skip apply and go straight to `voicectl sync`.
+   honest - still run `voicectl update-apply` with the unchanged core so `Processed through`
+   advances past the judged entries.
 
 ## Output
 

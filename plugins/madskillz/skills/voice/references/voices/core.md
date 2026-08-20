@@ -436,7 +436,7 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
   discussion with a colleague). Added inquiry-style and decisiveness traits and a spoken-register
   section. The conversation's topical content (its politics/ethics/religion) was deliberately
   excluded — only voice/thinking traits were taken.
-- Processed through: 2026-08-20T01:38:31Z
+- Processed through: 2026-08-20T05:22:46Z
 - Repo-synced through: 2026-08-20T01:38:31Z
 - Changelog:
   - 2026-08-19 (restructure) - split the monolithic science-blog profile into this core
