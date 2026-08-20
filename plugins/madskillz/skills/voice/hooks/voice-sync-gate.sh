@@ -7,5 +7,6 @@
 # VOICE_SYNC_LAUNCH) - see voicectl's gate module. Contract: never blocks session teardown,
 # never errors (always exit 0), emits nothing to stdout.
 cat >/dev/null 2>&1   # drain the SessionEnd event JSON
+PATH="$HOME/.local/bin:$PATH"
 command -v voicectl >/dev/null 2>&1 && voicectl gate >/dev/null 2>&1
 exit 0

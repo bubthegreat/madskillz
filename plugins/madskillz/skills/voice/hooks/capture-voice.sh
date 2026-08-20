@@ -2,6 +2,7 @@
 # madskillz voice-capture hook (UserPromptSubmit) - thin shim over `voicectl capture`.
 # Appends the owner's prompt to ~/.madskillz/voice/corpus.jsonl. Contract: never blocks the
 # prompt, never errors (always exit 0), emits nothing to stdout.
+PATH="$HOME/.local/bin:$PATH"
 if command -v voicectl >/dev/null 2>&1; then
   voicectl capture >/dev/null 2>&1
 else
