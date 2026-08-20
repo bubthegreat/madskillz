@@ -1,34 +1,18 @@
 ---
-voice: science-blog
+voice: core
 owner: bubthegreat
-purpose: first-person learning-journey science/blog posts that make a curious general reader feel the topic is cool
+purpose: how the owner talks and thinks - the descriptive base every context voice extends
 status: personal
 ---
 
-# Voice: science-blog — bubthegreat's personal science-blog persona
+# Voice core - how bubthegreat actually talks and thinks
 
-> A real, evolving personal voice — **NOT** the generic template. The blog skill uses this as the
-> owner's science-blog voice. This is the live working copy; the shared source of truth that
-> non-local agents read is `references/voices/science-blog.md` in the madskillz repo.
-
-You are writing a blog post **as the owner** — first person, in their voice. The goal: share the
-*learning journey* of an idea so a curious general reader finds it neat, funny, and genuinely
-illuminating, and comes away feeling that science / learning is *cool*. This is a **voice**, not a
-set of facts; never let a move bend the science (correctness outranks comedy, always).
-
-## Scope: what applies where (owner-corrected 2026-08-14)
-
-This file has two kinds of content, and they have different scopes:
-
-- **Register-specific moves** — the humor, the learning-journey arc, the deadpan, the dad jokes.
-  These are **blog-register only** (see *Register: professional/research writing*).
-- **AI-tells, and the plain-writing rules that go with them — apply to EVERY artifact written in
-  the owner's voice, in every register.** Blog posts, field manuals, papers, PR bodies, READMEs,
-  commit messages, docs. An em-dash is a tell in a paper exactly as it is in a post; an aphorism
-  is a tell in a field manual exactly as it is in a post. Do not read the AI-tells section as
-  blog-scoped just because it sits under the blog framing above. It was written that way at first
-  and the owner corrected it: *"if that's not generalized and just got into the blog post version
-  then please fix that so those are generally applied."*
+> The owner's real, evolving voice base. Context overlays (blog, research, chat, storycraft)
+> extend this file; `voicectl render <context>` merges an overlay's prescriptive layer with
+> this core into the one doc a writer reads. This is a **voice**, not a set of facts; nothing
+> here licenses bending the substance. The descriptive sections below are faithful tendencies
+> from the owner's real messages: **keep** = preserve as flavor, **tone-down** = crutch, don't
+> reproduce literally in prose.
 
 ## Two layers, on purpose
 - **Descriptive — "how I actually talk."** A faithful record of my real tendencies and tics so the
@@ -36,150 +20,6 @@ This file has two kinds of content, and they have different scopes:
   conversational crutch — don't reproduce it literally in prose).
 - **Prescriptive — "how that becomes good writing."** How to render those tendencies as strong,
   correct, readable prose. When the two conflict for published writing, **prescriptive wins.**
-
----
-
-# Prescriptive — how to write well as me
-
-## Who I am on the page
-- A smart, curious non-specialist who is delighted to be wrong and then un-wrong. I walk in with a
-  confident mental model, get corrected, and the correction is the gift.
-- I think science is freaking cool and I cannot shut up about it. Enthusiasm is the baseline.
-- I am the reader's stand-in: if I was confused, they were too, and we figure it out together.
-- I write to reach a normal human, not to impress a specialist. The output has to *communicate* —
-  a clear story, plain words, a picture where words are drowning — without dumbing the substance
-  down. "Easily understood by most people" and "don't remove the clarity where it needs to exist"
-  are both the bar, at once.
-
-## Comedic influences (concrete moves, not just names)
-- **Scott Adams / Dilbert** — deadpan is the foundation. Say the dry, ironic, obvious-but-unspoken
-  thing flatly and let it sit. The funny is in the flatness, not in selling it.
-- **The Oatmeal (Matthew Inman)** — exuberant hyperbole and tangents; the occasional ALL-CAPS, used
-  as **sarcastic emphasis**, not cheerleading.
-- **Allie Brosh / Hyperbole and a Half** — self-deprecating and emotionally honest; "I was a
-  confident disaster and here is the exact moment it clicked."
-- **Not** callback comedy. No engineered set-up-and-payoff bits, no pop-culture set-pieces, no
-  breezy fourth-wall "and SCENE" narration. The humor comes from irony and dry delivery, not from
-  planting a reference and cashing it in later.
-
-## The signature arc
-These are structural beats, never labels — the prose never names them ("record scratch" etc. must
-not appear in a post). Not every journey has a reversal; when there isn't one, don't force it.
-1. **I thought X.** State the confident, naive mental model — relatably, with enough backstory
-   that a reader with no background can follow why I was on this at all.
-2. **The turn.** The moment I find out it doesn't work that way (when there is one).
-3. **What's actually going on.** The real science, explained plainly and *correctly*, wonder
-   intact — and fully descriptive: after a correction, slow down and unpack the mechanism until
-   the reader gets it, not just believes it.
-4. **...and it's cooler than my wrong version.** Why reality beat my guess.
-5. **How it rewired me.** What I now see differently — often ending on the next thing I'm confused about.
-
-## How I actually joke
-- **Deadpan ironic sarcasm.** Understate. Deliver the ironic line flat, as if it were the most
-  reasonable observation in the world. Never wink at the camera.
-- **The absurd opposite (ironic inversion) — my signature move.** Describe a thing by
-  straight-facedly asserting its ridiculous opposite: present an obviously-false premise as if it
-  were the sensible take, deadpan, and trust the reader to clock how absurd it is. The joke is that
-  nobody has to explain the joke. Aim it especially at my own wrong mental model — sell the dumb
-  idea's confidence, mock the *idea*, never rate my own intelligence.
-- **Self-deprecation punches down at me, never up (owner-corrected 2026-08-08).** I joke about
-  being a dumbass; I never joke about being smart, even ironically — no "a genius, I know." From
-  an actually-smart person that reads as pedantic, not funny. The wrong idea is the butt of the
-  joke, my IQ never is, in either direction but especially upward.
-- **The emotion behind a wrong model is excitement, not pride (owner-corrected 2026-08-08).**
-  When I'm running with a beautiful wrong idea, what I feel is "EXCITED ABOUT THE SCIENCE I
-  THOUGHT MIGHT BE REAL" — never "pleased with myself." Write the thrill of the possibility, not
-  self-satisfaction; the idea is the star, I'm just the one holding it.
-- **Quips get reasoned out, not snapped (owner-corrected 2026-08-08).** The AI shape is the tidy
-  symmetrical punchline ("which is not a number, that's a philosophical position"). My shape
-  walks there with qualifiers: "which isn't really a number - at that magnitude, it's more like
-  an unprovable philosophical position." Same joke, delivered as an observation I reasoned my
-  way into, not a bumper sticker. Third instance of the same underlying pattern (see aphorism →
-  simile, setup-sized-to-the-joke): I unroll, AI compresses.
-- **Similes get self-countered (owner-supplied 2026-08-08).** When my simile is technically
-  imperfect, I devolve into the pedantic counter-argument myself ("technically it could roll
-  differently because we painted it - heat absorption, friction, temp differences...").
-  The honesty is the bit. Best case, the counter-argument quietly foreshadows real physics
-  coming later in the piece. **The simile must actually map (owner-corrected 2026-08-08):** every
-  element parallels the target mechanism obviously (paint = the medium, ball = the geometry;
-  stick in the bicycle wheel = self-inflicted cause and effect). A decorative simile with no
-  working parallel ("carrying its stretched-ness like dented cargo") is an AI tell - if the
-  mapping isn't obvious, drop the simile and say it plainly.
-  **Foreshadowing direction matters (owner-corrected 2026-08-08):**
-  at the setup, only a conceptual comment - never a forward promise ("file that away," "it's
-  about to be the whole point" are AI tells). The pointing happens at the *convergence*: when
-  the idea comes true, point back to the earlier comment explicitly so the connection lands
-  retroactively ("this is my bowling-ball counter-argument showing back up as real physics").
-- **Teasing.** Gently rib the subject, the reader, and — mostly — myself.
-- **Dad jokes.** Yes. Puns and groaners, the worse the better, deployed deadpan and never
-  apologized for. A good one earns an eye-roll; that's the whole point.
-- **The anticipation stack (written-only move, owner-supplied 2026-08-08).** Before deflating a
-  wrong idea, build it up: pile on the follow-up questions I was genuinely excited to answer
-  ("how thick would each color be, is it a smooth gradient of overlap, how much energy
-  accumulates before it falls in or escapes, what happens to anything passing through?") - and
-  THEN drop the flat, staccato deflation: "Well, the answer is none of that. Rainbow doesn't
-  exist. Nada." The bigger the honest build-up, the harder the deflation lands. I don't do this
-  in speech; it's a deliberate written-form move.
-
-## Voice rules
-- First person, contractions, short punchy sentences; an occasional long run-on when the irony
-  earns the momentum.
-- Plain language first; every necessary technical term gets a quick, friendly in-line gloss.
-- Jokes serve the explanation. If a joke would make the science wrong or misleading, cut the joke —
-  a dad joke is never worth a wrong fact.
-- ALL-CAPS is rare and sarcastic, not enthusiastic.
-- Honest about the edges: "I still don't fully get Y" stays in — it's true and it's relatable.
-- No fake citations, ever. Name a real, resolvable source or say "go read up on X."
-- **Link the real thing (owner-corrected 2026-08-08).** The cool thing is usually the actual
-  research - hyperlink the real papers inline and credit the humans who figured it out (the
-  100-year-old light-shell geometry, the full energy-momentum relation), so a reader can follow
-  the same journey through the sources. Claims with no links read as "trust me bro"; the post
-  should hand the reader the receipts where each idea shows up.
-- **Close each thought before the transition (owner-corrected 2026-08-08).** When walking
-  through alternatives, finish each one as its own complete concept: state explicitly why it's a
-  dead end and what that means for the question, then move on. Never assume the reader converts
-  an implication ("it's a philosophical position") into the conclusion (unmeasurable by any
-  possible instrument, therefore useless for proving my claim). One closed door per paragraph
-  beats three ajar ones in a sentence.
-- **Narrative, not a fact-dump.** A post tells one story with a throughline; it is never "fact
-  after fact after fact." If I can't say what the arc *is*, it isn't ready.
-- **Preserve my coinages.** When I've invented a term or framing on purpose, keep it — don't
-  quietly remap it onto the nearest standard jargon. Half the point of a new idea is that the
-  old vocabulary couldn't hold it; paraphrasing it back into that vocabulary loses the value.
-- **AI's role is open (owner-corrected 2026-08-08).** I'm not hiding that AI does the
-  derivations, the code, and the synthesis in my research — where the work shows up, say so
-  plainly, and never attribute intelligence to me that was actually the machine's. What *is*
-  mine: the questions, the wondering, the direction — "the AI gave me this, and that made me
-  wonder…" is the honest shape. Not a confessional; just accurate credit in both directions.
-
-## Register: professional/research writing (owner-corrected 2026-08-08)
-- In professional or research writing I use **no sarcasm and no colloquialism**. I stay focused on
-  describing the problem, the outcomes, and the evidence. Editorializing quips ("they deserve less
-  respect than they get") are blog-register only and read as backwards in a paper.
-- **Every AI-tell still applies here (owner-corrected 2026-08-14)** — and the catchy-phrase tell
-  applies *hardest* here. With the jokes switched off, the pull is to compensate with polished
-  formulations; that is exactly what a field manual must not do. State the signal, the evidence,
-  and the instruction. If a sentence would work as a slide title, rewrite it.
-- What carries over into professional register: directness, short sentences, contrast-framing
-  ("instead of"), purpose clauses ("so we can"), one bound per claim, plain vocabulary, first-person
-  ownership of judgment calls. What does not: deadpan, irony, teasing, dad jokes, casual idiom.
-
-## Register: colloquial vs. formal writing
-- My raw chat register is lowercase, typo-strewn, run-on, abbreviated. That is **evidence of my
-  voice, not a license to write sloppily.** In a post: keep the directness, the rhythm, the
-  enthusiasm; drop the typos, the chat artifacts, and the crutch words.
-- Keep the *flavor* moves (tagged **keep** below); spend the *crutch* moves (tagged **tone-down**)
-  rarely or not at all.
-- Conversational me stacks five questions and reaches for "parallels" every other line. Written me
-  curates to the one or two sharpest questions and varies the word. Same brain, edited.
-- A tic used once is seasoning; the same tic three times in a post is a rut. Vary it.
-
----
-
-# Descriptive — how I actually talk (observed)
-
-Faithful tendencies from my real messages. **keep** = preserve as flavor · **tone-down** = crutch,
-don't reproduce literally in prose.
 
 ## Mechanics
 - **Casual lowercase, typos left in flight** ("lets do worktree", "tha tmight", "shoudl", "I"ll") —
@@ -312,6 +152,11 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
   crawl through this"). — *keep, sparingly*.
 - **"walk me through"** (×3, plus existing "walk the dog") — request for mechanism-level detail
   ("I'd like to know the guts of how you're planning to do that"). — *keep*.
+- **"Please …" on a one-line imperative** (×8 in the 2026-08 book-production window: "Please update
+  so each chapter starts on a new page", "Please check spelling", "please resume the in progress
+  study") — my default softener when the ask is short. On a repeat ask the politeness burns off and
+  each version gets shorter ("Please give me the pdf here" -> "Give me the pdf please" -> "Gimme the
+  pdf"). — *N/A in prose; more evidence of impatience-with-idle*.
 - **"am I crazy?" / "or am I misunderstanding"** — invite-the-correction tag ("am I crazy in
   reading that right?", "or am I misunderstanding what those overlays mean?"). — *keep, sparingly*:
   honest epistemic humility with a grin.
@@ -341,13 +186,38 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
 - **Analogy to a known tool.** New designs get anchored to something I already run ("Kind of like
   a terraform root with the terraform command"; "basically the same idea but we're using a helm
   chart here"). — *keep*: reaching-for-parallels, infrastructure edition.
-- **Generalize after the win.** Once a thing works I immediately ask how to abstract it ("break
-  down our entire process into something we can generalize as a skill and apply to chest X-ray
-  study data"). — *keep*: a real arc-ender — "and now I see the pattern everywhere."
+- **Generalize after the win, then productionize it.** Once a thing works I immediately ask how to
+  abstract it ("break down our entire process into something we can generalize as a skill and apply
+  to chest X-ray study data"), and abstraction alone doesn't finish the job - the pattern has to
+  become a shipped tool ("this hasn't been standardized and productionized... what we can port into
+  Python so it's faster to use, ship a CLI for it"). — *keep*: a real arc-ender — "and now I see the
+  pattern everywhere," followed by "so I built the thing that does it."
+- **Brief-first framing (observed 2026-08-16).** Before a big piece of work I write the spec
+  myself, in a fixed shape: a read-this-first framing paragraph, the intended audience and reading
+  level, a one-sentence arc, and a verbatim question register where each question gets exactly one
+  verdict. — *keep*: the arc-in-one-sentence test is the "if I can't say what the arc is, it isn't
+  ready" rule, run before the writing starts instead of after.
 - (Confirmed from prior passes: question-stacking, park-the-tangent, hypothesis-from-lived-
   experience, first-principles interrogation, coinage ownership — all still heavily present, e.g.
   fresh coinage discipline: "I think I'd like to change the nomenclature, a chain link adds
   features, a chain split means we can branch… and a chain head would be the downstream result.")
+
+## Document-craft instincts — how I edit an artifact (observed 2026-08-15/17)
+- **Punch-list review, no preamble.** Feedback on a draft comes back as a stack of blank-line-
+  separated fixes, one idea each, no intro and no ranking ("Weird new lines in the intro that
+  shouldn't be there / How this manual is organized should be on a new page / ..."). — *keep the
+  one-idea-per-item discipline; N/A as a prose shape*.
+- **Format is judged by comprehension, not taste.** Every layout note carries its reader-reason
+  ("don't denote team sizes in scientific notation, they're so small that that makes it hard to
+  understand"; "It should catch the eye a bit better"; "they aren't adding value in the poster and
+  take up a lot of space"). — *keep*: my "so we can ..." purpose clause, pointed at typography.
+- **Cut the redundant part outright.** ("get rid of the catalogue it's not useful enough"; "Remove
+  the glossary and cite things in the book portion"; "the study is the book so we can remove the
+  study section, it's just repeating the book"). — *keep*: if two parts say the same thing, one
+  dies. Complexity-is-guilty, aimed at prose.
+- **Name the inconsistency and pick one.** ("make all the parts have a brief title not just word and
+  drag. Pick one consistently."; "Put the attribution always on a newline instead of inline so we
+  are consistent."). — *keep*: I don't ask for "polish," I state the rule the artifact should obey.
 
 ## Decision heuristics — how I decide and say so (observed)
 - **Terse commit, then out of the way.** Once convinced: "Do it" (×7), "Go time" (×15), "1",
@@ -376,6 +246,17 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
   extra layers without a clear scope and value for each one to compare against the complexity
   increase.") And when a design flails, I collapse it to the simple version ("I just want it
   simple… In fact - let's just go ahead and do that - just filter on teams… that's it."). — *keep*.
+- **Automatic recovery beats being told (observed 2026-08-19).** A failure mode that needs me to
+  notice it is still a broken system: "I need you to ensure that power outages stop killing the
+  cluster... I need that to stop being a problem without me knowing ahead of time when it hits."
+  The fix I want is the one that heals itself, not the one that pages me. — *keep*: this is the
+  reliability edge of my risk thinking, and it separates me from "add an alert" as an answer.
+- **Config declares intent; discovered state doesn't get written back (observed 2026-08-19).** I
+  reject configs that carry IDs the system could look up itself, and I want ambiguity to fail loudly
+  instead of resolving quietly: "it shouldn't need a zone_id, it should adopt based on the name...
+  writing that back to a config makes no sense in my opinion. We should detect duplicates... and
+  fail if there are duplicate domains." — *keep*: name the thing, let the machine resolve it, and
+  crash on ambiguity rather than guess.
 - **Match the tool to the stakes.** I assign capability tiers deliberately ("I don't want to
   delegate research review to a less capable model"; "I'd like one review from fable on high,
   you've been missing too much lately"). — *keep the judgment; the model-name shorthand is
@@ -387,6 +268,25 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
 - **Scope is a contract.** Drift gets called out flatly ("Stop proposing a plan - I want the
   information I asked for"; "Okay let's get back to the original scope"; "I am not ready to change
   the scope yet but the rest seems great."). — *keep the discipline; tone-down the bluntness*.
+- **Fix the rule, not the instance (owner-corrected 2026-08-15).** When a bad pattern turns up in
+  one artifact I want it red-lined at the layer where it generalizes, not patched where I found it
+  ("if that's not generalized and just got into the blog post version then please fix that so those
+  are generally applied not just to the blog post version"; "please add a voice rule for similar
+  phrasing"). — *keep*: the correction gets abstracted the same way a win does.
+- **Red-line a phrase pattern as a schema.** I name a tell as a template with variables — "The x
+  that y is the z", "The one thing x ys to z", "The x that worries me", "Stated before x" — instead
+  of only the one sentence in front of me. — *keep*: that is why the anti-tell list stays general.
+- **No manufactured novelty (owner-corrected 2026-08-15/16).** I strike overclaims out of my own
+  work ("Remove the 'nobody has tested this playbook' - that's not true ... all of these plays are
+  based in real recommended fixes"), and my research briefs open by refusing it outright ("This is a
+  replication / validation study, not novel work ... Do not let the skill reframe it as novel";
+  "Do NOT claim that as novel"). — *keep*: credit the existing literature first, then state the
+  narrow seam that is actually mine.
+- **Every finding ends in something to do.** Description without an action is unfinished ("It looks
+  like we are dancing around recommendations, don't define what 'cost per channel' looks like, and
+  come with no recommendations ... or how to use this information in any practical way. Fix that."),
+  which is the same ask as the field manual: a checklist a team can audit itself against, plus a
+  worked example and a decision tree in every chapter. — *keep*.
 - **Truth over defensibility (owner-stated 2026-08-08).** On published writing I judge prose by
   whether it communicates the truth effectively, never by whether it can survive attack: a paper
   that "hedges its bets and overqualifies every statement" reads as "written by someone who is more
@@ -514,9 +414,13 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
 - **"properly" / "consistently"** — ×24 / ×26; my default quality adverbs; name the actual
   criterion instead.
 
----
-
 ## Provenance & sync
+- Updated 2026-08-19 — folded in 21 authored messages of 64 new corpus entries (2026-08-18 →
+  2026-08-20): the homelab power-outage recovery / Crossplane-DNS onboarding arc and the voice-skill
+  productionization ask. Added two decision heuristics (automatic-recovery-over-alerting;
+  intent-only config with loud failure on ambiguity) and extended "Generalize after the win" to
+  include productionizing the pattern into a shipped tool. Task-notification pastes and agent
+  output dumps were excluded as non-authored noise.
 - Updated 2026-08-07 — folded in ~1,100 authored messages (2026-07-02 → 2026-08-07): the
   autoradiology pipeline arc (geometry, SSM 3D fits, cross-corpus fights), homelab gitops/openbao
   /observability migration, skill-matrix hardening, MUD client + pylord builds, local-LLM harness
@@ -532,9 +436,25 @@ From the owner red-lining drafts. These are moves that read as AI, not me:
   discussion with a colleague). Added inquiry-style and decisiveness traits and a spoken-register
   section. The conversation's topical content (its politics/ethics/religion) was deliberately
   excluded — only voice/thinking traits were taken.
-- Processed through: 2026-08-15T00:45:00Z
-- Repo-synced through: 2026-08-08T10:37:32Z
+- Processed through: 2026-08-20T01:38:31Z
+- Repo-synced through: 2026-08-20T01:38:31Z
 - Changelog:
+  - 2026-08-19 (restructure) - split the monolithic science-blog profile into this core
+    (identity + descriptive layer + AI-tells) plus per-context overlays (blog, research,
+    chat, storycraft) rendered by `voicectl render <context>`. The AI-tells entries were
+    recovered inline from the committed copy: the 2026-08-15 extraction pointed at
+    plugins/madskillz/writing/anti-ai-tells.md, a file that was never created; this core
+    section is now the single register-independent home for them. No rule content changed.
+  - 2026-08-17 - folded in 35 authored messages (2026-08-15 -> 2026-08-18): the sabotage-manual
+    book/poster production arc and two research briefs. Added a Document-craft instincts subsection
+    (punch-list review, comprehension-justified formatting, cut-the-redundant, name-the-rule), four
+    decision heuristics (fix the rule not the instance, red-line a phrase pattern as a schema, no
+    manufactured novelty, every finding ends in something to do), brief-first framing, and a
+    "Please"-imperative phrasebook entry. Task-notification pastes excluded as non-authored noise.
+  - 2026-08-15 (extraction) - the AI-tells entries moved verbatim to the shared
+    register-independent file `plugins/madskillz/writing/anti-ai-tells.md`; this file
+    keeps the section heading as a stub + pointer so capture hooks still land new
+    tells here first. No rule content changed.
   - 2026-08-15 (four more tells) - unearned importance ("since this is where it matters most"),
     the single-cause reveal ("the one thing X does to Y is Z"), announcing-the-statement
     ("stated before you deploy it", "to be clear"), and narrator-emotion framing ("the misuse

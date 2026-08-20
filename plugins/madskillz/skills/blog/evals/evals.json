@@ -1,6 +1,6 @@
 {
   "skill": "blog",
-  "description": "Trigger and behavior evals for the standalone personal blog + voice skill.",
+  "description": "Trigger and behavior evals for the standalone personal blog skill (voice is owned by the voice skill).",
   "tests": [
     {
       "id": "trigger-blog-this",
@@ -8,29 +8,17 @@
       "should_trigger": true,
       "grading_criteria": [
         "Skill triggers",
-        "Refreshes the voice profile (Step 0) before writing",
+        "Gets the voice via `voicectl render blog` (Step 0) before writing",
         "Drafts a first-person post in the owner's voice that keeps the facts correct",
         "Does not fabricate questions, aha moments, or citations"
       ]
     },
     {
-      "id": "trigger-update-voice-only",
+      "id": "update-voice-hands-off",
       "prompt": "Update my voice profile from how I've been writing lately.",
-      "should_trigger": true,
+      "should_trigger": false,
       "grading_criteria": [
-        "Runs the voice updater only; writes no blog post",
-        "Summarizes only corpus entries newer than the recorded marker",
-        "Merges only genuinely-new, repeated traits; never fabricates a trait",
-        "Advances the marker"
-      ]
-    },
-    {
-      "id": "voice-update-nothing-new",
-      "prompt": "Refresh how I sound.",
-      "should_trigger": true,
-      "grading_criteria": [
-        "If nothing in the corpus is new, says so and changes nothing",
-        "Does not force a finding"
+        "Routes to the voice skill's update flow; writes no blog post"
       ]
     },
     {

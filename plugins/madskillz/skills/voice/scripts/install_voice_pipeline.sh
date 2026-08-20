@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# install_voice_pipeline.sh — one-shot, idempotent installer for the blog skill's
-# voice-capture + auto-sync pipeline on this machine.
+# install_voice_pipeline.sh - one-shot, idempotent installer for the voice skill's
+# capture + auto-sync pipeline on this machine.
 #
-# What it sets up (see ../references/voice-update.md for the full design):
+# What it sets up:
 #   1. ~/.madskillz/voice/                      the voice dir
-#   2. ~/.madskillz/voice/voice.md              live profile, seeded from the committed voice
-#   3. ~/.claude/hooks/capture-voice.sh         global UserPromptSubmit corpus capture
-#   4. ~/.claude/hooks/voice-sync-gate.sh       SessionEnd gate that launches background syncs
-#   5. ~/.claude/settings.json                  hook wiring for 3 + 4 (never clobbers other hooks)
-#   6. ~/.madskillz/voice/madskillz-sync        dedicated main-pinned clone the gate pushes from
+#   2. ~/.madskillz/voice/tool/                 copy of the voicectl package, installed as a uv tool
+#   3. ~/.madskillz/voice/{core,<context>}.md   live profiles, seeded from the committed voices
+#   4. ~/.claude/hooks/capture-voice.sh         global UserPromptSubmit shim -> voicectl capture
+#   5. ~/.claude/hooks/voice-sync-gate.sh       SessionEnd shim -> voicectl gate
+#   6. ~/.claude/settings.json                  hook wiring for 4 + 5 (never clobbers other hooks)
+#   7. ~/.madskillz/voice/madskillz-sync        dedicated main-pinned clone the sync pushes from
 #
-# Idempotent: every step skips when already done; safe to re-run.
+# Idempotent: every step skips when already done; safe to re-run (re-runs refresh the tool copy).
 #
 # Env overrides:
 #   VOICE_DIR                 voice dir                    (~/.madskillz/voice)
@@ -18,13 +19,14 @@
 #   VOICE_REMOTE              remote for the sync clone    (origin of this checkout, else
 #                                                           git@github.com:bubthegreat/madskillz.git)
 #   VOICE_INSTALL_NO_CLONE=1  skip the sync-clone step     (tests / offline)
+#   VOICE_INSTALL_NO_TOOL=1   skip the uv tool install     (tests / offline)
 set -u
 
 here="$(cd "$(dirname "$0")" && pwd)"
-plugin_root="$(cd "$here/../../.." && pwd)"            # scripts -> blog -> skills -> plugin root
+skill_root="$(cd "$here/.." && pwd)"                    # scripts -> voice skill root
 VOICE_DIR="${VOICE_DIR:-$HOME/.madskillz/voice}"
 CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
-committed_voice="$here/../references/voices/science-blog.md"
+voices_dir="$skill_root/references/voices"
 
 say() { printf '%s\n' "$*"; }
 ok=0; skipped=0
@@ -38,26 +40,47 @@ if [ -d "$VOICE_DIR" ]; then skip "voice dir exists: $VOICE_DIR"; else
   mkdir -p "$VOICE_DIR" && did "created $VOICE_DIR"
 fi
 
-# --- 2. seed live profile -----------------------------------------------------------------------
-if [ -f "$VOICE_DIR/voice.md" ]; then skip "live profile exists: $VOICE_DIR/voice.md"; else
-  if [ -f "$committed_voice" ]; then
-    cp "$committed_voice" "$VOICE_DIR/voice.md" && did "seeded live profile from committed science-blog voice"
+# --- 2. voicectl tool ---------------------------------------------------------------------------
+# Copy the package out of the (roaming) checkout so the installed tool never dangles, then
+# install with uv. Refreshing the copy on every run keeps the tool current with the skill.
+if [ -n "${VOICE_INSTALL_NO_TOOL:-}" ]; then
+  skip "voicectl install skipped (VOICE_INSTALL_NO_TOOL)"
+elif ! command -v uv >/dev/null 2>&1; then
+  say "  ! uv not found - voicectl not installed; install uv and re-run"
+else
+  rm -rf "$VOICE_DIR/tool"
+  mkdir -p "$VOICE_DIR/tool"
+  cp -r "$skill_root/cli/pyproject.toml" "$skill_root/cli/voicectl" "$VOICE_DIR/tool/"
+  if uv tool install --force --quiet "$VOICE_DIR/tool" 2>/dev/null; then
+    did "installed voicectl (uv tool) from $VOICE_DIR/tool"
   else
-    say "ERROR: committed voice not found at $committed_voice"; exit 1
+    say "  ! uv tool install failed - voicectl unavailable"
   fi
 fi
 
-# --- 3+4. install hook scripts ------------------------------------------------------------------
+# --- 3. seed live profiles ----------------------------------------------------------------------
+seeded=0
+for f in "$voices_dir"/*.md; do
+  base="$(basename "$f")"
+  if [ -f "$VOICE_DIR/$base" ]; then :; else
+    cp "$f" "$VOICE_DIR/$base" && seeded=$((seeded+1))
+  fi
+done
+if [ "$seeded" -gt 0 ]; then did "seeded $seeded live profile(s) from committed voices"; else
+  skip "live profiles already present"
+fi
+
+# --- 4+5. install hook shims --------------------------------------------------------------------
 mkdir -p "$CLAUDE_DIR/hooks"
 for h in capture-voice.sh voice-sync-gate.sh; do
-  src="$plugin_root/hooks/$h" dst="$CLAUDE_DIR/hooks/$h"
+  src="$skill_root/hooks/$h" dst="$CLAUDE_DIR/hooks/$h"
   [ -f "$src" ] || { say "ERROR: hook source missing: $src"; exit 1; }
   if [ -f "$dst" ] && cmp -s "$src" "$dst"; then skip "hook current: $dst"; else
     cp "$src" "$dst" && chmod +x "$dst" && did "installed hook: $dst"
   fi
 done
 
-# --- 5. wire settings.json ----------------------------------------------------------------------
+# --- 6. wire settings.json ----------------------------------------------------------------------
 # Appends a UserPromptSubmit entry for capture-voice.sh and a SessionEnd entry for the gate,
 # matching by script name so re-runs and hand-edits don't duplicate. Existing hooks untouched.
 wired="$(SETTINGS="$CLAUDE_DIR/settings.json" python3 - <<'PY'
@@ -111,7 +134,7 @@ case "$wired" in
   *)      did "settings.json: added hook(s): $wired" ;;
 esac
 
-# --- 6. dedicated sync clone --------------------------------------------------------------------
+# --- 7. dedicated sync clone --------------------------------------------------------------------
 # A CLONE pinned to main, never a worktree (a worktree would lock main out of the primary
 # checkout). Holds nothing precious; the gate hard-resets it to origin/main before each sync.
 sync_repo="$VOICE_DIR/madskillz-sync"
@@ -128,10 +151,10 @@ else
   if git clone --branch main "$remote" "$sync_repo" >/dev/null 2>&1; then
     did "cloned sync repo: $remote -> $sync_repo (main)"
   else
-    say "  ! sync clone FAILED ($remote) — auto-push disabled until it exists; re-run when online"
+    say "  ! sync clone FAILED ($remote) - auto-push disabled until it exists; re-run when online"
   fi
 fi
 
 say ""
 say "voice pipeline: $ok change(s), $skipped already in place."
-say "Backfill existing local history with: python3 $here/backfill_corpus.py"
+say "Backfill existing local history with: voicectl backfill"

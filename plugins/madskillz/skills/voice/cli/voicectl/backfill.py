@@ -1,42 +1,28 @@
-#!/usr/bin/env python3
-"""backfill_corpus.py — rebuild/extend the voice corpus from local Claude Code data.
-
-The capture hook only records prompts from the moment it is installed. This script folds in
-what the machine already knows: every prompt in ~/.claude/history.jsonl plus user-authored
-turns mined from ~/.claude/projects/*/ session transcripts. Idempotent — re-runs append
-nothing new.
-
-Only entries newer than the live profile's `Processed through:` marker are considered
-(anything older was already folded into the profile). Corpus schema matches the capture
-hook: one JSON line {"ts": "<ISO8601 UTC>", "text": "<message>"}.
-
-Env overrides: VOICE_DIR (~/.madskillz/voice), CLAUDE_DIR (~/.claude),
-BACKFILL_SESSIONS_PER_PROJECT (15).
-"""
+"""Backfill the corpus from local Claude Code data (~/.claude/history.jsonl + project
+transcripts). Idempotent; honors the live core profile's `Processed through:` marker.
+Port of the blog skill's backfill_corpus.py."""
 
 import json
 import os
-import re
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-VOICE_DIR = Path(os.environ.get("VOICE_DIR", Path.home() / ".madskillz" / "voice"))
-CLAUDE_DIR = Path(os.environ.get("CLAUDE_DIR", Path.home() / ".claude"))
-SESSIONS_PER_PROJECT = int(os.environ.get("BACKFILL_SESSIONS_PER_PROJECT", "15"))
+from . import paths
+from .profile import get_marker
 
-CORPUS = VOICE_DIR / "corpus.jsonl"
-PROFILE = VOICE_DIR / "voice.md"
+
+def _sessions_per_project() -> int:
+    return int(os.environ.get("BACKFILL_SESSIONS_PER_PROJECT", "15"))
 
 
 def processed_marker() -> str:
-    """The live profile's `Processed through:` ts; '' means process everything."""
-    try:
-        m = re.search(r"Processed through:\s*(\S+)", PROFILE.read_text(encoding="utf-8"))
-        if m and m.group(1).lower() != "none":
-            return m.group(1)
-    except OSError:
-        pass
+    for p in (paths.core_path(), paths.voice_dir() / "voice.md"):
+        try:
+            m = get_marker(p.read_text(encoding="utf-8"), "processed")
+            if m:
+                return m
+        except OSError:
+            continue
     return ""
 
 
@@ -76,7 +62,7 @@ def iter_transcripts(projects_dir: Path):
     for project in sorted(projects_dir.iterdir()):
         sessions = sorted(
             project.glob("*.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True
-        )[:SESSIONS_PER_PROJECT]
+        )[: _sessions_per_project()]
         for session in sessions:
             try:
                 lines = session.read_text(encoding="utf-8").splitlines()
@@ -110,14 +96,17 @@ def dedupe_key(ts: str, text: str):
     return ts[:10], text
 
 
-def main() -> int:
-    VOICE_DIR.mkdir(parents=True, exist_ok=True)
+def run() -> str:
+    voice_dir = paths.voice_dir()
+    voice_dir.mkdir(parents=True, exist_ok=True)
+    corpus = paths.corpus_path()
+    claude_dir = paths.claude_dir()
     marker = processed_marker()
 
     existing = []
     seen = set()
-    if CORPUS.exists():
-        for line in CORPUS.read_text(encoding="utf-8").splitlines():
+    if corpus.exists():
+        for line in corpus.read_text(encoding="utf-8").splitlines():
             try:
                 d = json.loads(line)
                 existing.append((d["ts"], d["text"]))
@@ -128,8 +117,8 @@ def main() -> int:
     mined = 0
     deduped = 0
     fresh = []
-    sources = list(iter_history(CLAUDE_DIR / "history.jsonl")) + list(
-        iter_transcripts(CLAUDE_DIR / "projects")
+    sources = list(iter_history(claude_dir / "history.jsonl")) + list(
+        iter_transcripts(claude_dir / "projects")
     )
     for ts, text in sources:
         if marker and ts <= marker:
@@ -144,17 +133,12 @@ def main() -> int:
 
     if fresh:
         merged = sorted(existing + fresh)
-        with CORPUS.open("w", encoding="utf-8") as f:
+        with corpus.open("w", encoding="utf-8") as f:
             for ts, text in merged:
                 f.write(json.dumps({"ts": ts, "text": text}, ensure_ascii=False) + "\n")
 
-    print(
+    return (
         f"backfill: {mined} candidate message(s) after marker "
         f"({marker or 'none'}), {deduped} duplicate(s) skipped, "
-        f"{len(fresh)} appended -> {CORPUS} ({len(existing) + len(fresh)} total)"
+        f"{len(fresh)} appended -> {corpus} ({len(existing) + len(fresh)} total)"
     )
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())

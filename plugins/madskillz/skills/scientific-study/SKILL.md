@@ -199,6 +199,11 @@ study (per Step 1), frame it as such.
 These are the owner's standing standards. They are the default for every study, and they apply to
 all four manuscript documents unless a rule names one document.
 
+**0 — The owner's research voice.** When `voicectl` is installed, run `voicectl render research`
+and follow the rendered profile (the `voice` skill's core + research overlay): it carries the
+owner's register-independent AI-tells and the professional-register rules. The standards below
+still apply; on conflict the more restrictive rule wins.
+
 **1 — 9th-grade prose.** Follow `scientific-peer-review/references/expected-reader.md` in full,
 including its register rules: short declarative sentences carrying one idea each; every technical
 term glossed in-line at first use; no sarcasm and no colloquialism; clear referents, so no pronoun
