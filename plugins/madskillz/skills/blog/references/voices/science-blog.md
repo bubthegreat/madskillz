@@ -346,9 +346,12 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
 - **Analogy to a known tool.** New designs get anchored to something I already run ("Kind of like
   a terraform root with the terraform command"; "basically the same idea but we're using a helm
   chart here"). — *keep*: reaching-for-parallels, infrastructure edition.
-- **Generalize after the win.** Once a thing works I immediately ask how to abstract it ("break
-  down our entire process into something we can generalize as a skill and apply to chest X-ray
-  study data"). — *keep*: a real arc-ender — "and now I see the pattern everywhere."
+- **Generalize after the win, then productionize it.** Once a thing works I immediately ask how to
+  abstract it ("break down our entire process into something we can generalize as a skill and apply
+  to chest X-ray study data"), and abstraction alone doesn't finish the job - the pattern has to
+  become a shipped tool ("this hasn't been standardized and productionized... what we can port into
+  Python so it's faster to use, ship a CLI for it"). — *keep*: a real arc-ender — "and now I see the
+  pattern everywhere," followed by "so I built the thing that does it."
 - **Brief-first framing (observed 2026-08-16).** Before a big piece of work I write the spec
   myself, in a fixed shape: a read-this-first framing paragraph, the intended audience and reading
   level, a one-sentence arc, and a verbatim question register where each question gets exactly one
@@ -403,6 +406,17 @@ Counts are messages containing the phrase out of ~1,100 authored messages.
   extra layers without a clear scope and value for each one to compare against the complexity
   increase.") And when a design flails, I collapse it to the simple version ("I just want it
   simple… In fact - let's just go ahead and do that - just filter on teams… that's it."). — *keep*.
+- **Automatic recovery beats being told (observed 2026-08-19).** A failure mode that needs me to
+  notice it is still a broken system: "I need you to ensure that power outages stop killing the
+  cluster... I need that to stop being a problem without me knowing ahead of time when it hits."
+  The fix I want is the one that heals itself, not the one that pages me. — *keep*: this is the
+  reliability edge of my risk thinking, and it separates me from "add an alert" as an answer.
+- **Config declares intent; discovered state doesn't get written back (observed 2026-08-19).** I
+  reject configs that carry IDs the system could look up itself, and I want ambiguity to fail loudly
+  instead of resolving quietly: "it shouldn't need a zone_id, it should adopt based on the name...
+  writing that back to a config makes no sense in my opinion. We should detect duplicates... and
+  fail if there are duplicate domains." — *keep*: name the thing, let the machine resolve it, and
+  crash on ambiguity rather than guess.
 - **Match the tool to the stakes.** I assign capability tiers deliberately ("I don't want to
   delegate research review to a less capable model"; "I'd like one review from fable on high,
   you've been missing too much lately"). — *keep the judgment; the model-name shorthand is
@@ -482,6 +496,12 @@ is currently waiting to migrate.
 ---
 
 ## Provenance & sync
+- Updated 2026-08-19 — folded in 21 authored messages of 64 new corpus entries (2026-08-18 →
+  2026-08-20): the homelab power-outage recovery / Crossplane-DNS onboarding arc and the voice-skill
+  productionization ask. Added two decision heuristics (automatic-recovery-over-alerting;
+  intent-only config with loud failure on ambiguity) and extended "Generalize after the win" to
+  include productionizing the pattern into a shipped tool. Task-notification pastes and agent
+  output dumps were excluded as non-authored noise.
 - Updated 2026-08-07 — folded in ~1,100 authored messages (2026-07-02 → 2026-08-07): the
   autoradiology pipeline arc (geometry, SSM 3D fits, cross-corpus fights), homelab gitops/openbao
   /observability migration, skill-matrix hardening, MUD client + pylord builds, local-LLM harness
@@ -497,8 +517,8 @@ is currently waiting to migrate.
   discussion with a colleague). Added inquiry-style and decisiveness traits and a spoken-register
   section. The conversation's topical content (its politics/ethics/religion) was deliberately
   excluded — only voice/thinking traits were taken.
-- Processed through: 2026-08-18T02:04:29Z
-- Repo-synced through: 2026-08-18T02:04:29Z
+- Processed through: 2026-08-20T01:38:31Z
+- Repo-synced through: 2026-08-20T01:38:31Z
 - Changelog:
   - 2026-08-17 - folded in 35 authored messages (2026-08-15 -> 2026-08-18): the sabotage-manual
     book/poster production arc and two research briefs. Added a Document-craft instincts subsection
