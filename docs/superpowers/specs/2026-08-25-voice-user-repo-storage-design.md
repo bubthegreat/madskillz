@@ -95,7 +95,7 @@ Env vars (`VOICE_DIR`, `VOICE_SYNC_*`) remain as overrides for tests and power u
 
 | Command | Behavior |
 |---|---|
-| `init [--remote URL] [--allow-public]` | If `--remote`: clone into `VOICE_DIR` (or, if the dir exists without `.git`, `git init` + `remote add` + fetch, then adopt existing files). Empty remote → first commit + push. Then seed any missing profile from the skill templates, replacing `owner: <handle>` with `git config user.name`. Write `.gitattributes`/`.gitignore`/`README.md` if missing. **Visibility check** (below). Without `--remote`: seed templates into a plain dir (local-only). Idempotent. |
+| `init [--remote URL] [--create] [--allow-public]` | If `--remote`: clone into `VOICE_DIR` (or, if the dir exists without `.git`, `git init` + `remote add` + fetch, then adopt existing files). Empty remote → first commit + push. Then seed any missing profile from the skill templates, replacing `owner: <handle>` with `git config user.name`. Write `.gitattributes`/`.gitignore`/`README.md` if missing. **Visibility check** (below). `--create`: when the remote does not exist and it is a `github.com` URL, run `gh repo create <owner/name> --private` first (requires `gh auth status` ok; refuses otherwise). Without `--remote`: seed templates into a plain dir (local-only). Idempotent. |
 | `pull` | `git pull --rebase --autostash origin <branch>`. Conflict on `corpus.jsonl` cannot happen (union). Conflict on any `.md`: abort rebase, keep **remote** version, print which files and exit 2. Never leaves the repo mid-rebase. |
 | `push` | `git add -A` (minus gitignored) → commit `voice: update (<host>)` if dirty → `git push`. Rejected push → `pull` → retry once. Exit nonzero on failure; live files untouched. |
 | `sync` | `pull` then `push`. Replaces today's materiality-gated copy. Materiality logic is deleted from `sync.py`; it survives only as the gate's spend check. |
@@ -110,6 +110,35 @@ Env vars (`VOICE_DIR`, `VOICE_SYNC_*`) remain as overrides for tests and power u
 `paths.sync_repo()`, `paths.sync_branch()`, `VOICES_SUBPATH`, and `NON_OVERLAY["voice.md"]`
 are removed. `templates_dir()` is added: the skill's `references/voices/` (resolved from the
 installed tool copy, `VOICE_DIR/tool/templates/`).
+
+## Init flow (agent-driven, shipped in SKILL.md)
+
+The user never has to know the flags. On "set up my voice" / first render on a fresh machine
+the agent runs this sequence and narrates each step:
+
+1. `voicectl status --json` → if `mode` is `synced`, done.
+2. Ask one question: "Where should your voice live?" with options
+   **existing repo** (paste URL / `owner/name`), **create one for me** (default name
+   `<gh-user>/voice`), or **local only** (no sync, explain the cost).
+3. Resolve to a URL. `owner/name` → `git@github.com:owner/name.git` when SSH auth works
+   (`ssh -T git@github.com`), else `https://github.com/owner/name.git`.
+4. Existence check: `gh repo view owner/name` (github) or `git ls-remote URL`.
+   - exists + is a voice store (`core.md` at root of default branch, or empty repo) → wire in:
+     `voicectl init --remote URL`.
+   - exists + non-empty + not a voice store → stop, tell the user, ask for another repo.
+   - missing → `voicectl init --remote URL --create` (github only; other hosts: tell the user
+     to create it, then re-run).
+5. Visibility check runs inside `init`; on `PUBLIC` the agent reports the refusal and asks
+   whether to make it private (`gh repo edit --visibility private`) or pass `--allow-public`.
+6. `voicectl backfill` then `voicectl push`. Report `voicectl status` summary: remote, mode,
+   corpus lines, contexts.
+
+Second machine: same flow; step 4 finds the existing store and clones it. The local
+`~/.claude` history is backfilled and pushed; union merge folds it into the shared corpus.
+
+The installer (`install_voice_pipeline.sh`) is the non-interactive form: `VOICE_REMOTE` set
+→ `init --remote` (+ `--create` when `VOICE_CREATE=1`); unset → local-only with the hint to
+run the agent flow.
 
 ## Multi-machine semantics
 
@@ -179,5 +208,6 @@ installer rewrites an existing entry that still carries them (matched by script 
 
 ## Consumers
 
-Unchanged: `voicectl render blog|research|chat|storycraft`. SKILL.md "Machine setup" gains
-the `VOICE_REMOTE` line and a "second machine" paragraph.
+Unchanged: `voicectl render blog|research|chat|storycraft`. SKILL.md "Machine setup" is
+replaced by the Init flow above; consumer skills that hit a missing `voicectl` or a
+`local-only` status point the user at "set up my voice".
