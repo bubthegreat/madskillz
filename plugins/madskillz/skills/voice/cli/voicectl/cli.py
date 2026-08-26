@@ -11,7 +11,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import backfill, gate, paths, sync, update
+from . import backfill, gate, paths, store, sync, update
 from .corpus import append_capture, count_since
 from .merge import RenderError, render
 from .profile import get_marker
@@ -73,24 +73,7 @@ def cmd_render(args) -> int:
 
 
 def cmd_status(args) -> int:
-    core = paths.core_path()
-    corpus = paths.corpus_path()
-    lock = paths.voice_dir() / ".sync.lock"
-    info: dict = {
-        "voice_dir": str(paths.voice_dir()),
-        "core_exists": core.is_file(),
-        "contexts": paths.live_contexts(),
-        "lock_held": lock.is_file(),
-    }
-    if core.is_file():
-        text = core.read_text(encoding="utf-8")
-        info["processed_through"] = get_marker(text, "processed") or "none"
-        info["repo_synced_through"] = get_marker(text, "repo") or "none"
-        info["pending_since_processed"] = count_since(corpus, get_marker(text, "processed"))
-        info["pending_since_repo_sync"] = count_since(corpus, get_marker(text, "repo"))
-        verdict = sync.assess(paths.voice_dir(), paths.sync_repo() / paths.VOICES_SUBPATH)
-        info["material"] = verdict.material
-        info["materiality_reasons"] = verdict.reasons
+    info = sync.status_info()
     if args.json:
         print(json.dumps(info, ensure_ascii=False, indent=2))
     else:
@@ -101,9 +84,9 @@ def cmd_status(args) -> int:
 
 def cmd_sync(args) -> int:
     try:
-        print(sync.run(dry_run=args.dry_run, push=not args.no_push))
+        print(sync.run(dry_run=args.dry_run))
         return 0
-    except sync.SyncError as e:
+    except store.StoreError as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
 
@@ -163,9 +146,8 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--json", action="store_true")
     s.set_defaults(fn=cmd_status)
 
-    y = sub.add_parser("sync", help="materiality-gated copy live -> committed + git push")
+    y = sub.add_parser("sync", help="pull then push the voice store")
     y.add_argument("--dry-run", action="store_true")
-    y.add_argument("--no-push", action="store_true")
     y.set_defaults(fn=cmd_sync)
 
     sub.add_parser("update-prep", help="emit the LLM's exact input as JSON").set_defaults(fn=cmd_update_prep)
