@@ -73,3 +73,16 @@ def test_gate_respects_interval_and_lock(voice_env, monkeypatch):
 def test_gate_never_raises(monkeypatch, tmp_path):
     monkeypatch.setenv("VOICE_DIR", str(tmp_path / "nonexistent"))
     gate.run()  # missing everything: silent no-op
+
+
+def test_gate_reads_config_from_store(voice_env, bare_remote, monkeypatch):
+    from voicectl import config
+    _make_synced_store(voice_env, bare_remote)
+    hit = voice_env / "launched"
+    monkeypatch.setenv("VOICE_SYNC_LAUNCH", f"touch {hit}")
+    monkeypatch.delenv("VOICE_SYNC_MIN_COUNT", raising=False)
+    config.set("minCount", "1")
+    config.set("minInterval", "0")
+    add_corpus(voice_env, "2026-01-02T00:00:00Z", "one")
+    gate.run()
+    assert hit.exists()

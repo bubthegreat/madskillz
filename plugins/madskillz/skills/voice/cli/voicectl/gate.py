@@ -1,13 +1,14 @@
 """SessionEnd gate: the cheap tier of the two-tier materiality check. Decides whether it
-is worth spending an LLM, then detaches a headless updater agent. Port of
-voice-sync-gate.sh; contract unchanged: never blocks teardown, never errors, no stdout."""
+is worth spending an LLM, then detaches a headless updater agent; the updater's own
+update-prep/update-apply do the pull/push. Contract unchanged: never blocks teardown,
+never errors, no stdout."""
 
 import os
 import subprocess
 import time
 from datetime import datetime, timezone
 
-from . import paths
+from . import config, paths
 from .corpus import count_since
 from .profile import get_marker
 
@@ -19,32 +20,6 @@ def _log(msg: str) -> None:
             f.write(f"{ts} {msg}\n")
     except OSError:
         pass
-
-
-def _refresh_sync_repo(repo, branch) -> None:
-    """Bring the DEDICATED sync repo to origin/<branch> so the agent's push fast-forwards.
-    Guarded: refuses unless the repo is checked out on <branch>, so it can never reset a
-    roaming working checkout. Safe only because the dedicated repo holds nothing precious."""
-    def git(*args):
-        return subprocess.run(
-            ["git", "-C", str(repo), *args], capture_output=True, text=True
-        )
-
-    if git("rev-parse", "--is-inside-work-tree").returncode != 0:
-        _log(f"refresh: '{repo}' is not a git repo - skip")
-        return
-    cur = git("branch", "--show-current").stdout.strip()
-    if cur != branch:
-        _log(f"refresh: '{repo}' is on '{cur}', not target '{branch}' - refusing to reset")
-        return
-    if git("fetch", "origin", branch, "-q").returncode != 0:
-        _log("refresh: fetch failed (offline?) - skip")
-        return
-    if git("reset", "--hard", f"origin/{branch}", "-q").returncode != 0:
-        _log("refresh: reset failed - skip")
-        return
-    git("clean", "-fd", "-q")
-    _log(f"refresh: '{repo}' reset to origin/{branch}")
 
 
 def run() -> None:
@@ -62,12 +37,10 @@ def _run() -> None:
     lock = voice_dir / ".sync.lock"
     stamp = voice_dir / ".last-sync-attempt"
 
-    min_count = int(os.environ.get("VOICE_SYNC_MIN_COUNT", "15"))
-    min_interval = int(os.environ.get("VOICE_SYNC_MIN_INTERVAL_SECONDS", "720"))
+    min_count = config.get_int("minCount")
+    min_interval = config.get_int("minInterval")
     lock_stale = int(os.environ.get("VOICE_SYNC_LOCK_STALE_SECONDS", "1800"))
-    model = os.environ.get("VOICE_SYNC_MODEL", "opus")
-    repo = paths.sync_repo()
-    branch = paths.sync_branch()
+    model = config.get("model")
 
     if not corpus.is_file() or not core.is_file():
         return
@@ -91,9 +64,6 @@ def _run() -> None:
     lock.touch()
     _log(f"gate passed: {count} new msgs >= {min_count} - launching background sync (model={model})")
 
-    if os.environ.get("VOICE_SYNC_AUTOREFRESH"):
-        _refresh_sync_repo(repo, branch)
-
     # Test/override hook: run synchronously, then release the lock.
     launch = os.environ.get("VOICE_SYNC_LAUNCH")
     if launch:
@@ -111,7 +81,7 @@ def _run() -> None:
     # Detach so SessionEnd never waits on the LLM. LEAST-PRIVILEGE (deliberate): the
     # unattended agent gets exactly the tools the voice sync needs; never bypassPermissions.
     script = (
-        f'cd "{repo}" 2>/dev/null || cd "$HOME"\n'
+        f'cd "{voice_dir}" 2>/dev/null || cd "$HOME"\n'
         f'claude -p "update my voice" --model "{model}" --add-dir "{voice_dir}" '
         f"--allowedTools Read Edit Write Skill Glob Grep 'Bash(git:*)' 'Bash(python3:*)' "
         f"'Bash(voicectl:*)' >>\"{paths.log_path()}\" 2>&1\n"
