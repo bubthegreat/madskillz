@@ -145,3 +145,23 @@ def test_pull_offline_raises(voice_env, bare_remote):
     _git(voice_env, "remote", "set-url", "origin", str(bare_remote.parent / "missing.git"))
     with pytest.raises(store.StoreError):
         store.pull()
+
+
+def test_pull_resolves_autostash_pop_conflict_to_remote(voice_env, bare_remote, tmp_path, capsys):
+    """An uncommitted profile edit that collides with an incoming remote change makes the
+    autostash pop conflict. git pull still exits 0, so pull() has to notice and clean up."""
+    _make_synced_store(voice_env, bare_remote)
+    other = clone_of(bare_remote, tmp_path / "other")
+    (other / "core.md").write_text(CORE.replace("trait two", "REMOTE"))
+    _git(other, "add", "-A"); _git(other, "commit", "-q", "-m", "remote"); _git(other, "push", "-q")
+    # local edit is never committed
+    (voice_env / "core.md").write_text(CORE.replace("trait two", "LOCAL"))
+
+    assert store.pull() == 2
+    text = (voice_env / "core.md").read_text()
+    assert "REMOTE" in text
+    assert "<<<<<<<" not in text
+    assert "core.md" in capsys.readouterr().out
+    porcelain = _git(voice_env, "status", "--porcelain")
+    assert not [ln for ln in porcelain.splitlines() if ln[:2] in ("UU", "AA")]
+    assert _git(voice_env, "stash", "list") == ""

@@ -128,43 +128,66 @@ def _rebase_in_progress() -> bool:
     return (g / "rebase-merge").exists() or (g / "rebase-apply").exists()
 
 
+def _resolve_to_remote(files: list[str]) -> None:
+    """Take the remote side of every conflicted file and mark it merged."""
+    for f in files:
+        git("checkout", "--ours", "--", f, check=False)
+        git("add", "--", f, check=False)
+
+
+def _drop_autostash() -> None:
+    """Drop the stash entry `--autostash` left behind when its pop conflicted."""
+    lines = [ln for ln in git("stash", "list", check=False).stdout.splitlines() if ln.strip()]
+    if lines and lines[0].rstrip().endswith("autostash"):
+        git("stash", "drop", "-q", check=False)
+
+
 def pull() -> int:
     """Rebase local commits onto origin.
 
     Returns 0 when the pull was clean, 2 when at least one profile conflicted and the
     remote version was kept (the files are printed). Raises StoreError when the fetch
-    itself fails. A local-only store is a no-op returning 0.
+    itself fails. A local-only store is a no-op returning 0. Never returns with unmerged
+    paths or conflict markers in the working tree.
     """
     if mode() != "synced":
         return 0
     branch = paths.store_branch()
     git("fetch", "-q", "origin", branch)
     r = git("pull", "-q", "--rebase", "--autostash", "origin", branch, check=False)
-    if r.returncode == 0:
-        return 0
-    if not _rebase_in_progress():
-        raise StoreError(f"pull failed: {r.stderr.strip()}")
 
-    # Remote wins for every conflicted profile. During a rebase "ours" is the upstream side.
     conflicted: set[str] = set()
-    for _ in range(MAX_CONFLICT_STEPS):
+    if r.returncode != 0:
         if not _rebase_in_progress():
-            break
-        files = _conflicted_files()
-        conflicted.update(files)
-        for f in files:
-            git("checkout", "--ours", "--", f, check=False)
-            git("add", "--", f, check=False)
-        cont = git("-c", "core.editor=true", "rebase", "--continue", check=False)
-        if cont.returncode != 0 and not _conflicted_files():
-            # Resolving to the remote side emptied this commit; drop it and move on.
-            git("rebase", "--skip", check=False)
-    if _rebase_in_progress():
-        # Still stuck after the cap: give up on the local commits and take the remote state.
-        git("rebase", "--abort", check=False)
-        git("reset", "-q", "--hard", f"origin/{branch}")
+            raise StoreError(f"pull failed: {r.stderr.strip()}")
+        # Remote wins for every conflicted profile. During a rebase "ours" is the upstream side.
+        for _ in range(MAX_CONFLICT_STEPS):
+            if not _rebase_in_progress():
+                break
+            files = _conflicted_files()
+            conflicted.update(files)
+            _resolve_to_remote(files)
+            cont = git("-c", "core.editor=true", "rebase", "--continue", check=False)
+            if cont.returncode != 0 and not _conflicted_files():
+                # Resolving to the remote side emptied this commit; drop it and move on.
+                git("rebase", "--skip", check=False)
+        if _rebase_in_progress():
+            # Still stuck after the cap: give up on the local commits and take the remote state.
+            git("rebase", "--abort", check=False)
+            git("reset", "-q", "--hard", f"origin/{branch}")
 
-    names = ", ".join(sorted(conflicted)) or "the store"
+    # A failed autostash pop leaves unmerged paths but still exits 0, so check either way.
+    # The rebase is over by now, so HEAD carries the remote side and "ours" is again remote.
+    popped = _conflicted_files()
+    if popped:
+        conflicted.update(popped)
+        _resolve_to_remote(popped)
+        git("reset", "-q")  # keep them as plain working-tree files, not staged
+        _drop_autostash()
+
+    if not conflicted:
+        return 0
+    names = ", ".join(sorted(conflicted))
     print(f"pull: conflict on {names} - kept remote version; re-run your update")
     return 2
 
