@@ -33,18 +33,22 @@ def store_branch() -> str:
 
 
 def templates_dir() -> Path:
-    """Skill-shipped profile templates. Env override > skill checkout > installed tool copy."""
+    """Skill-shipped profile templates. Env override > skill checkout > installed copy.
+
+    The installed copy sits BESIDE the store dir, never inside it: files inside the store
+    dir are the user's own, and `init` renames those aside when it adopts a remote store.
+    """
     env = os.environ.get("VOICE_TEMPLATES_DIR")
     if env:
         return Path(env)
     checkout = Path(__file__).resolve().parents[2] / "references" / "voices"
     if checkout.is_dir():
         return checkout
-    return voice_dir() / "tool" / "templates"
+    return voice_dir().parent / "voice-templates"
 
 
 # Files in the live voice dir that are markdown but not context overlays.
-NON_OVERLAY = {"core.md", "README.md"}
+NON_OVERLAY = {"core.md", "README.md", "voice.md"}
 
 # Suffix for the backup dir `init --remote` makes when adopting a non-empty remote.
 BACKUP_SUFFIX = ".bak-"

@@ -2,7 +2,8 @@
 # install_voice_pipeline.sh - one-shot, idempotent installer for the voice skill on this machine.
 #
 # What it sets up:
-#   1. ~/.madskillz/voice/tool/                 copy of voicectl + profile templates, installed as a uv tool
+#   1. ~/.madskillz/voice/tool/                 copy of voicectl, installed as a uv tool
+#      ~/.madskillz/voice-templates/            profile templates, beside the store (never inside it)
 #   2. ~/.claude/hooks/capture-voice.sh         global UserPromptSubmit shim -> voicectl capture
 #   3. ~/.claude/hooks/voice-sync-gate.sh       SessionEnd shim -> voicectl gate
 #   4. ~/.claude/settings.json                  hook wiring for 2 + 3 (never clobbers other hooks)
@@ -36,18 +37,23 @@ command -v python3 >/dev/null 2>&1 || { say "ERROR: python3 required"; exit 1; }
 command -v git >/dev/null 2>&1 || { say "ERROR: git required"; exit 1; }
 
 # --- 1. voicectl tool + templates -----------------------------------------------------------
-# The tool copy lives OUTSIDE the store's tracked files (tool/ is gitignored) so it never
-# dangles when the skill checkout moves, and templates ride along for `voicectl init`.
+# The tool copy lives inside the store dir but outside its tracked files (tool/ is gitignored)
+# so it never dangles when the skill checkout moves. The templates go BESIDE the store dir:
+# anything inside it is the user's own data, which `voicectl init` renames aside when it
+# adopts a remote store.
 tool_dir="$VOICE_DIR/tool"
+templates_dir="$(dirname "$VOICE_DIR")/voice-templates"
 if [ -n "${VOICE_INSTALL_NO_TOOL:-}" ]; then
   skip "voicectl install skipped (VOICE_INSTALL_NO_TOOL)"
 elif ! command -v uv >/dev/null 2>&1; then
   say "  ! uv not found - voicectl not installed; install uv and re-run"
 else
   rm -rf "$tool_dir"
-  mkdir -p "$tool_dir/templates"
+  mkdir -p "$tool_dir"
   cp -r "$skill_root/cli/pyproject.toml" "$skill_root/cli/voicectl" "$tool_dir/"
-  cp "$skill_root/references/voices/"*.md "$tool_dir/templates/"
+  mkdir -p "$templates_dir"
+  cp "$skill_root/references/voices/"*.md "$templates_dir/"
+  did "installed profile templates ($templates_dir)"
   if uv tool install --force --quiet "$tool_dir" 2>/dev/null; then
     did "installed voicectl (uv tool) from $tool_dir"
   else

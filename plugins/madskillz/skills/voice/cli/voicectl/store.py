@@ -16,7 +16,15 @@ from pathlib import Path
 from . import paths
 
 GITATTRIBUTES = "corpus.jsonl merge=union\n"
-GITIGNORE = "sync.log\n.sync.lock\n.last-sync-attempt\ntool/\n*.tmp\nvoice.md\nposts/\n"
+GITIGNORE = (
+    "sync.log\n.sync.lock\n.last-sync-attempt\ntool/\n*.tmp\nvoice.md\nposts/\nmadskillz-sync/\n"
+)
+
+# Entries the pipeline itself puts in the voice dir. None of them is user data, so their
+# presence must never make `init` think the dir holds profiles worth backing up.
+RUNTIME_ENTRIES = frozenset(
+    {"tool", "sync.log", ".sync.lock", ".last-sync-attempt", "voice.md", "posts", "madskillz-sync"}
+)
 README = """# voice store
 
 Personal voice profiles (`core.md` + context overlays) and the prompt corpus
@@ -49,6 +57,11 @@ def git(*args: str, cwd: Path | None = None, check: bool = True) -> subprocess.C
     if check and r.returncode != 0:
         raise StoreError(f"git {' '.join(args)}: {r.stderr.strip()}")
     return r
+
+
+def _has_user_files(d: Path) -> bool:
+    """True when `d` holds anything the owner would miss - profiles, corpus, notes."""
+    return d.is_dir() and any(p.name not in RUNTIME_ENTRIES for p in d.iterdir())
 
 
 def is_repo(d: Path | None = None) -> bool:
@@ -374,7 +387,7 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
     _refuse_public(remote, allow_public, result)
 
     branch = paths.store_branch()
-    existing_files = d.is_dir() and any(d.iterdir())
+    existing_files = _has_user_files(d)
 
     if state == "store":
         backup = None
@@ -384,9 +397,14 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
             d.rename(backup)
         # On a fresh machine ~/.madskillz does not exist yet, and `git -C` needs the dir.
         d.parent.mkdir(parents=True, exist_ok=True)
+        # git refuses to clone into a non-empty dir, and the dir may still hold runtime
+        # files (`tool/`, `sync.log`) worth keeping. Clone aside, then move the clone in.
+        staging = d.with_name(d.name + ".clone-tmp")
+        shutil.rmtree(staging, ignore_errors=True)
         try:
-            git("clone", "-q", "--branch", branch, remote, str(d), cwd=d.parent)
+            git("clone", "-q", "--branch", branch, "--", remote, str(staging), cwd=d.parent)
         except StoreError as e:
+            shutil.rmtree(staging, ignore_errors=True)
             # The rename already moved the owner's files aside. Put them back rather than
             # leaving a .bak-<ts> dir the error message never names.
             if backup is None:
@@ -401,6 +419,10 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
                         f"clone failed: {e}; your local voice dir was restored"
                     ) from e
             raise StoreError(f"clone failed: {e}; your local voice dir is at {backup}") from e
+        d.mkdir(parents=True, exist_ok=True)
+        for p in staging.iterdir():
+            shutil.move(str(p), str(d / p.name))
+        staging.rmdir()
         if backup:
             _append_corpus(backup / "corpus.jsonl", d / "corpus.jsonl")
             result["backup"] = str(backup)

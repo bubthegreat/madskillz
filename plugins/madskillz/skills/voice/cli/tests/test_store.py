@@ -1,10 +1,11 @@
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
 
-from voicectl import store
+from voicectl import paths, store
 from tests.conftest import CORE, add_corpus, clone_of
 
 
@@ -394,3 +395,43 @@ def test_two_machines_converge(tmp_path, monkeypatch, voice_env, bare_remote):
         text = (d / "corpus.jsonl").read_text()
         assert "from A" in text and "from B" in text
     assert "trait A" in (a / "core.md").read_text() and "trait B" in (a / "core.md").read_text()
+
+
+def test_templates_dir_falls_back_beside_the_store(tmp_path, monkeypatch, voice_env):
+    """With no env override and no skill checkout, the templates live NEXT TO the store dir.
+    Inside it they would look like user files to `init`, which renames those aside."""
+    monkeypatch.delenv("VOICE_TEMPLATES_DIR", raising=False)
+    monkeypatch.setattr(paths, "__file__", str(tmp_path / "gone" / "cli" / "voicectl" / "paths.py"))
+    assert paths.templates_dir() == voice_env.parent / "voice-templates"
+
+
+def _templates_beside_store(tmp_path, voice_env, monkeypatch):
+    """Put the fixture templates outside any voice dir and point the resolver at them."""
+    templates = tmp_path / "voice-templates"
+    templates.mkdir()
+    for t in (voice_env.parent / "templates").glob("*.md"):
+        shutil.copy(t, templates / t.name)
+    monkeypatch.delenv("VOICE_TEMPLATES_DIR", raising=False)
+    monkeypatch.setattr(paths, "templates_dir", lambda: templates)
+    return templates
+
+
+def test_init_clones_over_a_runtime_only_dir(tmp_path, monkeypatch, voice_env, bare_remote):
+    """A voice dir holding only runtime files (`tool/`, `sync.log`) has no user data, so
+    adopting a store must clone straight in: no backup, and the tool copy stays put."""
+    _push_store(bare_remote, tmp_path / "c")
+    _templates_beside_store(tmp_path, voice_env, monkeypatch)
+
+    fresh = tmp_path / "machine" / "voice"
+    (fresh / "tool" / "templates").mkdir(parents=True)
+    (fresh / "sync.log").write_text("noise\n", encoding="utf-8")
+    monkeypatch.setenv("VOICE_DIR", str(fresh))
+
+    r = store.init(str(bare_remote))
+    assert r["action"] == "cloned"
+    assert r["backup"] is None
+    assert list((tmp_path / "machine").glob("voice" + paths.BACKUP_SUFFIX + "*")) == []
+    assert (fresh / "tool" / "templates").is_dir()
+    assert (fresh / "sync.log").is_file()
+    assert (fresh / "core.md").is_file()
+    assert r["seeded"]
