@@ -6,7 +6,7 @@ import os
 import tempfile
 from pathlib import Path
 
-from . import paths
+from . import paths, store
 from .corpus import entries_since
 from .profile import get_marker, set_marker, validate_core
 
@@ -15,7 +15,17 @@ class UpdateError(Exception):
     pass
 
 
+def _pull_status() -> str:
+    if store.mode() != "synced":
+        return "local-only"
+    try:
+        return "conflict-remote-kept" if store.pull() == 2 else "ok"
+    except store.StoreError:
+        return "offline"
+
+
 def prep() -> dict:
+    pull = _pull_status()
     core = paths.core_path()
     if not core.is_file():
         raise UpdateError(f"live core profile missing: {core} (run 'voicectl init')")
@@ -24,6 +34,8 @@ def prep() -> dict:
     new = entries_since(paths.corpus_path(), marker)
     return {
         "core_path": str(core),
+        "mode": store.mode(),
+        "pull": pull,
         "processed_through": marker or "none",
         "new_entry_count": len(new),
         "newest_ts": new[-1]["ts"] if new else marker,
@@ -57,7 +69,18 @@ def apply(candidate_file: Path, processed_through: str | None = None) -> str:
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
         raise
-    return f"update-apply: installed {core} (Processed through: {processed_through or 'unchanged'})"
+
+    try:
+        if candidate_file.resolve().is_relative_to(core.parent.resolve()):
+            candidate_file.unlink(missing_ok=True)
+    except (OSError, ValueError):
+        pass
+
+    msg = f"update-apply: installed {core} (Processed through: {processed_through or 'unchanged'})"
+    try:
+        return msg + "; " + store.push()
+    except store.StoreError as e:
+        return msg + f"; push failed: {e} (local apply stands; run 'voicectl sync' later)"
 
 
 def prep_json() -> str:

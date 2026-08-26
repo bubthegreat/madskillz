@@ -59,3 +59,39 @@ def test_entries_dedupe_on_ts_and_text(voice_env):
     add_corpus(voice_env, "2026-01-02T00:00:00Z", "not dup")
     corpus = voice_env / "corpus.jsonl"
     assert count_since(corpus, "") == 2
+
+
+from tests.test_store import _make_synced_store, _git
+
+
+def test_prep_pulls_remote_core_first(voice_env, bare_remote, tmp_path):
+    from tests.conftest import clone_of
+    _make_synced_store(voice_env, bare_remote)
+    other = clone_of(bare_remote, tmp_path / "other")
+    (other / "core.md").write_text(CORE.replace("Processed through: 2026-01-01T00:00:00Z",
+                                                "Processed through: 2026-01-03T00:00:00Z"))
+    _git(other, "add", "-A"); _git(other, "commit", "-q", "-m", "r"); _git(other, "push", "-q")
+    add_corpus(voice_env, "2026-01-02T00:00:00Z", "older than remote marker")
+    add_corpus(voice_env, "2026-01-04T00:00:00Z", "newer")
+    p = update.prep()
+    assert p["pull"] == "ok"
+    assert p["processed_through"] == "2026-01-03T00:00:00Z"
+    assert [e["text"] for e in p["new_entries"]] == ["newer"]
+
+
+def test_prep_offline_falls_back_to_local(voice_env, bare_remote):
+    _make_synced_store(voice_env, bare_remote)
+    _git(voice_env, "remote", "set-url", "origin", str(bare_remote.parent / "gone.git"))
+    p = update.prep()
+    assert p["pull"] == "offline"
+    assert p["processed_through"] == "2026-01-01T00:00:00Z"
+
+
+def test_apply_pushes(voice_env, bare_remote):
+    _make_synced_store(voice_env, bare_remote)
+    add_corpus(voice_env, "2026-01-05T00:00:00Z", "fresh")
+    candidate = voice_env / "candidate.md"
+    candidate.write_text(CORE.replace("- **trait one**", "- **trait zero**\n- **trait one**"))
+    msg = update.apply(candidate)
+    assert "pushed" in msg
+    assert "trait zero" in _git(voice_env, "show", "origin/main:core.md")
