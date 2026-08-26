@@ -358,3 +358,39 @@ def test_init_refuses_mismatched_origin(voice_env, bare_remote, tmp_path):
         store.init(other)
     msg = str(e.value)
     assert str(bare_remote) in msg and other in msg
+
+
+def test_two_machines_converge(tmp_path, monkeypatch, voice_env, bare_remote):
+    from voicectl import update
+    a = voice_env
+    _make_synced_store(a, bare_remote)
+    b = tmp_path / "machine-b"
+    monkeypatch.setenv("VOICE_DIR", str(b))
+    assert store.init(str(bare_remote))["action"] == "cloned"
+
+    # A captures + updates
+    monkeypatch.setenv("VOICE_DIR", str(a))
+    add_corpus(a, "2026-03-01T00:00:00Z", "from A")
+    update.prep()
+    cand = a / "cand.md"
+    cand.write_text(CORE.replace("- **trait one**", "- **trait A**\n- **trait one**"))
+    update.apply(cand)
+
+    # B captures concurrently (has not pulled), then updates
+    monkeypatch.setenv("VOICE_DIR", str(b))
+    add_corpus(b, "2026-03-02T00:00:00Z", "from B")
+    p = update.prep()          # pulls A's core + corpus (union)
+    assert p["pull"] == "ok"
+    assert [e["text"] for e in p["new_entries"]] == ["from B"]
+    cand = b / "cand.md"
+    cand.write_text((b / "core.md").read_text().replace("- **trait A**", "- **trait A**\n- **trait B**"))
+    update.apply(cand)
+
+    # A pulls and both agree
+    monkeypatch.setenv("VOICE_DIR", str(a))
+    assert store.pull() == 0
+    assert (a / "core.md").read_text() == (b / "core.md").read_text()
+    for d in (a, b):
+        text = (d / "corpus.jsonl").read_text()
+        assert "from A" in text and "from B" in text
+    assert "trait A" in (a / "core.md").read_text() and "trait B" in (a / "core.md").read_text()
