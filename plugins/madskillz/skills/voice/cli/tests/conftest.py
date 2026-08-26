@@ -1,5 +1,7 @@
 import json
+import subprocess
 import textwrap
+from pathlib import Path
 
 import pytest
 
@@ -103,3 +105,16 @@ def git_env(monkeypatch):
         "GIT_CONFIG_NOSYSTEM": "1",
     }.items():
         monkeypatch.setenv(k, v)
+
+
+@pytest.fixture
+def bare_remote(tmp_path, git_env):
+    """Empty bare repo on branch main."""
+    origin = tmp_path / "origin.git"
+    subprocess.run(["git", "init", "--bare", "-q", "-b", "main", str(origin)], check=True)
+    return origin
+
+
+def clone_of(origin: Path, dest: Path) -> Path:
+    subprocess.run(["git", "clone", "-q", str(origin), str(dest)], check=True)
+    return dest
