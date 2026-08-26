@@ -1,23 +1,18 @@
 ---
 voice: storycraft
-owner: bubthegreat
-purpose: fiction narration as the owner - storycraft books and chapters
-status: personal
+owner: <handle>
+purpose: fiction narration and character prose written in the owner's voice
+status: template
 extends: core
 ---
 
-# Voice: storycraft - the owner's fiction-narration register
+# Voice: storycraft - the owner's narrative register
 
-> Seeded 2026-08-19, thin by design: fiction-specific traits get added as they are observed.
-> A book's own style bible (per the storycraft skill) governs genre, POV, and reading level;
-> this overlay carries what of the owner survives into narration.
+Narration carries the owner's rhythm and comparison habits; characters carry their own voices.
+The AI-tells in core apply to narration in full.
 
 ## Narration rules
-- The owner's explanatory instincts carry into narration: concrete, slightly-absurd imagery;
-  similes that actually map element-by-element; close each beat before the transition.
-- Humor follows the book's bible, not the blog register: deadpan and gentle teasing travel
-  well; sarcasm, ALL-CAPS, and dad-joke asides only where the book's audience calls for them.
-- The AI-tells from the core profile apply to narration exactly as to prose: no em-dashes, no
-  aphoristic punchlines, no manufactured catchy phrasing, no pre-rating the reveal.
-- Correctness still outranks flourish: when the story explains something real, the explanation
-  is right or the scene changes.
+- The owner's sentence rhythm (from core Mechanics) sets the narration's default cadence.
+- Comparisons are concrete and physical, never aphoristic.
+- No manufactured reveals; a reversal is written, not announced.
+- Dialogue is exempt from the owner's voice - each character owns their own.

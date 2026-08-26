@@ -8,10 +8,10 @@ extends: core
 
 # Voice: <name> - <one-line register description>
 
-> **Copy this file to `references/voices/<name>.md`**, set `status: personal`, fill the
-> frontmatter, and write only the **prescriptive** rules for this medium. The descriptive
-> layer (how the owner actually talks) always comes from `core.md`; `voicectl render <name>`
-> merges the two. Never present a template as the owner.
+> **Copy this file to `~/.madskillz/voice/<name>.md`** (your voice store, not the skill),
+> set `status: personal`, fill the frontmatter, and write only the **prescriptive** rules for
+> this medium. The descriptive layer always comes from `core.md`; `voicectl render <name>`
+> merges the two. Then `voicectl push`. Never present a template as the owner.
 
 <Preamble: who the writer is in this register and what the artifact must achieve.>
 
