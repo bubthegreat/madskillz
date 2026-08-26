@@ -68,7 +68,21 @@ def voice_env(tmp_path, monkeypatch):
     (vdir / "blog.md").write_text(OVERLAY, encoding="utf-8")
     (vdir / "corpus.jsonl").write_text("", encoding="utf-8")
     monkeypatch.setenv("VOICE_DIR", str(vdir))
-    monkeypatch.setenv("VOICE_SYNC_REPO", str(tmp_path / "sync-repo"))
+    templates = tmp_path / "templates"
+    templates.mkdir()
+    (templates / "core.md").write_text(
+        CORE.replace("owner: tester", "owner: <handle>").replace("status: personal", "status: template"),
+        encoding="utf-8",
+    )
+    (templates / "blog.md").write_text(
+        OVERLAY.replace("owner: tester", "owner: <handle>").replace("status: personal", "status: template"),
+        encoding="utf-8",
+    )
+    (templates / "chat.md").write_text(
+        OVERLAY.replace("voice: blog", "voice: chat").replace("owner: tester", "owner: <handle>").replace("status: personal", "status: template"),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("VOICE_TEMPLATES_DIR", str(templates))
     return vdir
 
 

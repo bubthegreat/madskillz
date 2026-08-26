@@ -28,19 +28,26 @@ def log_path() -> Path:
     return voice_dir() / "sync.log"
 
 
-def sync_repo() -> Path:
-    return Path(os.environ.get("VOICE_SYNC_REPO", voice_dir() / "madskillz-sync"))
-
-
-def sync_branch() -> str:
+def store_branch() -> str:
     return os.environ.get("VOICE_SYNC_BRANCH", "main")
 
 
-# Committed voices library, relative to a madskillz checkout.
-VOICES_SUBPATH = "plugins/madskillz/skills/voice/references/voices"
+def templates_dir() -> Path:
+    """Skill-shipped profile templates. Env override > skill checkout > installed tool copy."""
+    env = os.environ.get("VOICE_TEMPLATES_DIR")
+    if env:
+        return Path(env)
+    checkout = Path(__file__).resolve().parents[2] / "references" / "voices"
+    if checkout.is_dir():
+        return checkout
+    return voice_dir() / "tool" / "templates"
 
-# Files in the live voice dir that are voice profiles, not overlays.
-NON_OVERLAY = {"core.md", "voice.md"}
+
+# Files in the live voice dir that are markdown but not context overlays.
+NON_OVERLAY = {"core.md", "README.md"}
+
+# Suffix for the backup dir `init --remote` makes when adopting a non-empty remote.
+BACKUP_SUFFIX = ".bak-"
 
 
 def live_contexts() -> list[str]:
@@ -48,6 +55,4 @@ def live_contexts() -> list[str]:
     d = voice_dir()
     if not d.is_dir():
         return []
-    return sorted(
-        p.stem for p in d.glob("*.md") if p.name not in NON_OVERLAY
-    )
+    return sorted(p.stem for p in d.glob("*.md") if p.name not in NON_OVERLAY)
