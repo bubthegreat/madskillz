@@ -55,7 +55,10 @@ def _run() -> None:
         _log("clearing stale lock")
         lock.unlink(missing_ok=True)
 
-    marker = get_marker(core.read_text(encoding="utf-8"), "repo")
+    # Threshold on the marker `update-apply` advances. The legacy `Repo-synced through`
+    # marker is never written any more, so counting from it would launch an updater on
+    # every session for as long as the corpus is non-empty.
+    marker = get_marker(core.read_text(encoding="utf-8"), "processed")
     count = count_since(corpus, marker)
     if count < min_count:
         return

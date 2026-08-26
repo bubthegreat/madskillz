@@ -86,3 +86,30 @@ def test_gate_reads_config_from_store(voice_env, bare_remote, monkeypatch):
     add_corpus(voice_env, "2026-01-02T00:00:00Z", "one")
     gate.run()
     assert hit.exists()
+
+
+def test_gate_thresholds_on_processed_marker(voice_env, monkeypatch):
+    """The gate must count messages the *updater* has not judged yet, i.e. the ones after
+    `Processed through`. Thresholding on the legacy `Repo-synced through` marker made every
+    session launch an updater, because nothing advances that marker any more."""
+    hit = voice_env / "launched"
+    monkeypatch.setenv("VOICE_SYNC_LAUNCH", f"touch {hit}")
+    monkeypatch.setenv("VOICE_SYNC_MIN_INTERVAL_SECONDS", "0")
+    # Nothing advances the legacy repo marker any more, so a real core carries `none` there
+    # while `Processed through` moves forward with every update pass.
+    (voice_env / "core.md").write_text(
+        CORE.replace("Repo-synced through: 2026-01-01T00:00:00Z", "Repo-synced through: none"),
+        encoding="utf-8",
+    )
+
+    # 50 lines, all older than the core's `Processed through: 2026-01-01T00:00:00Z`.
+    for i in range(50):
+        add_corpus(voice_env, f"2025-12-{i % 28 + 1:02d}T00:00:00Z", f"old {i}")
+    monkeypatch.setenv("VOICE_SYNC_MIN_COUNT", "15")
+    gate.run()
+    assert not hit.exists()
+
+    add_corpus(voice_env, "2026-06-01T00:00:00Z", "genuinely new")
+    monkeypatch.setenv("VOICE_SYNC_MIN_COUNT", "1")
+    gate.run()
+    assert hit.exists()
