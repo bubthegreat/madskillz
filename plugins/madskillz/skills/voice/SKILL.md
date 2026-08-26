@@ -12,10 +12,13 @@ description: >-
 
 The owner's voice lives in two layers:
 
-- **Core** (`references/voices/core.md`) - identity, the descriptive layer (observed traits,
-  tagged keep/tone-down), the register-independent AI-tells, and the provenance markers.
-- **Overlays** (`references/voices/<context>.md`, `extends: core`) - thin prescriptive deltas
-  for one medium: `blog`, `research`, `chat`, `storycraft`.
+- **Core** - identity, the descriptive layer (observed traits, tagged keep/tone-down), the
+  register-independent AI-tells, and the provenance markers.
+- **Overlays** (`extends: core`) - thin prescriptive deltas for one medium: `blog`, `research`,
+  `chat`, `storycraft`.
+
+`references/voices/core.md` and `references/voices/<context>.md` in this skill are the
+**templates**. The live personal copies are in the voice store, `~/.madskillz/voice/`.
 
 A writer never reads these separately: `voicectl render <context>` deterministically merges the
 overlay's prescriptive layer with the core into one doc. The live copies live in the user's
@@ -68,8 +71,10 @@ templates). Then wire the voice store. The user never needs the flags; walk them
    - **Existing repo** - they paste a URL or `owner/name`.
    - **Create one for me** - default `<github-user>/voice` (`gh api user -q .login`).
    - **Local only** - no sync; say plainly that other machines will not see this voice.
-3. Resolve `owner/name` to a URL: `git@github.com:owner/name.git` if `ssh -T git@github.com`
-   succeeds, else `https://github.com/owner/name.git`.
+3. Resolve `owner/name` to a URL: `git@github.com:owner/name.git` if
+   `ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"`, else
+   `https://github.com/owner/name.git`. (Plain `ssh -T git@github.com` exits 1 even on
+   success, so never test its exit status.)
 4. `voicectl init --remote URL`. Exit 3 with a `refused:` line means one of:
    - `remote not found` - re-run with `--create` (github + `gh` only; other hosts: the user
      creates the repo, then re-run).
@@ -84,8 +89,9 @@ templates). Then wire the voice store. The user never needs the flags; walk them
 already had a local-only voice dir, `init` backs it up to `~/.madskillz/voice.bak-<ts>`, keeps
 the remote profiles, and folds the local corpus in. Nothing is lost.
 
-Per-machine tunables: `voicectl config` (`model`, `minCount`, `minInterval`, `corpusSync`).
-`corpusSync=false` is reserved and not enforced yet; the corpus is always pushed.
+Per-machine tunables: `voicectl config` (`model`, `minCount`, `minInterval`). `corpusSync` is
+reserved: it reads as `true` and `voicectl config corpusSync ...` refuses to set it, because the
+corpus is always pushed.
 
 ## Integrity stance (non-negotiable)
 
@@ -103,4 +109,6 @@ Per-machine tunables: `voicectl config` (`model`, `minCount`, `minInterval`, `co
 - Unknown render context: `voicectl render` lists the available ones; ask, don't guess.
 - Offline: `update-prep` says `pull: offline` and works from the local core; `update-apply`
   applies locally and reports the unpushed state. `voicectl sync` later.
+- A prompt captured during the few seconds a `pull` is rewriting `corpus.jsonl` can be lost;
+  the next update pass sees everything else.
 - Blog posts themselves are written by the `blog` skill; this skill only owns the voice.

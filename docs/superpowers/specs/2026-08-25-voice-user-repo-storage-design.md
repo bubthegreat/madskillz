@@ -87,7 +87,7 @@ clone's local git config: per-machine, never committed):
 | `voice.model` | `opus` | model for the detached updater |
 | `voice.minCount` | `15` | gate: pending messages before an update |
 | `voice.minInterval` | `720` | gate: seconds between attempts |
-| `voice.corpusSync` | `true` | commit/push `corpus.jsonl` |
+| `voice.corpusSync` | `true` | reserved; the corpus is always pushed, and `config set` refuses this key |
 
 Env vars (`VOICE_DIR`, `VOICE_SYNC_*`) remain as overrides for tests and power users.
 
@@ -103,13 +103,15 @@ Env vars (`VOICE_DIR`, `VOICE_SYNC_*`) remain as overrides for tests and power u
 | `update-apply` | As today, then `push`. Push failure after a successful apply is reported but the local apply stands; next `sync`/gate retries. |
 | `status` | Adds `mode` (`synced`/`local-only`), `remote`, `ahead/behind`, `dirty`. Drops `material`/`materiality_reasons`. |
 | `config [key [value]]` | Read/write the `voice.*` keys. |
-| `migrate-to-repo --remote URL` | One-shot for existing installs: back up `VOICE_DIR` to `VOICE_DIR.bak-<ts>`, `git init` in place, add remote, drop `voice.md`, `posts/`, `madskillz-sync/`, first commit + push. Refuses if remote is non-empty and not a voice store (no `core.md` at root). |
-| `gate` | Unchanged decision logic; reads tunables from `config`; no longer resets any repo. Detached updater's `cd` target becomes `VOICE_DIR`. |
+| `migrate-to-repo --remote URL` | One-shot for existing installs: `copytree` `VOICE_DIR` to `VOICE_DIR.bak-<ts>` (skipping `tool/` and `madskillz-sync/`) **before any git command**, delete `voice.md` and `madskillz-sync/`, then run `init` (which `git init`s in place, adds the remote, and pushes the first commit). `posts/` stays on disk and is gitignored. Refuses if remote is non-empty and not a voice store (no `core.md` at root). |
+| `gate` | Unchanged decision logic; reads tunables from `config`; thresholds on `Processed through` (the marker `update-apply` advances), not the legacy `Repo-synced through`; no longer resets any repo. Detached updater's `cd` target becomes `VOICE_DIR`. |
 | `backfill` | Unchanged; runs before first `push` in the installer so history seeds the store. |
 
-`paths.sync_repo()`, `paths.sync_branch()`, `VOICES_SUBPATH`, and `NON_OVERLAY["voice.md"]`
-are removed. `templates_dir()` is added: the skill's `references/voices/` (resolved from the
-installed tool copy, `VOICE_DIR/tool/templates/`).
+`paths.sync_repo()`, `paths.sync_branch()`, and `VOICES_SUBPATH` are removed; `voice.md` stays
+in `NON_OVERLAY` so a leftover compat render never reads as a context. `templates_dir()` is
+added: `VOICE_TEMPLATES_DIR` > the skill checkout's `references/voices/` > the installed copy at
+`~/.madskillz/voice-templates/` (beside the store dir, never inside it - files inside it are the
+user's own and `init` renames those aside).
 
 ## Init flow (agent-driven, shipped in SKILL.md)
 
@@ -121,7 +123,8 @@ the agent runs this sequence and narrates each step:
    **existing repo** (paste URL / `owner/name`), **create one for me** (default name
    `<gh-user>/voice`), or **local only** (no sync, explain the cost).
 3. Resolve to a URL. `owner/name` → `git@github.com:owner/name.git` when SSH auth works
-   (`ssh -T git@github.com`), else `https://github.com/owner/name.git`.
+   (`ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"` - the plain command
+   exits 1 even on success), else `https://github.com/owner/name.git`.
 4. Existence check: `gh repo view owner/name` (github) or `git ls-remote URL`.
    - exists + is a voice store (`core.md` at root of default branch, or empty repo) → wire in:
      `voicectl init --remote URL`.
@@ -152,9 +155,9 @@ run the agent flow.
   the loser's new corpus lines merged via union, so the next update on either machine
   re-judges them (its `Processed through` is the remote's, which predates them).
 - **Marker:** single `Processed through` in the shared core, meaningful because the corpus is
-  shared. With `voice.corpusSync=false` the marker is **per-remote, corpus per-machine** and
-  older local messages can be skipped; the CLI prints this warning when the key is set and
-  `status` shows `corpus: local (lossy across machines)`.
+  shared - and it is, because `corpusSync` is not implemented and the corpus is always pushed.
+  A per-machine corpus would make the shared marker lossy, which is why `config set corpusSync`
+  is refused rather than half-honored.
 
 ## Privacy
 
@@ -162,12 +165,14 @@ run the agent flow.
   visibility` (if `gh` present); otherwise skipped with a printed notice. `PUBLIC` → refuse
   unless `--allow-public`. Other hosts: trust the user, print the notice.
 - Generated `README.md` states the repo holds verbatim prompts and must stay private.
-- `voice.corpusSync=false` keeps prompts off the remote at the cost above.
+- `voice.corpusSync=false` was to keep prompts off the remote at the cost above. It is not
+  implemented; `voicectl config corpusSync <value>` refuses the write.
 
 ## Installer
 
-`install_voice_pipeline.sh` steps become: voice dir → uv tool (copies `cli/` **and**
-`references/voices/` into `tool/templates/`) → hooks + settings wiring (unchanged) →
+`install_voice_pipeline.sh` steps become: voice dir → uv tool (copies `cli/` into
+`VOICE_DIR/tool/` and `references/voices/*.md` into `~/.madskillz/voice-templates/`, beside the
+store) → hooks + settings wiring (unchanged) →
 `voicectl init [--remote "$VOICE_REMOTE"]` → `voicectl backfill` → `voicectl push`.
 `VOICE_REMOTE` unset = local-only, with a printed hint. The `madskillz-sync` step is removed.
 Settings.json `SessionEnd` command loses `VOICE_SYNC_REPO`/`VOICE_SYNC_AUTOREFRESH`; the
