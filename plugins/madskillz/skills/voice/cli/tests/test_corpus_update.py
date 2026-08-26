@@ -51,3 +51,11 @@ def test_update_apply_rejects_invalid(voice_env):
     with pytest.raises(update.UpdateError):
         update.apply(candidate)
     assert paths.core_path().read_text() == before
+
+
+def test_entries_dedupe_on_ts_and_text(voice_env):
+    add_corpus(voice_env, "2026-01-02T00:00:00Z", "dup")
+    add_corpus(voice_env, "2026-01-02T00:00:00Z", "dup")
+    add_corpus(voice_env, "2026-01-02T00:00:00Z", "not dup")
+    corpus = voice_env / "corpus.jsonl"
+    assert count_since(corpus, "") == 2

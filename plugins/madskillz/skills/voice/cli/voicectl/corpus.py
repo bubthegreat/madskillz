@@ -22,7 +22,10 @@ def append_capture(corpus: Path, event_json: str) -> bool:
 
 
 def entries(corpus: Path) -> list[dict]:
-    out = []
+    """Parsed corpus lines, deduped on (ts, text) - union merges across machines can
+    duplicate a line both sides added. First occurrence wins; order preserved."""
+    out: list[dict] = []
+    seen: set[tuple[str, str]] = set()
     try:
         lines = corpus.read_text(encoding="utf-8").splitlines()
     except OSError:
@@ -35,8 +38,13 @@ def entries(corpus: Path) -> list[dict]:
             d = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if isinstance(d.get("ts"), str) and isinstance(d.get("text"), str):
-            out.append(d)
+        if not (isinstance(d.get("ts"), str) and isinstance(d.get("text"), str)):
+            continue
+        key = (d["ts"], d["text"])
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(d)
     return out
 
 
