@@ -25,8 +25,11 @@ the topic is cool. Post structure lives in `references/blog-format.md`; the voic
 ## Step 0 — Get the voice
 Run `voicectl render blog` and follow the rendered profile (the `voice` skill's core + blog
 overlay). If `voicectl` is missing, run the voice skill's installer first
-(`skills/voice/scripts/install_voice_pipeline.sh`). "Update my voice" requests belong to the
-`voice` skill — follow its SKILL.md update flow; no post is written for those.
+(`skills/voice/scripts/install_voice_pipeline.sh`). If `voicectl status --json` reports
+`mode: local-only` or `render` warns that the core has no observed traits, tell the user to run
+"set up my voice" (the voice skill's setup flow) before writing as them. "Update my voice"
+requests belong to the `voice` skill — follow its SKILL.md update flow; no post is written for
+those.
 
 ## Step 1 — Gather what to blog
 The live session, notes the owner gives, or an existing study's artifacts (`paper.md`,

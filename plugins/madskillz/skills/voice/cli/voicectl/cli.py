@@ -10,7 +10,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import backfill, config, gate, paths, store, sync, update
+from . import backfill, config, gate, paths, profile, store, sync, update
 from .corpus import append_capture
 from .merge import RenderError, render
 
@@ -43,6 +43,20 @@ def cmd_backfill(_args) -> int:
     return 0
 
 
+UNFILLED_CORE_WARNING = (
+    'warning: core profile has no observed traits yet (Processed through: none) - '
+    'run "update my voice" or set up your voice store'
+)
+
+
+def _core_is_unfilled(text: str) -> bool:
+    """True for a core still in its seeded-template state: the descriptive layer is empty,
+    or no update pass has ever run against the corpus."""
+    mechanics = profile.parse(text).section("## Mechanics") or ""
+    has_traits = any(line.startswith("- ") for line in mechanics.splitlines())
+    return not has_traits or not profile.get_marker(text, "processed")
+
+
 def cmd_render(args) -> int:
     core = paths.core_path()
     overlay = paths.overlay_path(args.context)
@@ -53,15 +67,18 @@ def cmd_render(args) -> int:
         known = ", ".join(paths.live_contexts()) or "none"
         print(f"error: unknown context '{args.context}' (available: {known})", file=sys.stderr)
         return 1
+    core_text = core.read_text(encoding="utf-8")
     try:
         out = render(
-            core.read_text(encoding="utf-8"),
+            core_text,
             overlay.read_text(encoding="utf-8"),
             args.context,
         )
     except RenderError as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
+    if _core_is_unfilled(core_text):
+        print(UNFILLED_CORE_WARNING, file=sys.stderr)
     if args.output:
         Path(args.output).write_text(out, encoding="utf-8")
         print(f"rendered {args.context} -> {args.output}")
