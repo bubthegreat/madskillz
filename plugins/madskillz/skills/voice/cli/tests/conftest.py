@@ -75,3 +75,17 @@ def voice_env(tmp_path, monkeypatch):
 def add_corpus(vdir, ts, text):
     with (vdir / "corpus.jsonl").open("a", encoding="utf-8") as f:
         f.write(json.dumps({"ts": ts, "text": text}) + "\n")
+
+
+@pytest.fixture
+def git_env(monkeypatch):
+    """Deterministic git identity so commits work in a sandbox."""
+    for k, v in {
+        "GIT_AUTHOR_NAME": "tester",
+        "GIT_AUTHOR_EMAIL": "tester@example.com",
+        "GIT_COMMITTER_NAME": "tester",
+        "GIT_COMMITTER_EMAIL": "tester@example.com",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_CONFIG_NOSYSTEM": "1",
+    }.items():
+        monkeypatch.setenv(k, v)
