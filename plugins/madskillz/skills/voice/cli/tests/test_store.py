@@ -115,6 +115,7 @@ def test_core_conflict_resolves_to_remote(voice_env, bare_remote, tmp_path, caps
     assert "core.md" in capsys.readouterr().out
     # repo is clean, not mid-rebase
     assert not (voice_env / ".git" / "rebase-merge").exists()
+    assert not (voice_env / ".git" / "rebase-apply").exists()
     assert _git(voice_env, "status", "--porcelain") == ""
 
 
@@ -165,3 +166,37 @@ def test_pull_resolves_autostash_pop_conflict_to_remote(voice_env, bare_remote, 
     porcelain = _git(voice_env, "status", "--porcelain")
     assert not [ln for ln in porcelain.splitlines() if ln[:2] in ("UU", "AA")]
     assert _git(voice_env, "stash", "list") == ""
+
+
+def test_pull_last_resort_aborts_and_keeps_local_work(voice_env, bare_remote, tmp_path, monkeypatch):
+    """When the conflict loop runs out of steps, pull() aborts the rebase and raises.
+    It must never throw local work away with a hard reset."""
+    _make_synced_store(voice_env, bare_remote)
+    other = clone_of(bare_remote, tmp_path / "other")
+    (other / "core.md").write_text(CORE.replace("trait two", "REMOTE"))
+    _git(other, "add", "-A"); _git(other, "commit", "-q", "-m", "remote"); _git(other, "push", "-q")
+    (voice_env / "core.md").write_text(CORE.replace("trait two", "LOCAL"))
+    assert store.commit_all("local core") is True
+
+    monkeypatch.setattr(store, "MAX_CONFLICT_STEPS", 0)
+    with pytest.raises(store.StoreError) as e:
+        store.pull()
+    assert "resolve manually" in str(e.value)
+
+    assert not (voice_env / ".git" / "rebase-merge").exists()
+    assert not (voice_env / ".git" / "rebase-apply").exists()
+    assert _git(voice_env, "log", "-1", "--format=%s") == "local core"
+    assert _git(voice_env, "status", "--porcelain") == ""
+
+
+def test_push_without_tracking_ref_pushes(voice_env, bare_remote):
+    """A store made by `git init` + `remote add` has no origin/<branch> ref yet, so the
+    ahead-count fails. That must not read as "nothing to push"."""
+    _git(voice_env, "init", "-q", "-b", "main")
+    _git(voice_env, "remote", "add", "origin", str(bare_remote))
+    store.scaffold(voice_env)
+    assert store.commit_all("seed") is True
+
+    out = store.push()
+    assert "pushed" in out
+    assert _git(voice_env, "rev-parse", "origin/main") == _git(voice_env, "rev-parse", "HEAD")

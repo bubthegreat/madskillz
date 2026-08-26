@@ -172,9 +172,14 @@ def pull() -> int:
                 # Resolving to the remote side emptied this commit; drop it and move on.
                 git("rebase", "--skip", check=False)
         if _rebase_in_progress():
-            # Still stuck after the cap: give up on the local commits and take the remote state.
-            git("rebase", "--abort", check=False)
-            git("reset", "-q", "--hard", f"origin/{branch}")
+            # Still stuck after the cap. Unwind to where we started - the abort also restores
+            # the autostash - and hand it to the owner. Local work is never thrown away.
+            git("rebase", "--abort")
+            raise StoreError(
+                f"pull: could not rebase cleanly after {MAX_CONFLICT_STEPS} steps; "
+                f"local commits and uncommitted changes were kept; "
+                f"resolve manually in {paths.voice_dir()}"
+            )
 
     # A failed autostash pop leaves unmerged paths but still exits 0, so check either way.
     # The rebase is over by now, so HEAD carries the remote side and "ours" is again remote.
@@ -182,7 +187,8 @@ def pull() -> int:
     if popped:
         conflicted.update(popped)
         _resolve_to_remote(popped)
-        git("reset", "-q")  # keep them as plain working-tree files, not staged
+        # keep them as plain working-tree files, not staged
+        git("reset", "-q", "--", *popped)
         _drop_autostash()
 
     if not conflicted:
@@ -198,8 +204,10 @@ def push() -> str:
         return f"push: {LOCAL_ONLY_HINT}"
     branch = paths.store_branch()
     made = commit_all(f"voice: update ({hostname()})")
-    ahead = git("rev-list", "--count", f"origin/{branch}..HEAD", check=False).stdout.strip()
-    if not made and ahead in ("", "0"):
+    # A missing origin/<branch> ref makes rev-list fail; that is a store that has never been
+    # pushed, so it has everything to push.
+    ahead = git("rev-list", "--count", f"origin/{branch}..HEAD", check=False)
+    if not made and ahead.returncode == 0 and ahead.stdout.strip() == "0":
         return "push: nothing to push"
     r = git("push", "-q", "origin", branch, check=False)
     if r.returncode != 0:
