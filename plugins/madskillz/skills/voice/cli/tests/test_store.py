@@ -435,3 +435,34 @@ def test_init_clones_over_a_runtime_only_dir(tmp_path, monkeypatch, voice_env, b
     assert (fresh / "sync.log").is_file()
     assert (fresh / "core.md").is_file()
     assert r["seeded"]
+
+
+def test_migrate_to_repo_backs_up_and_drops_cruft(voice_env, bare_remote):
+    """The one-shot migration copies the old dir aside BEFORE any git runs, drops the dead
+    compat render and the retired sync clone, and never pushes either to the remote."""
+    (voice_env / "voice.md").write_text("compat render", encoding="utf-8")
+    (voice_env / "posts").mkdir()
+    (voice_env / "posts" / "x.md").write_text("a post", encoding="utf-8")
+    (voice_env / "madskillz-sync" / ".git").mkdir(parents=True)
+    (voice_env / "tool").mkdir()
+    add_corpus(voice_env, "2026-02-01T00:00:00Z", "local line")
+
+    r = store.migrate_to_repo(str(bare_remote))
+    assert r["action"] == "adopted-empty"
+
+    backup = Path(r["backup"])
+    assert (backup / "core.md").is_file()
+    assert (backup / "voice.md").is_file()
+    assert (backup / "posts" / "x.md").is_file()
+    assert not (backup / "tool").exists()
+    assert not (backup / "madskillz-sync").exists()
+
+    assert not (voice_env / "voice.md").exists()
+    assert not (voice_env / "madskillz-sync").exists()
+    assert (voice_env / "posts" / "x.md").is_file()   # kept on disk, gitignored
+    assert (voice_env / "tool").is_dir()
+
+    tracked = _git(voice_env, "ls-tree", "-r", "--name-only", "origin/main").split()
+    assert "core.md" in tracked and "corpus.jsonl" in tracked
+    assert "voice.md" not in tracked and "posts/x.md" not in tracked
+    assert not [t for t in tracked if t.startswith("madskillz-sync")]

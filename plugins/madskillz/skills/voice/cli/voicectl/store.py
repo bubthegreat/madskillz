@@ -440,3 +440,25 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
     result["seeded"] = _first_commit_and_push(d, owner)
     result.update(mode="synced", action="adopted-empty" if existing_files else "cloned")
     return result
+
+
+def migrate_to_repo(remote: str, create: bool = False, allow_public: bool = False) -> dict:
+    """One-shot move of a pre-store voice dir into a voice repo the user owns.
+
+    The dir is copied aside before any git command runs, so a failed init leaves the
+    owner's profiles intact. The dead `voice.md` compat render and the retired
+    `madskillz-sync` clone are removed rather than committed; `posts/` stays on disk and
+    is gitignored.
+    """
+    d = paths.voice_dir()
+    backup = None
+    if _has_user_files(d):
+        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        backup = d.with_name(d.name + paths.BACKUP_SUFFIX + ts)
+        shutil.copytree(d, backup, ignore=shutil.ignore_patterns("tool", "madskillz-sync"))
+    (d / "voice.md").unlink(missing_ok=True)
+    shutil.rmtree(d / "madskillz-sync", ignore_errors=True)
+    result = init(remote, create=create, allow_public=allow_public)
+    if backup:
+        result["backup"] = str(backup)
+    return result

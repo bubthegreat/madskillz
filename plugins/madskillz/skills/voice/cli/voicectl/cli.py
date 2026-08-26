@@ -107,9 +107,9 @@ def cmd_update_apply(args) -> int:
         return 1
 
 
-def _run_init(args) -> int:
+def _run_init(args, wire=store.init) -> int:
     try:
-        r = store.init(args.remote, create=args.create, allow_public=args.allow_public)
+        r = wire(args.remote, create=args.create, allow_public=args.allow_public)
     except store.InitRefused as e:
         print(f"refused: {e}", file=sys.stderr)
         return 3
@@ -133,7 +133,7 @@ def cmd_init(args) -> int:
 
 
 def cmd_migrate(args) -> int:
-    return _run_init(args)
+    return _run_init(args, store.migrate_to_repo)
 
 
 def cmd_pull(_args) -> int:
