@@ -5,8 +5,12 @@ to git against the store clone.
 """
 
 import os
+import re
+import shutil
 import socket
 import subprocess
+import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 from . import paths
@@ -214,3 +218,175 @@ def push() -> str:
         pull()
         git("push", "-q", "origin", branch)
     return f"push: pushed to origin/{branch}"
+
+
+_GH_RE = re.compile(r"github\.com[:/]([^/\s]+)/([^/\s]+?)(?:\.git)?/?$")
+
+
+class InitRefused(StoreError):
+    pass
+
+
+def github_slug(url: str) -> str | None:
+    """'owner/name' for any github.com remote URL form, else None."""
+    m = _GH_RE.search(url)
+    return f"{m.group(1)}/{m.group(2)}" if m else None
+
+
+def remote_state(url: str) -> str:
+    """Classify a remote we do not have a clone of yet.
+
+    'missing' (unreachable), 'empty' (no branches), 'store' (core.md at the root of the
+    store branch), 'foreign' (has commits but no core.md). These are read-only probes
+    against the URL, so they run git directly rather than through git().
+    """
+    r = subprocess.run(["git", "ls-remote", "--heads", url], capture_output=True, text=True)
+    if r.returncode != 0:
+        return "missing"
+    if not r.stdout.strip():
+        return "empty"
+    probe = subprocess.run(
+        ["git", "archive", f"--remote={url}", paths.store_branch(), "core.md"],
+        capture_output=True,
+    )
+    if probe.returncode == 0:
+        return "store"
+    # `git archive --remote` is unsupported on some hosts (GitHub); fall back to a shallow clone.
+    with tempfile.TemporaryDirectory() as td:
+        c = subprocess.run(
+            ["git", "clone", "-q", "--depth=1", "--branch", paths.store_branch(), url, td],
+            capture_output=True,
+            text=True,
+        )
+        if c.returncode == 0 and (Path(td) / "core.md").exists():
+            return "store"
+    return "foreign"
+
+
+def visibility(url: str) -> str:
+    """'PUBLIC' | 'PRIVATE' | 'INTERNAL' | 'UNKNOWN'. Needs a github remote and the gh CLI."""
+    slug = github_slug(url)
+    if not slug or not shutil.which("gh"):
+        return "UNKNOWN"
+    r = subprocess.run(
+        ["gh", "repo", "view", slug, "--json", "visibility", "-q", ".visibility"],
+        capture_output=True,
+        text=True,
+    )
+    return r.stdout.strip().upper() if r.returncode == 0 and r.stdout.strip() else "UNKNOWN"
+
+
+def create_remote(url: str) -> None:
+    """Create the remote as a private GitHub repo. Only github.com, only with gh."""
+    slug = github_slug(url)
+    if not slug:
+        raise StoreError("--create only supports github.com remotes; create the repo, then re-run")
+    if not shutil.which("gh"):
+        raise StoreError("--create needs the gh CLI (https://cli.github.com) logged in")
+    r = subprocess.run(["gh", "repo", "create", slug, "--private"], capture_output=True, text=True)
+    if r.returncode != 0:
+        raise StoreError(f"gh repo create {slug}: {r.stderr.strip()}")
+
+
+def _first_commit_and_push(d: Path, owner: str) -> list[str]:
+    scaffold(d)
+    seeded = seed_templates(d, owner)
+    commit_all("voice: initialize store")
+    git("push", "-q", "-u", "origin", paths.store_branch(), cwd=d)
+    return seeded
+
+
+def _append_corpus(src: Path, dst: Path) -> None:
+    """Append the corpus lines from `src` onto `dst`, creating `dst` when missing."""
+    if not src.is_file() or src.stat().st_size == 0:
+        return
+    text = src.read_text(encoding="utf-8").rstrip("\n") + "\n"
+    with dst.open("a", encoding="utf-8") as out:
+        out.write(text)
+
+
+def init(remote: str | None, create: bool = False, allow_public: bool = False) -> dict:
+    """Pick, wire, or create the store repo behind the live voice dir.
+
+    With no remote the voice dir stays a plain local directory. With a remote the dir
+    becomes a clone of it: an existing store is adopted (remote profiles win, local
+    corpus lines are kept), an empty remote is filled from what is already here.
+    """
+    d = paths.voice_dir()
+    owner = owner_name()
+    result: dict = {
+        "mode": "local-only",
+        "action": "local",
+        "seeded": [],
+        "backup": None,
+        "visibility": "UNKNOWN",
+        "created": False,
+    }
+
+    if remote is None:
+        d.mkdir(parents=True, exist_ok=True)
+        scaffold(d)
+        result["seeded"] = seed_templates(d, owner)
+        return result
+
+    if is_repo(d):
+        current = remote_url(d)
+        if current != remote:
+            raise StoreError(
+                f"{d} already has origin '{current}', not '{remote}'; "
+                f"remove .git or pass the matching remote"
+            )
+        pull()
+        scaffold(d)
+        result["seeded"] = seed_templates(d, owner)
+        push()
+        result.update(mode="synced", action="already")
+        return result
+
+    state = remote_state(remote)
+    if state == "missing":
+        if not create:
+            raise InitRefused(f"remote not found: {remote} (pass --create to make a private repo)")
+        create_remote(remote)
+        result["created"] = True
+        state = "empty"
+    if state == "foreign":
+        raise InitRefused(
+            f"{remote} is non-empty and is not a voice store (no core.md at root); pick another repo"
+        )
+
+    vis = visibility(remote)
+    result["visibility"] = vis
+    if vis == "PUBLIC" and not allow_public:
+        raise InitRefused(
+            f"{remote} is PUBLIC; the corpus holds verbatim prompts. "
+            f"Make it private or pass --allow-public"
+        )
+
+    branch = paths.store_branch()
+    existing_files = d.is_dir() and any(d.iterdir())
+
+    if state == "store":
+        backup = None
+        if existing_files:
+            ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            backup = d.with_name(d.name + paths.BACKUP_SUFFIX + ts)
+            d.rename(backup)
+        git("clone", "-q", "--branch", branch, remote, str(d), cwd=d.parent)
+        if backup:
+            _append_corpus(backup / "corpus.jsonl", d / "corpus.jsonl")
+            result["backup"] = str(backup)
+        scaffold(d)
+        result["seeded"] = seed_templates(d, owner)
+        commit_all(f"voice: adopt machine {hostname()}")
+        git("push", "-q", "origin", branch)
+        result.update(mode="synced", action="adopted-store" if backup else "cloned")
+        return result
+
+    # state == "empty": nothing on the remote yet, so this machine's files become the store.
+    d.mkdir(parents=True, exist_ok=True)
+    git("init", "-q", "-b", branch)
+    git("remote", "add", "origin", remote)
+    result["seeded"] = _first_commit_and_push(d, owner)
+    result.update(mode="synced", action="adopted-empty" if existing_files else "cloned")
+    return result

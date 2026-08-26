@@ -1,5 +1,6 @@
 import json
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -200,3 +201,97 @@ def test_push_without_tracking_ref_pushes(voice_env, bare_remote):
     out = store.push()
     assert "pushed" in out
     assert _git(voice_env, "rev-parse", "origin/main") == _git(voice_env, "rev-parse", "HEAD")
+
+
+def test_github_slug():
+    assert store.github_slug("git@github.com:alice/voice.git") == "alice/voice"
+    assert store.github_slug("https://github.com/alice/voice") == "alice/voice"
+    assert store.github_slug("ssh://git@github.com/alice/voice.git") == "alice/voice"
+    assert store.github_slug("/tmp/origin.git") is None
+
+
+def test_remote_state(bare_remote, tmp_path):
+    assert store.remote_state(str(tmp_path / "nope.git")) == "missing"
+    assert store.remote_state(str(bare_remote)) == "empty"
+    c = clone_of(bare_remote, tmp_path / "c")
+    (c / "junk.txt").write_text("x")
+    _git(c, "add", "-A"); _git(c, "commit", "-q", "-m", "x"); _git(c, "push", "-q", "-u", "origin", "main")
+    assert store.remote_state(str(bare_remote)) == "foreign"
+    (c / "core.md").write_text(CORE)
+    _git(c, "add", "-A"); _git(c, "commit", "-q", "-m", "core"); _git(c, "push", "-q")
+    assert store.remote_state(str(bare_remote)) == "store"
+
+
+def test_init_local_only(tmp_path, monkeypatch, voice_env):
+    fresh = tmp_path / "fresh"
+    monkeypatch.setenv("VOICE_DIR", str(fresh))
+    r = store.init(None)
+    assert r["action"] == "local" and r["mode"] == "local-only"
+    assert (fresh / "core.md").exists() and not (fresh / ".git").exists()
+
+
+def test_init_clone_empty_remote_seeds_and_pushes(tmp_path, monkeypatch, voice_env, bare_remote):
+    fresh = tmp_path / "fresh"
+    monkeypatch.setenv("VOICE_DIR", str(fresh))
+    r = store.init(str(bare_remote))
+    assert r["action"] == "cloned" and r["mode"] == "synced"
+    assert "core.md" in r["seeded"]
+    assert "core.md" in _git(fresh, "ls-tree", "--name-only", "origin/main")
+    assert store.init(str(bare_remote))["action"] == "already"
+
+
+def test_init_adopt_empty_remote_in_place(voice_env, bare_remote):
+    add_corpus(voice_env, "2026-02-01T00:00:00Z", "local line")
+    r = store.init(str(bare_remote))
+    assert r["action"] == "adopted-empty"
+    assert "owner: tester" in (voice_env / "core.md").read_text()  # existing file kept
+    assert "corpus.jsonl" in _git(voice_env, "ls-tree", "--name-only", "origin/main")
+
+
+def test_init_adopt_existing_store_backs_up_and_merges_corpus(voice_env, bare_remote, tmp_path):
+    c = clone_of(bare_remote, tmp_path / "c")
+    (c / "core.md").write_text(CORE.replace("trait two", "REMOTE"))
+    with (c / "corpus.jsonl").open("w") as f:
+        f.write(json.dumps({"ts": "2026-01-01T00:00:00Z", "text": "remote line"}) + "\n")
+    _git(c, "add", "-A"); _git(c, "commit", "-q", "-m", "store"); _git(c, "push", "-q", "-u", "origin", "main")
+    add_corpus(voice_env, "2026-02-01T00:00:00Z", "local line")
+    (voice_env / "voice.md").write_text("compat")
+    r = store.init(str(bare_remote))
+    assert r["action"] == "adopted-store"
+    assert r["backup"] and Path(r["backup"]).is_dir()
+    text = (voice_env / "core.md").read_text()
+    assert "REMOTE" in text  # remote profile wins
+    corpus = (voice_env / "corpus.jsonl").read_text()
+    assert "remote line" in corpus and "local line" in corpus
+    assert not (voice_env / "voice.md").exists()
+    assert "local line" in _git(voice_env, "show", "origin/main:corpus.jsonl")
+
+
+def test_init_refuses_foreign_remote(voice_env, bare_remote, tmp_path):
+    c = clone_of(bare_remote, tmp_path / "c")
+    (c / "junk.txt").write_text("x")
+    _git(c, "add", "-A"); _git(c, "commit", "-q", "-m", "x"); _git(c, "push", "-q", "-u", "origin", "main")
+    with pytest.raises(store.InitRefused):
+        store.init(str(bare_remote))
+
+
+def test_init_missing_remote_needs_create(voice_env, tmp_path):
+    with pytest.raises(store.InitRefused):
+        store.init(str(tmp_path / "nope.git"))
+
+
+def test_init_refuses_public(voice_env, bare_remote, monkeypatch):
+    monkeypatch.setattr(store, "github_slug", lambda url: "alice/voice")
+    monkeypatch.setattr(store, "visibility", lambda url: "PUBLIC")
+    with pytest.raises(store.InitRefused):
+        store.init(str(bare_remote))
+    assert store.init(str(bare_remote), allow_public=True)["action"] == "adopted-empty"
+
+
+def test_init_create_calls_create_remote(voice_env, tmp_path, monkeypatch):
+    target = tmp_path / "new.git"
+    def fake_create(url):
+        subprocess.run(["git", "init", "--bare", "-q", "-b", "main", url], check=True)
+    monkeypatch.setattr(store, "create_remote", fake_create)
+    r = store.init(str(target), create=True)
+    assert r["action"] == "adopted-empty" and r["created"] is True
