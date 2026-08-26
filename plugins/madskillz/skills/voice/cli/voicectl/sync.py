@@ -20,7 +20,6 @@ def status_info() -> dict:
         "core_exists": core.is_file(),
         "contexts": paths.live_contexts(),
         "lock_held": (d / ".sync.lock").is_file(),
-        "corpus_sync": config.get_bool("corpusSync"),
         "config": config.all_values(),
     }
     if store.is_repo():

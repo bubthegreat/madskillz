@@ -48,9 +48,18 @@ def get(key: str) -> str:
     return DEFAULTS[key]
 
 
+# Keys that are read but not honored yet. Setting one would promise behavior the pipeline
+# does not have, so the write is refused rather than silently ignored.
+UNIMPLEMENTED: dict[str, str] = {
+    "corpusSync": "corpusSync is not implemented yet; the corpus is always pushed",
+}
+
+
 def set(key: str, value: str) -> None:  # noqa: A001 - CLI verb
     if key not in DEFAULTS:
         raise KeyError(key)
+    if key in UNIMPLEMENTED:
+        raise ConfigError(UNIMPLEMENTED[key])
     if not _is_repo():
         raise ConfigError(
             f"{paths.voice_dir()} is not a git repo; run 'voicectl init' first"
