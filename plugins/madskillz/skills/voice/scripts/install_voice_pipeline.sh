@@ -30,6 +30,8 @@ ok=0; skipped=0
 did()  { say "  + $*"; ok=$((ok+1)); }
 skip() { say "  = $*"; skipped=$((skipped+1)); }
 
+if [ "${BASH_VERSINFO[0]}" -lt 4 ] || { [ "${BASH_VERSINFO[0]}" -eq 4 ] && [ "${BASH_VERSINFO[1]}" -lt 4 ]; }; then say "ERROR: bash >= 4.4 required"; exit 1; fi
+
 command -v python3 >/dev/null 2>&1 || { say "ERROR: python3 required"; exit 1; }
 command -v git >/dev/null 2>&1 || { say "ERROR: git required"; exit 1; }
 
@@ -65,9 +67,12 @@ done
 
 # --- 4. settings.json --------------------------------------------------------------------------
 # Adds the two hook entries, matched by script name. An existing gate entry that still carries
-# the old VOICE_SYNC_REPO / VOICE_SYNC_AUTOREFRESH env is rewritten to the plain command.
-wired="$(SETTINGS="$CLAUDE_DIR/settings.json" python3 - <<'PY'
-import json, os, sys
+# the dead VOICE_SYNC_REPO / VOICE_SYNC_AUTOREFRESH assignments has only those two stripped -
+# any other env on the command (e.g. a hand-added VOICE_SYNC_MODEL=...) survives. The first
+# matching entry per event wins; extra matching entries are never touched or deleted, just
+# reported so the owner can clean them up by hand.
+wired_full="$(SETTINGS="$CLAUDE_DIR/settings.json" python3 - <<'PY'
+import json, os, re, sys
 
 path = os.environ["SETTINGS"]
 try:
@@ -79,33 +84,55 @@ except Exception as e:
     print(f"ERROR: cannot parse {path}: {e}")
     sys.exit(1)
 
+DEAD_VAR_RE = re.compile(r'(?:^|\s)VOICE_SYNC_(?:REPO|AUTOREFRESH)=(?:"[^"]*"|\S+)')
+
 hooks = settings.setdefault("hooks", {})
 wanted = {
     "UserPromptSubmit": ("capture-voice.sh", 'bash "$HOME/.claude/hooks/capture-voice.sh"'),
     "SessionEnd": ("voice-sync-gate.sh", 'bash "$HOME/.claude/hooks/voice-sync-gate.sh"'),
 }
 changed = []
+warnings = []
 for event, (marker, command) in wanted.items():
     entries = hooks.setdefault(event, [])
     found = None
+    total = 0
     for e in entries:
         for h in e.get("hooks", []):
             if marker in h.get("command", ""):
-                found = h
+                total += 1
+                if found is None:
+                    found = h  # first match wins; later matches only counted, never edited
     if found is None:
         entries.append({"hooks": [{"type": "command", "command": command, "timeout": 10}]})
         changed.append(f"{event}:added")
-    elif found["command"] != command and "VOICE_SYNC_" in found["command"]:
-        found["command"] = command
-        changed.append(f"{event}:rewritten")
+    elif found["command"] != command:
+        cleaned = DEAD_VAR_RE.sub("", found["command"]).strip()
+        if cleaned != found["command"]:
+            found["command"] = cleaned
+            changed.append(f"{event}:rewritten")
+    if total > 1:
+        warnings.append(
+            f"WARN: {event}: {total - 1} extra {marker} hook entries in settings.json - "
+            f"remove duplicates by hand"
+        )
 
 if changed:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=2)
         f.write("\n")
+
+for w in warnings:
+    print(w)
 print(",".join(changed) if changed else "none")
 PY
 )"
+# The python block prints any WARN lines first, then the added/rewritten summary as the last
+# line - split them so the WARN lines are surfaced verbatim and the case below only sees the
+# summary.
+wired="$(printf '%s\n' "$wired_full" | tail -n1)"
+warn_lines="$(printf '%s\n' "$wired_full" | sed '$d')"
+[ -n "$warn_lines" ] && say "$warn_lines"
 case "$wired" in
   ERROR*) say "$wired"; exit 1 ;;
   none)   skip "settings.json hooks already wired" ;;
@@ -127,10 +154,28 @@ else
   fi
   if out="$(voicectl init "${init_args[@]}" 2>&1)"; then
     say "$out" | sed 's/^/    /'
-    did "voice store ready ($VOICE_DIR)"
-    if voicectl backfill >/dev/null 2>&1; then did "backfilled local Claude history into the corpus"; fi
+    if printf '%s\n' "$out" | grep -q "action: already"; then
+      skip "voice store already wired ($VOICE_DIR)"
+    else
+      did "voice store ready ($VOICE_DIR)"
+    fi
+    if bfout="$(voicectl backfill 2>&1)"; then
+      if printf '%s\n' "$bfout" | grep -qF ' 0 appended -> '; then
+        skip "backfill: no new lines"
+      else
+        did "$bfout"
+      fi
+    fi
     if [ -n "${VOICE_REMOTE:-}" ]; then
-      if out="$(voicectl push 2>&1)"; then did "$out"; else say "  ! push failed: $out"; fi
+      if pout="$(voicectl push 2>&1)"; then
+        if printf '%s\n' "$pout" | grep -qF "nothing to push"; then
+          skip "$pout"
+        else
+          did "$pout"
+        fi
+      else
+        say "  ! push failed: $pout"
+      fi
     else
       say "  ! local-only: set VOICE_REMOTE (or ask Claude to 'set up my voice') to sync across machines"
     fi
