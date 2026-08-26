@@ -18,9 +18,10 @@ The owner's voice lives in two layers:
   for one medium: `blog`, `research`, `chat`, `storycraft`.
 
 A writer never reads these separately: `voicectl render <context>` deterministically merges the
-overlay's prescriptive layer with the core into one doc. Live working copies sit in
-`~/.madskillz/voice/` (same filenames); the committed copies here are what non-local agents and
-fresh machines seed from.
+overlay's prescriptive layer with the core into one doc. The live copies live in the user's
+**voice store** - `~/.madskillz/voice/`, a clone of a private git repo the user owns - so every
+machine converges on one core, one overlay set, one corpus. This skill ships only templates;
+nobody's real profile is in the plugin.
 
 ## Getting the voice (any consumer skill)
 
@@ -36,33 +37,55 @@ Never read an overlay alone as "the voice," and never present a template as the 
 The CLI does everything deterministic; the model only judges traits:
 
 1. `voicectl update-prep` - emits JSON: the new corpus entries since `Processed through` plus
-   the path of the live core.
+   the path of the live core. `update-prep` pulls first; a `pull: conflict-remote-kept` result
+   means another machine updated concurrently - the remote core is now the base, continue
+   normally.
 2. Judge per `references/voice-update.md`: is anything **genuinely new** about how the owner
    writes? Merge real findings into the live core's descriptive sections (write the full
    revised core to a temp file). A no-change pass is valid: apply the unchanged core anyway so
    the marker advances.
 3. `voicectl update-apply <tempfile>` - validates and installs it atomically, bumping the
    marker.
-4. `voicectl sync` - materiality-gated: pushes the live profiles to the committed library on
-   `main` via the dedicated sync clone when the delta is material, otherwise does nothing.
+4. `update-apply` pushes to the voice store on its own. If it reports `push failed`, run
+   `voicectl sync` when back online; the local apply stands.
 
-`voicectl status --json` shows markers, pending counts, and the materiality verdict.
+`voicectl status --json` shows mode, remote, markers, pending count, and config.
 
 ## Minting a new context voice
 
-Copy `references/voice-overlay-template.md` to `references/voices/<name>.md`, set the
+Copy `references/voice-overlay-template.md` to `~/.madskillz/voice/<name>.md`, set the
 frontmatter (`extends: core`, `status: personal`), and write only the prescriptive rules for
-that medium - the descriptive layer always comes from core. Seed the live copy with
-`voicectl init`. The first commit of a new overlay is explicit and owner-reviewed, never an
-auto-sync.
+that medium - the descriptive layer always comes from core. `voicectl push` when the owner has
+reviewed it.
 
-## Machine setup (once)
+## Setting up a machine ("set up my voice")
 
-`bash scripts/install_voice_pipeline.sh` - idempotent. Creates `~/.madskillz/voice/`, seeds
-live profiles from the committed voices, installs the `voicectl` uv tool, wires the
-UserPromptSubmit capture hook and SessionEnd gate hook into `~/.claude/settings.json` (via the
-shims in `hooks/`), and creates the dedicated main-pinned sync clone. Then fold in existing
-local history: `voicectl backfill`.
+Run `bash scripts/install_voice_pipeline.sh` once (installs `voicectl`, the hooks, and
+templates). Then wire the voice store. The user never needs the flags; walk them through this:
+
+1. `voicectl status --json`. If `mode` is `synced`, done - report `remote` and `contexts`.
+2. Ask one question: **Where should your voice live?**
+   - **Existing repo** - they paste a URL or `owner/name`.
+   - **Create one for me** - default `<github-user>/voice` (`gh api user -q .login`).
+   - **Local only** - no sync; say plainly that other machines will not see this voice.
+3. Resolve `owner/name` to a URL: `git@github.com:owner/name.git` if `ssh -T git@github.com`
+   succeeds, else `https://github.com/owner/name.git`.
+4. `voicectl init --remote URL`. Exit 3 with a `refused:` line means one of:
+   - `remote not found` - re-run with `--create` (github + `gh` only; other hosts: the user
+     creates the repo, then re-run).
+   - `is PUBLIC` - the corpus holds verbatim prompts. Offer `gh repo edit owner/name
+     --visibility private --accept-visibility-change-consequences`, or `--allow-public` if
+     the user insists.
+   - `not a voice store` - the repo has other content. Ask for another repo.
+5. `voicectl backfill`, then `voicectl push`.
+6. Report `voicectl status`: `remote`, `mode`, corpus line count, `contexts`.
+
+**Second machine:** same flow. Step 4 finds the existing store and clones it; if this machine
+already had a local-only voice dir, `init` backs it up to `~/.madskillz/voice.bak-<ts>`, keeps
+the remote profiles, and folds the local corpus in. Nothing is lost.
+
+Per-machine tunables: `voicectl config` (`model`, `minCount`, `minInterval`, `corpusSync`).
+`corpusSync=false` is reserved and not enforced yet; the corpus is always pushed.
 
 ## Integrity stance (non-negotiable)
 
@@ -78,5 +101,6 @@ local history: `voicectl backfill`.
 
 - "Update my voice" with nothing new in the corpus: say so; change nothing.
 - Unknown render context: `voicectl render` lists the available ones; ask, don't guess.
-- Sync clone missing/offline: `voicectl sync` fails loudly; live profiles stay authoritative.
+- Offline: `update-prep` says `pull: offline` and works from the local core; `update-apply`
+  applies locally and reports the unpushed state. `voicectl sync` later.
 - Blog posts themselves are written by the `blog` skill; this skill only owns the voice.

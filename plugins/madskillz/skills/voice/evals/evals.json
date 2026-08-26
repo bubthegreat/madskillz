@@ -10,7 +10,7 @@
         "Runs `voicectl update-prep` and judges only the new corpus entries",
         "Merges only genuinely-new, repeated traits into the descriptive layer; never fabricates a trait",
         "Installs via `voicectl update-apply` (never edits the live core in place or bumps markers by hand)",
-        "Runs `voicectl sync` afterwards and reports its verdict"
+        "Reports the push result that `voicectl update-apply` prints"
       ]
     },
     {
