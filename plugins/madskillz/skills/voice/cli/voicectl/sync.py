@@ -50,6 +50,6 @@ def run(dry_run: bool = False) -> str:
         return (f"sync (dry-run): ahead {i['ahead']}, behind {i['behind']}, "
                 f"dirty: {', '.join(i['dirty']) or 'none'}")
     code = store.pull()
-    pushed = store.push()
+    pushed = store.push().removeprefix("push: ")
     prefix = "sync: conflict resolved to remote; " if code == 2 else "sync: "
     return prefix + pushed

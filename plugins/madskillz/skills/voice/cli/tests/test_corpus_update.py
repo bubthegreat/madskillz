@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from voicectl import paths, update
+from voicectl import backfill, paths, update
 from voicectl.corpus import append_capture, count_since, entries_since
 from tests.conftest import CORE, add_corpus
 
@@ -95,3 +95,14 @@ def test_apply_pushes(voice_env, bare_remote):
     msg = update.apply(candidate)
     assert "pushed" in msg
     assert "trait zero" in _git(voice_env, "show", "origin/main:core.md")
+
+
+def test_backfill_marker_reads_only_the_core(voice_env):
+    """A leftover `voice.md` from the old compat render must not decide what the backfill
+    skips: the core is the only marker of record."""
+    (voice_env / "core.md").write_text(
+        CORE.replace("Processed through: 2026-01-01T00:00:00Z", "Processed through: none"),
+        encoding="utf-8",
+    )
+    (voice_env / "voice.md").write_text(CORE, encoding="utf-8")
+    assert backfill.processed_marker() == ""

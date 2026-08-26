@@ -88,7 +88,11 @@ def cmd_render(args) -> int:
 
 
 def cmd_status(args) -> int:
-    info = sync.status_info()
+    try:
+        info = sync.status_info()
+    except store.StoreError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
     if args.json:
         print(json.dumps(info, ensure_ascii=False, indent=2))
     else:

@@ -253,7 +253,7 @@ def remote_state(url: str) -> str:
     store branch), 'foreign' (has commits but no core.md). These are read-only probes
     against the URL, so they run git directly rather than through git().
     """
-    r = subprocess.run(["git", "ls-remote", "--heads", url], capture_output=True, text=True)
+    r = subprocess.run(["git", "ls-remote", "--heads", "--", url], capture_output=True, text=True)
     if r.returncode != 0:
         return "missing"
     if not r.stdout.strip():
@@ -267,7 +267,7 @@ def remote_state(url: str) -> str:
     # `git archive --remote` is unsupported on some hosts (GitHub); fall back to a shallow clone.
     with tempfile.TemporaryDirectory() as td:
         c = subprocess.run(
-            ["git", "clone", "-q", "--depth=1", "--branch", paths.store_branch(), url, td],
+            ["git", "clone", "-q", "--depth=1", "--branch", paths.store_branch(), "--", url, td],
             capture_output=True,
             text=True,
         )
@@ -436,7 +436,7 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
     # state == "empty": nothing on the remote yet, so this machine's files become the store.
     d.mkdir(parents=True, exist_ok=True)
     git("init", "-q", "-b", branch)
-    git("remote", "add", "origin", remote)
+    git("remote", "add", "origin", "--", remote)
     result["seeded"] = _first_commit_and_push(d, owner)
     result.update(mode="synced", action="adopted-empty" if existing_files else "cloned")
     return result

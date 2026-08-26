@@ -1,7 +1,7 @@
 [project]
 name = "voicectl"
 version = "0.1.0"
-description = "Owner-voice pipeline CLI: corpus capture, core+overlay render, materiality-gated repo sync."
+description = "Owner-voice pipeline CLI: corpus capture, core+overlay render, pull/push sync with the user's voice store."
 requires-python = ">=3.11"
 dependencies = []
 

@@ -64,3 +64,16 @@ def test_render_is_quiet_for_a_real_core(voice_env, capsys):
     out, err = capsys.readouterr()
     assert err == ""
     assert "trait one" in out
+
+
+def test_status_reports_store_errors(voice_env, monkeypatch, capsys):
+    """A broken store makes git fail; `status` has to say so and exit 1, not traceback."""
+    from voicectl import store
+
+    def boom(*a, **k):
+        raise store.StoreError("git status: not a git repository")
+
+    monkeypatch.setattr(store, "is_repo", lambda *a, **k: True)
+    monkeypatch.setattr(store, "git", boom)
+    assert main(["status"]) == 1
+    assert "error: git status" in capsys.readouterr().err

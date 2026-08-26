@@ -16,14 +16,12 @@ def _sessions_per_project() -> int:
 
 
 def processed_marker() -> str:
-    for p in (paths.core_path(), paths.voice_dir() / "voice.md"):
-        try:
-            m = get_marker(p.read_text(encoding="utf-8"), "processed")
-            if m:
-                return m
-        except OSError:
-            continue
-    return ""
+    """The live core's marker. Nothing else counts - a leftover `voice.md` from the old
+    compat render would otherwise make the backfill skip real messages."""
+    try:
+        return get_marker(paths.core_path().read_text(encoding="utf-8"), "processed")
+    except OSError:
+        return ""
 
 
 def is_owner_prose(text: str) -> bool:

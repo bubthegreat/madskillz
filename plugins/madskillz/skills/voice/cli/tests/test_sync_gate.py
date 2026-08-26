@@ -17,7 +17,7 @@ def test_sync_pull_then_push(voice_env, bare_remote, tmp_path):
     _git(other, "add", "-A"); _git(other, "commit", "-q", "-m", "r"); _git(other, "push", "-q")
     add_corpus(voice_env, "2026-02-01T00:00:00Z", "mine")
     out = sync.run()
-    assert "pushed" in out
+    assert out == "sync: pushed to origin/main"
     assert "remote bullet" in (voice_env / "blog.md").read_text()
     assert "mine" in _git(voice_env, "show", "origin/main:corpus.jsonl")
 
