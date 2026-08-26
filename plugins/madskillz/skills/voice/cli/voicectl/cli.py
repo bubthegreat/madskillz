@@ -6,15 +6,13 @@ failures logged to sync.log. Everything else errors loudly.
 
 import argparse
 import json
-import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import backfill, gate, paths, store, sync, update
-from .corpus import append_capture, count_since
+from . import backfill, config, gate, paths, store, sync, update
+from .corpus import append_capture
 from .merge import RenderError, render
-from .profile import get_marker
 
 
 def _log(msg: str) -> None:
@@ -109,24 +107,71 @@ def cmd_update_apply(args) -> int:
         return 1
 
 
-def cmd_init(args) -> int:
-    """Seed missing live voice files from a committed voices directory (default: the
-    dedicated sync clone). Never overwrites an existing live file."""
-    src = Path(args.source) if args.source else paths.sync_repo() / paths.VOICES_SUBPATH
-    if not src.is_dir():
-        print(f"error: committed voices dir not found: {src}", file=sys.stderr)
+def _run_init(args) -> int:
+    try:
+        r = store.init(args.remote, create=args.create, allow_public=args.allow_public)
+    except store.InitRefused as e:
+        print(f"refused: {e}", file=sys.stderr)
+        return 3
+    except store.StoreError as e:
+        print(f"error: {e}", file=sys.stderr)
         return 1
-    paths.voice_dir().mkdir(parents=True, exist_ok=True)
-    seeded, kept = [], []
-    for f in sorted(src.glob("*.md")):
-        dst = paths.voice_dir() / f.name
-        if dst.exists():
-            kept.append(f.name)
-        else:
-            shutil.copyfile(f, dst)
-            seeded.append(f.name)
-    print(f"init: seeded {seeded or 'nothing'}; kept existing {kept or 'nothing'}")
+    print(f"mode: {r['mode']}")
+    print(f"action: {r['action']}")
+    print(f"seeded: {', '.join(r['seeded']) or 'nothing'}")
+    if r["backup"]:
+        print(f"backup: {r['backup']}")
+    if r["mode"] == "synced":
+        print(f"visibility: {r['visibility']}")
+    else:
+        print(f"hint: {store.LOCAL_ONLY_HINT}")
     return 0
+
+
+def cmd_init(args) -> int:
+    return _run_init(args)
+
+
+def cmd_migrate(args) -> int:
+    return _run_init(args)
+
+
+def cmd_pull(_args) -> int:
+    try:
+        code = store.pull()
+        print("pull: ok" if code == 0 else "pull: conflict resolved to remote")
+        return code
+    except store.StoreError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+
+
+def cmd_push(_args) -> int:
+    try:
+        print(store.push())
+        return 0
+    except store.StoreError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+
+
+def cmd_config(args) -> int:
+    try:
+        if args.key and args.value is not None:
+            config.set(args.key, args.value)
+            print(f"{args.key} = {args.value}")
+        elif args.key:
+            print(config.get(args.key))
+        else:
+            for k, v in config.all_values().items():
+                print(f"{k} = {v}")
+        return 0
+    except KeyError as e:
+        print(f"error: unknown key {e}; known: {', '.join(config.DEFAULTS)}", file=sys.stderr)
+        return 1
+    except config.ConfigError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -142,7 +187,7 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("-o", "--output")
     r.set_defaults(fn=cmd_render)
 
-    s = sub.add_parser("status", help="markers, pending counts, materiality, lock state")
+    s = sub.add_parser("status", help="mode, remote, ahead/behind, dirty files, markers, pending count, config")
     s.add_argument("--json", action="store_true")
     s.set_defaults(fn=cmd_status)
 
@@ -157,9 +202,26 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--processed-through")
     a.set_defaults(fn=cmd_update_apply)
 
-    i = sub.add_parser("init", help="seed missing live voice files from the committed library")
-    i.add_argument("--source")
+    def _init_flags(parser, remote_required: bool):
+        parser.add_argument("--remote", required=remote_required, help="git URL of your private voice repo")
+        parser.add_argument("--create", action="store_true", help="create the repo (github.com + gh) if missing")
+        parser.add_argument("--allow-public", action="store_true")
+
+    i = sub.add_parser("init", help="wire this machine to your voice repo (or local-only without --remote)")
+    _init_flags(i, remote_required=False)
     i.set_defaults(fn=cmd_init)
+
+    m = sub.add_parser("migrate-to-repo", help="move an existing local voice dir into a voice repo")
+    _init_flags(m, remote_required=True)
+    m.set_defaults(fn=cmd_migrate)
+
+    sub.add_parser("pull", help="rebase onto the voice repo (remote wins profile conflicts)").set_defaults(fn=cmd_pull)
+    sub.add_parser("push", help="commit live changes and push to the voice repo").set_defaults(fn=cmd_push)
+
+    c = sub.add_parser("config", help="get/set per-machine tunables (model, minCount, minInterval, corpusSync)")
+    c.add_argument("key", nargs="?")
+    c.add_argument("value", nargs="?")
+    c.set_defaults(fn=cmd_config)
 
     args = p.parse_args(argv)
     return args.fn(args)
