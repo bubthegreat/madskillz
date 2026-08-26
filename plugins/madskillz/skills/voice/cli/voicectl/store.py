@@ -220,7 +220,7 @@ def push() -> str:
     return f"push: pushed to origin/{branch}"
 
 
-_GH_RE = re.compile(r"github\.com[:/]([^/\s]+)/([^/\s]+?)(?:\.git)?/?$")
+_GH_RE = re.compile(r"(?:^|@|/)github\.com[:/]([^/\s]+)/([^/\s]+?)(?:\.git)?/?$")
 
 
 class InitRefused(StoreError):
@@ -305,6 +305,21 @@ def _append_corpus(src: Path, dst: Path) -> None:
         out.write(text)
 
 
+def _refuse_public(remote: str, allow_public: bool, result: dict) -> None:
+    """Record the remote's visibility and refuse a public store unless it was allowed.
+
+    Runs before anything is pushed, on both the first-time and the already-wired paths:
+    the corpus holds verbatim prompts, so a public remote is never written to by accident.
+    """
+    vis = visibility(remote)
+    result["visibility"] = vis
+    if vis == "PUBLIC" and not allow_public:
+        raise InitRefused(
+            f"{remote} is PUBLIC; the corpus holds verbatim prompts. "
+            f"Make it private or pass --allow-public"
+        )
+
+
 def init(remote: str | None, create: bool = False, allow_public: bool = False) -> dict:
     """Pick, wire, or create the store repo behind the live voice dir.
 
@@ -336,6 +351,7 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
                 f"{d} already has origin '{current}', not '{remote}'; "
                 f"remove .git or pass the matching remote"
             )
+        _refuse_public(remote, allow_public, result)
         pull()
         scaffold(d)
         result["seeded"] = seed_templates(d, owner)
@@ -355,13 +371,7 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
             f"{remote} is non-empty and is not a voice store (no core.md at root); pick another repo"
         )
 
-    vis = visibility(remote)
-    result["visibility"] = vis
-    if vis == "PUBLIC" and not allow_public:
-        raise InitRefused(
-            f"{remote} is PUBLIC; the corpus holds verbatim prompts. "
-            f"Make it private or pass --allow-public"
-        )
+    _refuse_public(remote, allow_public, result)
 
     branch = paths.store_branch()
     existing_files = d.is_dir() and any(d.iterdir())
@@ -372,7 +382,25 @@ def init(remote: str | None, create: bool = False, allow_public: bool = False) -
             ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
             backup = d.with_name(d.name + paths.BACKUP_SUFFIX + ts)
             d.rename(backup)
-        git("clone", "-q", "--branch", branch, remote, str(d), cwd=d.parent)
+        # On a fresh machine ~/.madskillz does not exist yet, and `git -C` needs the dir.
+        d.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            git("clone", "-q", "--branch", branch, remote, str(d), cwd=d.parent)
+        except StoreError as e:
+            # The rename already moved the owner's files aside. Put them back rather than
+            # leaving a .bak-<ts> dir the error message never names.
+            if backup is None:
+                raise
+            if not d.exists():
+                try:
+                    backup.rename(d)
+                except OSError:
+                    pass
+                else:
+                    raise StoreError(
+                        f"clone failed: {e}; your local voice dir was restored"
+                    ) from e
+            raise StoreError(f"clone failed: {e}; your local voice dir is at {backup}") from e
         if backup:
             _append_corpus(backup / "corpus.jsonl", d / "corpus.jsonl")
             result["backup"] = str(backup)

@@ -207,7 +207,9 @@ def test_github_slug():
     assert store.github_slug("git@github.com:alice/voice.git") == "alice/voice"
     assert store.github_slug("https://github.com/alice/voice") == "alice/voice"
     assert store.github_slug("ssh://git@github.com/alice/voice.git") == "alice/voice"
+    assert store.github_slug("https://github.com/o/n.git/") == "o/n"
     assert store.github_slug("/tmp/origin.git") is None
+    assert store.github_slug("https://example.com/notgithub.com/o/n") is None
 
 
 def test_remote_state(bare_remote, tmp_path):
@@ -288,10 +290,71 @@ def test_init_refuses_public(voice_env, bare_remote, monkeypatch):
     assert store.init(str(bare_remote), allow_public=True)["action"] == "adopted-empty"
 
 
-def test_init_create_calls_create_remote(voice_env, tmp_path, monkeypatch):
+def test_init_create_calls_create_remote(voice_env, tmp_path, monkeypatch, git_env):
     target = tmp_path / "new.git"
     def fake_create(url):
         subprocess.run(["git", "init", "--bare", "-q", "-b", "main", url], check=True)
     monkeypatch.setattr(store, "create_remote", fake_create)
     r = store.init(str(target), create=True)
     assert r["action"] == "adopted-empty" and r["created"] is True
+
+
+def _push_store(bare_remote, dest):
+    """Make bare_remote look like a real voice store: core.md on the store branch."""
+    c = clone_of(bare_remote, dest)
+    (c / "core.md").write_text(CORE)
+    _git(c, "add", "-A"); _git(c, "commit", "-q", "-m", "store")
+    _git(c, "push", "-q", "-u", "origin", "main")
+    return c
+
+
+def test_init_clones_store_into_missing_parent(tmp_path, monkeypatch, voice_env, bare_remote):
+    """A fresh machine has no ~/.madskillz at all, so the clone has to make the parent dir."""
+    _push_store(bare_remote, tmp_path / "c")
+    fresh = tmp_path / "newmachine" / "voice"
+    monkeypatch.setenv("VOICE_DIR", str(fresh))
+    assert not fresh.parent.exists()
+
+    r = store.init(str(bare_remote))
+    assert r["action"] == "cloned" and r["mode"] == "synced"
+    assert r["backup"] is None
+    assert (fresh / "core.md").exists()
+
+
+def test_init_restores_local_dir_when_clone_fails(voice_env, tmp_path, monkeypatch, git_env):
+    """The adopt path renames the local dir aside before cloning. A failed clone must put
+    it back, not leave the owner hunting for a .bak-<ts> dir."""
+    monkeypatch.setattr(store, "remote_state", lambda url: "store")
+    before = (voice_env / "core.md").read_text()
+
+    with pytest.raises(store.StoreError) as e:
+        store.init(str(tmp_path / "nope.git"))
+    assert "restored" in str(e.value)
+
+    assert voice_env.is_dir()
+    assert (voice_env / "core.md").read_text() == before
+    assert list(tmp_path.glob("voice" + store.paths.BACKUP_SUFFIX + "*")) == []
+
+
+def test_init_already_wired_refuses_public_before_pushing(voice_env, bare_remote, monkeypatch):
+    """Re-running init on a wired store must not push a corpus to a public remote."""
+    assert store.init(str(bare_remote))["action"] == "adopted-empty"
+    head = _git(voice_env, "rev-parse", "origin/main")
+    add_corpus(voice_env, "2026-02-01T00:00:00Z", "private line")
+
+    monkeypatch.setattr(store, "github_slug", lambda url: "alice/voice")
+    monkeypatch.setattr(store, "visibility", lambda url: "PUBLIC")
+    with pytest.raises(store.InitRefused):
+        store.init(str(bare_remote))
+
+    assert _git(voice_env, "rev-parse", "origin/main") == head
+    assert "private line" not in _git(voice_env, "show", "origin/main:corpus.jsonl")
+
+
+def test_init_refuses_mismatched_origin(voice_env, bare_remote, tmp_path):
+    _make_synced_store(voice_env, bare_remote)
+    other = str(tmp_path / "other.git")
+    with pytest.raises(store.StoreError) as e:
+        store.init(other)
+    msg = str(e.value)
+    assert str(bare_remote) in msg and other in msg
