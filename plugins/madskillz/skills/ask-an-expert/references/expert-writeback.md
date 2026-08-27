@@ -21,8 +21,9 @@ ask-an-expert persists an expert** — inside a research run or standalone.
 - **Under `~/.madskillz/`, not `~/.claude/`** — the unattended headless agent is least-privilege and
   the harness sensitive-file guard blocks writes under `~/.claude/`; `~/.madskillz/` is writable (see
   `docs/superpowers/specs/2026-06-21-voice-storage-relocation-design.md`).
-- **Separate from the voice `madskillz-sync` clone** — the voice gate does `reset --hard origin/main`
-  on its clone; sharing it would wipe an in-flight expert branch. Different clone, different purpose.
+- **Its own dedicated clone** — never share a bare clone/worktree set across purposes; a gate or
+  script elsewhere in this repo doing `reset --hard origin/main` on a shared clone would wipe an
+  in-flight expert branch.
 
 ### Create it once, atomically (never recreate/reset it)
 

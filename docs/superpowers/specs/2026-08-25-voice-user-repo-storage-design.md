@@ -1,5 +1,7 @@
 # Voice: user-owned repo storage — design spec (2026-08-25)
 
+> Superseded by `2026-08-26-voice-store-service-design.md`; the git-repo store never shipped.
+
 Make the `voice` skill usable by anyone, on any number of machines, without new infrastructure.
 Today the skill and the owner's personal voice data are one thing: profiles are committed
 inside the plugin repo, the sync path pushes to `bubthegreat/madskillz` `main`, and nothing
