@@ -9,6 +9,12 @@
       "description": "Personal skills bundle",
       "source": "./plugins/madskillz",
       "category": "productivity"
+    },
+    {
+      "name": "voice",
+      "description": "Owner voice profiles: capture, render, update, sync via voice-store",
+      "source": { "source": "github", "repo": "bubthegreat/voice-store" },
+      "category": "productivity"
     }
   ]
 }
