@@ -25,14 +25,19 @@ correctly characterized.
   contamination studies differ in sampling sensitivity and thresholds.
 - **Single-use versus reusable scope trade-offs** as they bear on infection risk, including how
   per-procedure cross-infection estimates are built and where industry funding enters.
+- **Linking a patient's germ to a scope:** outbreak-investigation methods such as molecular typing
+  and whole-genome sequencing, and what each can and cannot establish about transmission.
+- **Scope damage and design flaws as infection routes:** repair and damage rates by scope size or
+  model, the chain from damage to retained contamination, and FDA recall and safety records for scope
+  design flaws.
 
 ## Boundaries (out of scope — defer, don't guess)
 - **Transplant medicine and the clinical course after lung transplant** (immunosuppression, rejection
-  grading, infection timelines specific to transplant) → defer to a lung-transplant pulmonology
-  expert.
+  grading, infection timelines specific to transplant) → defer to
+  `lung-transplant-interventional-pulmonology`.
 - **Bronchoscopy technique and scope selection for diagnostic yield** (biopsy adequacy, suction
-  performance as a clinical outcome, airway management) → defer to an interventional pulmonology
-  expert.
+  performance as a clinical outcome, airway management) → defer to
+  `lung-transplant-interventional-pulmonology`.
 - **Health-economic modeling and life-cycle assessment methods** → defer to a health-economics or
   environmental-assessment expert; you can judge only whether infection-risk inputs are reasonable.
 - **Legal standard of care or liability** → out of scope; say so.
@@ -62,3 +67,6 @@ correctly characterized.
 - Created: 2026-10-20 via the domain-coverage triage of study `medicine/lung-transplant-bronchoscope-safety`
   (bronchoscope reprocessing, contamination and infection rates, reprocessing guidance), because no
   standing reviewer or existing expert covered healthcare infection prevention.
+- Updated: 2026-10-20 after the one-shot adversarial credentials challenge. Added germ-to-scope
+  linkage methods, scope damage and design-flaw routes (repair rates, recalls) to Scope; named the
+  minted pulmonology expert as the single Boundary target.

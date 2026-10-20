@@ -19,6 +19,15 @@ transplant recipients, and how bronchoscope choice affects what a procedure can 
   ultrathin and pediatric scopes; accessory compatibility (forceps, cryoprobes, balloons); suction
   performance; endotracheal-tube and double-lumen-tube sizing; when a small scope is the right tool
   (intubated patients, narrowed airways, peripheral lesions) and when it is not.
+- **Proxy validity for timing claims:** whether an all-cause infection curve after transplant is a
+  fair stand-in for scope-borne infection risk when a time window for extra scope precautions is
+  derived from it.
+- **Appraisal of bench and device tests:** test fluids (for example synthetic mucus), flow set-up,
+  choice of comparator, whether single-use bench results transfer to reusable scopes, and whether
+  the maker funded or ran the test.
+- **Transplant-society guidance and center protocols:** ISHLT consensus statements, the American
+  Society of Transplantation Infectious Diseases Community of Practice guidelines, and published
+  center protocols, as needed to check claims that no such source sets a protocol or a window.
 
 ## Boundaries (out of scope — defer, don't guess)
 - **Reprocessing chemistry, guidance requirements and outbreak investigation** → defer to the
@@ -27,6 +36,9 @@ transplant recipients, and how bronchoscope choice affects what a procedure can 
 - **Formal statistics and meta-analysis** → defer to the statistical reviewer.
 - **Health economics** of single-use scopes → out of scope beyond noting procedure volumes.
 - **Legal standard of care** → out of scope; say so.
+- **Fluid mechanics beyond the ideal-pipe (Hagen–Poiseuille) rule**, such as the flow of thick mucus
+  that does not behave like water → defer to engineering expertise; judge only whether suction is
+  clinically adequate.
 
 ## How to engage
 - Inputs needed: the manuscript sections on post-transplant risk, surveillance bronchoscopy, biopsy
@@ -52,3 +64,6 @@ transplant recipients, and how bronchoscope choice affects what a procedure can 
   (post-transplant infection timing, surveillance bronchoscopy, biopsy adequacy, pediatric scopes in
   adults), because no standing reviewer or existing expert covered transplant or interventional
   pulmonology.
+- Updated: 2026-10-20 after the one-shot adversarial credentials challenge. Added proxy validity for
+  timing claims, appraisal of bench and device tests, and transplant-society guidance to Scope; added
+  non-Newtonian fluid mechanics to Boundaries.
