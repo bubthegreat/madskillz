@@ -21,6 +21,19 @@ and whether regulatory statements about additive safety are accurate.
   JECFA and IARC classifications (hazard vs risk), the Delaney Clause, animal-to-human inference.
 - Nutrient policy natural experiments: trans fat limits, folic acid and iodine fortification, salt
   reduction — their designs and the standard threats to them.
+- Post-market evaluation of additive approvals, bans and warning labels: what follow-up exists or was
+  required after approvals (for example aspartame, sucralose, olestra, stevia), bans and revocations
+  (cyclamate, FD&C Red No. 2, BVO, Red No. 3, titanium dioxide) and warning labels (saccharin, the EU
+  six-color label); historical additive harm signals detected after marketing (for example cobalt beer
+  foam stabilizers).
+- Judging absence-of-evidence claims: whether a literature search (databases, query strings, hit
+  screening) is adequate to support "no study measured X", and whether a missing measurement reflects
+  neglect or an effect too small to detect (statistical power at the population level).
+- Foodborne-infection epidemiology as it bears on processing law: pasteurization and raw-milk sales
+  laws, outbreak surveillance designs.
+- Neonatal and infant feeding safety signals from additives and thickeners (for example xanthan-gum
+  thickeners and necrotizing enterocolitis in premature infants), at the level of reading regulatory
+  warnings and case-series evidence.
 - Grading the strength of a body of evidence (design hierarchies, triangulation across designs).
 
 ## Boundaries (out of scope)
@@ -28,7 +41,8 @@ and whether regulatory statements about additive safety are accurate.
   data — defer to a food-allergy epidemiology and allergen-regulation expert.
 - Detailed statistical modeling of time series (count models, interrupted time series) — defer to the
   panel's statistical reviewer.
-- Clinical gastroenterology management of IBD beyond reading trial outcomes.
+- Clinical gastroenterology management of IBD, and clinical neonatology management of NEC, beyond
+  reading trial outcomes, case series and regulatory warnings.
 - Analytical chemistry of additives, food engineering process design, and law beyond reading what a
   regulation says.
 
@@ -55,3 +69,7 @@ and whether regulatory statements about additive safety are accurate.
 - Created: 2026-11-03 via the cycle-1 domain-coverage triage of the study
   `nutrition-metabolism/food-additive-approvals-health` (request 1 of 2: nutritional epidemiology and
   food-additive toxicology for Sections 2.3–2.5 and Figures 1 and 4).
+- Updated: 2026-11-03 after the adversarial credentials gate (one allowed revision). Added: post-market
+  evaluation of additive approvals, bans and warning labels; adequacy of absence-of-evidence searches
+  and population-level power; foodborne-infection epidemiology for pasteurization and raw-milk law;
+  neonatal thickener safety signals.
