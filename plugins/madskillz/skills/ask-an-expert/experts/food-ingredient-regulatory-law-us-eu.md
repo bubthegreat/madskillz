@@ -28,6 +28,18 @@ food are legally accurate, and whether a paper keeps regulatory status separate 
   Implementing Regulation 2017/2470), extraction solvents (Directive 2009/32/EC), food enzymes
   (Regulation (EC) No 1332/2008), processing aids (national law), food-contact materials, and feed
   additives (Regulation (EC) No 1831/2003).
+- US indirect and secondary uses: secondary direct food additives (21 CFR 173, including antimicrobial
+  washes and processing aids), food-contact substances (21 CFR 174–178 and the food contact
+  notification route of FD&C Act section 409(h)), and how a listing in these parts differs from
+  permission as an ingredient.
+- US color additive procedure: color additive petitions, batch certification under 21 CFR part 80,
+  exempt-from-certification listings, provisional listings and their termination.
+- EU food-contact and nutrient law as it bears on additive status: Regulation (EC) No 1935/2004,
+  Regulation (EU) No 10/2011 (plastics) and earlier directives such as Directive 2004/1/EC;
+  Regulation (EC) No 1925/2006 (addition of vitamins and minerals) and Regulation (EU) No 609/2013
+  (foods for specific groups).
+- Historical EU law: the pre-2008 additive directives (89/107/EEC, 94/34–36/EC, 95/2/EC and their
+  amendments such as 2006/52/EC) and the first novel food regulation, Regulation (EC) No 258/97.
 - Comparative classification: when a US-permitted substance is "not authorised" in the EU versus
   "authorised under another regime"; when an EU restriction is a safety measure versus a narrow
   technological use; what "no petition or notice found" can and cannot show.
@@ -66,3 +78,8 @@ food are legally accurate, and whether a paper keeps regulatory status separate 
   the GRAS notice mechanics, the US–EU status crosswalk and the regulator-evidence table). The
   existing food-additive toxicology expert lists law beyond reading a regulation in its Boundaries,
   and no standing reviewer covers legal status.
+- Updated: 2026-11-03 after the adversarial credentials gate (one allowed revision). Added: US
+  secondary direct and food-contact listings (21 CFR 173–178; FD&C Act 409(h)); US color additive
+  petition and certification procedure; EU food-contact law (1935/2004, 10/2011, 2004/1/EC); EU
+  nutrient and specific-group law (1925/2006, 609/2013); pre-2008 EU additive directives and novel food
+  Regulation 258/97.
