@@ -32,6 +32,13 @@ compares those estimates fairly with health-based guidance values, alone and in 
   or is not justified (for example, summing quotients whose denominators are points of departure).
 - NHANES biomonitoring design facts: subsample weights for urine analytes, eligible ages, cycle
   differences.
+- Per-food contaminant limits and how they relate to whole-diet values: FDA action levels and
+  guidance levels (for example the Closer to Zero lead and cadmium levels for baby food), FDA's
+  interim reference levels and toxicological reference values (such as the cadmium range 0.21–0.36
+  µg/kg bw/day), and how per-category 90th-percentile exposure is used to set a per-food level.
+- Comparing short-term or childhood intake with values defined as lifetime or long-term averages
+  (for example cadmium limits set to keep urinary cadmium low by age 50), and what such a comparison
+  can and cannot show.
 
 ## Boundaries (out of scope)
 - Diet-disease epidemiology of food additives, ultra-processed food research and GRAS or
@@ -75,3 +82,7 @@ compares those estimates fairly with health-based guidance values, alone and in 
   study modelling or cumulative risk assessment. Extending it to all of these would distort its
   mandate, so this expert was minted for those claims, and the existing expert is reused for the
   additive-regulation claims.
+- Updated: 2026-11-03 after the adversarial credentials gate (one allowed revision). Added to Scope:
+  per-food contaminant limits and their relation to whole-diet values (FDA action levels, interim
+  reference levels and toxicological reference values, per-category 90th-percentile exposure), and
+  comparing childhood intake with lifetime-average limits.
