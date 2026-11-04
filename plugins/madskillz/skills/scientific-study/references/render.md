@@ -64,7 +64,11 @@ uv run plugins/madskillz/skills/scientific-study/scripts/render-paper.py <study_
 2. Runs `pandoc` with the **study folder as the working directory**, so the paper's
    relative `assets/…` image paths and pipe tables resolve. Reader is `gfm` (the
    papers are authored for GitHub; a lone `$` stays literal currency, not math).
-3. Writes, with a table of contents and numbered sections:
+3. Passes a small Typst header (`--include-in-header`) that lets table figures
+   break across pages and sets table text at 8 pt, ragged-right. Pandoc wraps each
+   pipe table in a Typst figure, and figures do not break by default: a table longer
+   than the remaining page spills past it and its rows print on top of each other.
+4. Writes, with a table of contents and numbered sections:
 
 | File | Format | Purpose |
 |---|---|---|

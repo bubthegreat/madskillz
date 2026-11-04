@@ -100,6 +100,14 @@ def assemble(study_dir: Path, body: str) -> str:
     return "\n\n".join(parts) + "\n"
 
 
+TYPST_HEADER = """\
+#show figure.where(kind: table): set block(breakable: true)
+#show table: set par(justify: false)
+#show table: set text(size: 8pt)
+#set table(inset: (x: 4pt, y: 3pt))
+"""
+
+
 def render(study_dir: Path, out_dir: Path | None = None) -> dict:
     study_dir = study_dir.resolve()
     paper = study_dir / "paper.md"
@@ -138,9 +146,16 @@ def render(study_dir: Path, out_dir: Path | None = None) -> dict:
         "--resource-path", str(study_dir),
         *meta,
     ]
+    # Typst wraps each pipe table in a figure, and figures do not break across
+    # pages by default: a long table spills past the page and its rows print on
+    # top of each other. Let table figures break, and set table text ragged-right
+    # and smaller so narrow columns stay legible.
+    header = out_dir / f"{slug}.typst-header.typ"
+    header.write_text(TYPST_HEADER, encoding="utf-8")
     try:
         subprocess.run(
-            [*common, "-o", str(pdf), "--pdf-engine=typst"],
+            [*common, "-o", str(pdf), "--pdf-engine=typst",
+             "--include-in-header", str(header)],
             cwd=study_dir, check=True, capture_output=True, text=True,
         )
         subprocess.run(
@@ -152,6 +167,7 @@ def render(study_dir: Path, out_dir: Path | None = None) -> dict:
         raise RuntimeError(f"render failed:\n{e.stderr or e.stdout}") from e
     finally:
         src.unlink(missing_ok=True)
+        header.unlink(missing_ok=True)
 
     included = [h for f, h in BACK_SECTIONS if (study_dir / f).exists()]
     return {"pdf": pdf, "epub": epub, "title": title, "parts": included}
