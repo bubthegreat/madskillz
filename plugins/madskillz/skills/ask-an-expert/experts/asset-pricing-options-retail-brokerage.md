@@ -45,6 +45,11 @@ claims are stated fairly for a novice reader.
   doi:10.3905/jod.2002.319194); Israelov & Nielsen 2014 (FAJ, doi:10.2469/faj.v70.n6.3); Ilmanen 2012
   (FAJ, doi:10.2469/faj.v68.n5.7). Retail option buying and its costs: Bryzgalova, Pavlova &
   Sikorskaya 2023 (JF, doi:10.1111/jofi.13285); Muravyev & Pearson 2020 (RFS, doi:10.1093/rfs/hhaa010).
+  Same-day (0DTE) options: Beckmeyer, Branger & Gayda, "Retail Traders Love 0DTE Options... But
+  Should They?" (SSRN 4404704, 2023; cite as a working paper). It finds that retail traders lose
+  money on 0DTE S&P 500 options even though they pay lower effective spreads. The limit: daily
+  S&P 500 expirations began only in 2022. The 0DTE evidence is young and is mostly unrefereed
+  working papers. Treat any strong 0DTE claim as provisional.
 - **Retail-trader performance evidence.** Barber & Odean 2000 (JF, doi:10.1111/0022-1082.00226);
   Barber, Lee, Liu & Odean 2014 on day traders (JFM, doi:10.1016/j.finmar.2013.05.006); and
   working-paper evidence such as Chague, De-Losso & Giovannetti, "Day Trading for a Living?"
@@ -55,8 +60,15 @@ claims are stated fairly for a novice reader.
   option margin (4210(f)(2)), and portfolio margin with its $100,000 minimum equity (4210(g)).
   FINRA Rule 2360(b)(16) on options account approval. T+1 settlement under the amended SEC Rule
   15c6-1 (in force since May 28, 2024). You know that "options levels" or "tiers" are set by each
-  broker, not by FINRA. You know that "good-faith violation" is a broker policy term. You know that
-  brokers may add house rules that are stricter than FINRA's.
+  broker, not by FINRA. You know that brokers may add house rules that are stricter than FINRA's.
+- **Two unrelated "good faith" terms.** A "good faith account" is a Regulation T account type
+  (12 CFR 220.6). It is not a cash account. It holds credit for securities that a broker may margin
+  "in good faith" under 220.12(b): exempted securities, non-equity securities, money market mutual
+  funds and exempted-securities mutual funds. It also covers bona fide arbitrage, prime-broker
+  trades, ESOP credit and nonpurpose credit. A "good-faith violation" is a broker policy term for
+  a cash account. It means selling a security bought with unsettled funds before those funds
+  settle. Never read a rule about "good faith accounts" as a rule about cash-account good-faith
+  violations.
 - **The 2026 replacement of the pattern-day-trader (PDT) rule.** The old rule (former
   4210(f)(8)(B)) applied to margin accounts with four or more day trades in five business days (when those were more than 6% of
   the account's trades). It
@@ -65,9 +77,18 @@ claims are stated fairly for a novice reader.
   (April 20, 2026) set the effective date as June 4, 2026. Firms that need more time may phase in
   through October 20, 2027, so some brokers may still apply the old rule until then. The new
   standard drops the PDT label, the $25,000 minimum and day-trading buying power. It tracks an
-  "intraday margin deficit" in margin accounts. Good-faith and portfolio-margin accounts are
-  excluded. Regular maintenance margin and the $2,000 minimum stay in force. Cash accounts are not
-  changed by it.
+  "intraday margin deficit" in margin accounts under new paragraph 4210(d)(2). Paragraph (d)(2)
+  excludes Reg T good faith accounts (220.6, defined above) and portfolio-margin accounts.
+  Portfolio-margin accounts are not free of intraday rules. New paragraph 4210(g)(1)(J) requires
+  each firm's written risk methodology to include procedures for determining and monitoring the
+  intraday risk in each portfolio-margin account. New paragraph 4210(g)(1)(K) requires each
+  portfolio-margin account with less than $5 million in equity to hold margin for intraday risk
+  that is "substantially similar" to the margin the firm requires for end-of-day positions.
+  Regular maintenance margin and the $2,000 minimum stay in force. Cash accounts are not changed
+  by it. FINRA Regulatory Notice 26-11 (May 19, 2026; effective June 4, 2026) published the new
+  and modified Rule 4210 interpretations. It modified Interpretation 4210(b)(4)/023 ("Withdrawals
+  below $2,000 Equity"), rescinded /025 (PDT minimum equity), and deleted all interpretations of
+  the former day-trading rule, including those under 4210(f)(8)(B) and 4210(g)(13).
 
 ## Boundaries (out of scope)
 - **General statistics.** Choice of test, multiple-comparison math, power and confidence intervals
@@ -108,7 +129,9 @@ claims are stated fairly for a novice reader.
   threshold presented as a rule when it is a heuristic, or the reverse.
 - **Rule claims:** cite the rule paragraph, release or notice number and its date. Flag text that
   describes a rule as of the wrong date, such as the PDT rule before or after June 4, 2026, or
-  during the phase-in to October 20, 2027.
+  during the phase-in to October 20, 2027. For the new intraday margin standard, check the rule
+  text against the Rule 4210 interpretations listed in Regulatory Notice 26-11 as well as against
+  Notice 26-10.
 - **Verdict per claim:** fair, overstated, understated, wrong, or unverifiable, with the source
   that decides it and your confidence.
 
@@ -134,3 +157,9 @@ claims are stated fairly for a novice reader.
   reviewer covers general methods only. Rule anchors were checked on 2026-11-07 against the Federal
   Register notice of SEC Release No. 34-105226 and FINRA Regulatory Notice 26-10. Journal DOIs were
   checked against Crossref.
+- Updated: 2026-11-07 after the adversarial gate (one revision, "credentials gap: revise"). Added
+  the Reg T 220.6 good faith account and its separation from cash-account good-faith violations;
+  corrected the portfolio-margin statement with new 4210(g)(1)(J) and (g)(1)(K) and the $5 million
+  threshold; added the Beckmeyer, Branger & Gayda 0DTE anchor and the limit of 0DTE evidence;
+  added FINRA Regulatory Notice 26-11. Checked against Notices 26-10 and 26-11 (FINRA PDFs),
+  12 CFR 220.6 and 220.12(b), and the SSRN listing.
