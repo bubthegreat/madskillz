@@ -8,7 +8,7 @@ the *reader* lacks.
 
 ## The expected reader
 The reading-level standard in `expected-reader.md` (provided with this rubric): by default a
-~10th-grade general reader with no specialist background, unless the manuscript explicitly declares
+~9th-grade general reader with no specialist background, unless the manuscript explicitly declares
 a specialist intended audience. The reader navigates the body with the help of the abstract, the
 Glossary, the Acronyms index, and any Background / further-reading pointers — so more concepts need
 a definition or a pointer here than a specialist draft would require.

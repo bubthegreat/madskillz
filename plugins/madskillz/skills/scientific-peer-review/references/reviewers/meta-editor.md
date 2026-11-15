@@ -35,6 +35,15 @@ carried-forward verdict is a real prior verdict plus an explicit "no re-review n
 consult — disclose it as such, never as a fresh pass.
 
 ## What to do
+- **Apply the binding test (`binding-findings.md`) to every finding before you rank it.** Check the
+  claimed false belief against the evidence yourself (quote the row id or source). A finding that
+  names no false belief, or whose belief the evidence does not contradict, becomes a **note**,
+  whatever severity its reviewer gave it. Say which findings you moved and why.
+- **Guard against the hedge ratchet.** Reject any required change that only adds a qualifier, adds
+  precision to the prose, or repeats a caveat that Methods or Limits already holds. On re-review
+  cycles, compare the qualifier count of the current paper with the previous snapshot; if it rose
+  without a binding finding behind each new qualifier, say so in the plan and order the extra
+  qualifiers deleted.
 - Deduplicate findings that multiple reviewers raised; keep the clearest statement and credit
   all originating reviewers.
 - Resolve conflicts. **Integrity and correctness outrank presentation.** If the Ethics or
@@ -45,7 +54,11 @@ consult — disclose it as such, never as a fresh pass.
   Reproducibility and Ethics top out at `major` when inputs are merely missing, so a
   "reject vs major" gap that rests on no contradictory finding is not a real disagreement —
   say so rather than presenting it as a split.
-- Rank all findings blocker → major → minor.
+- Rank binding findings blocker → major → minor. List notes separately, marked non-binding. A
+  note is never "fix before publication."
+- **Decisions are the owner's, not the panel's.** When reviewers disagree about a judgment call (a
+  grading rule, a borderline label), list it under Disagreements for the human. Do not turn it into
+  a required change, and do not direct a new agent round to settle it.
 - Emit ONE ordered revision plan, then the overall call. Stop there — revision is out of scope.
 
 ## Output
@@ -71,10 +84,22 @@ Engagement this cycle (re-review only): <per reviewer — full re-review | re-en
 <material conflicts stated explicitly, e.g. "Adversarial: reject vs Statistical: minor — author
 adjudicates". If none: "none">
 
-## Revision plan (ranked)
-1. [blocker] [from: <reviewer(s)>] [location] — <required change>
+## Revision plan (ranked; binding findings only)
+1. [blocker] [from: <reviewer(s)>] [location] — false belief: <…>; evidence: <…>; fix: <deletion or corrected fact>
 2. [major]   …
 3. [minor]   …
+
+## Moved to notes
+<findings a reviewer raised as binding that fail the binding test, one line each with the reason>
+
+## Notes (non-binding; the writer may ignore them)
+<one line each>
+
+## Hedge check (re-review cycles)
+<qualifier count, previous snapshot → current; any qualifier added without a binding finding, ordered deleted>
+
+## Decisions for the owner
+<judgment calls the panel could not settle; each with the options and what each would change>
 
 ## Overall call: accept | minor revision | major revision | reject
 ```

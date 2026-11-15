@@ -61,7 +61,7 @@ available; say so honestly when you cannot).
   paper's framing) and continue — the study is then framed honestly as a
   replication/validation, not as novel work.
 
-**Audience.** The study is written for a **~10th-grade general reader** by default (see Step 2 and
+**Audience.** The study is written for a **~9th-grade general reader** by default (see Step 2 and
 `scientific-peer-review/references/expected-reader.md`). If it is deliberately aimed at a specialist
 audience, record that intended audience as explicit context in the brief and the paper's framing —
 the same honest-context discipline as a replication/validation study — so the drafting and the
@@ -90,7 +90,7 @@ colliding on a shared checkout.
 After gathering evidence (from Step 1 deep-research or initial synthesis), write `story-spine.md`
 in the study folder using the template in `references/story-spine.md`. Complete all five fields:
 starting hypothesis, what the data showed, the turn, the one-sentence arc, and the abstract spine
-(3 sentences, 10th-grade). Commit `story-spine.md` alone as `narrative: story spine for <slug>`
+(3 sentences, 9th-grade). Commit `story-spine.md` alone as `narrative: story spine for <slug>`
 before writing any prose in `paper.md`.
 
 ### Step 2b — Draft the paper
@@ -183,7 +183,7 @@ world-claims concentrate, and the `claims-ledger` reviewer audits them sentence 
 Step 3.
 
 Write for the expected reader defined in
-`scientific-peer-review/references/expected-reader.md` — by default a **~10th-grade general
+`scientific-peer-review/references/expected-reader.md` — by default a **~9th-grade general
 reader** (no specialist background; standard concepts such as p-values are defined, not presumed),
 unless this study is deliberately framed for a specialist audience (see Step 1): the abstract
 doubles as the plain-language summary, define every acronym on first use and every specialized
@@ -202,7 +202,12 @@ Follow `references/review-loop.md`. For each cycle (max 3):
    The panel includes the **responsiveness** reviewer, which audits the paper against the register:
    a registered question the paper never addresses is a **blocker**, and a paper whose largest
    section serves no registered question is a **major**.
-2. **Edit the paper** to address blocker/major findings (and minors where cheap).
+2. **Edit the paper** to address the binding findings (blockers and majors, and binding minors
+   where cheap). Notes are optional and are never applied by adding a qualifier. Then run the
+   **editor pass** in `references/review-loop.md`: it deletes qualifiers no binding finding
+   requires and moves statistics from the prose to figures and tables, without changing any
+   claim's strength. Cycles 2 and 3 verify fixes and check changed text only. Do not start any
+   agent round beyond the three panel cycles without the owner's approval.
 3. Commit the revision as its own commit (`review cycle N: address <summary>`),
    and save that cycle's review report under `review/` so the evolution is visible.
 

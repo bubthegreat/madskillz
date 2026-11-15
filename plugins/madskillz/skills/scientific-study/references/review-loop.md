@@ -13,10 +13,39 @@ do:
   snapshot CURRENT paper.md -> review/cycle-<cycle>-paper.md   # the exact version this cycle reviews
   plan   = run scientific-peer-review on the CURRENT paper + artifacts   # the engine; cycle>1 also passes prior reports + the cycle-(cycle-1)-paper.md diff for re-engagement triage
   save plan -> review/cycle-<cycle>.md
-  apply plan to paper.md (and artifacts) — edit faithfully
+  apply the plan's BINDING findings to paper.md (and artifacts) — edit faithfully
+  run the editor pass (below)
   commit "review cycle <cycle>: address <short summary>"   # snapshot + report + edits together
 while plan has blocker-severity findings AND cycle < 3
 ```
+
+## What the loop may and may not do
+
+The loop's danger is the **hedge ratchet**: every correctness reviewer optimizes defensibility, so
+each cycle adds qualifiers and none removes them. After three cycles a clear paper reads like
+committee prose, and it is not more accurate for it. These rules hold it level:
+
+- **Only binding findings are applied.** A finding binds when a reasonable reader would believe
+  something the evidence contradicts, in either direction (`scientific-peer-review/references/
+  binding-findings.md`). Notes are optional, and a note is never applied by adding a qualifier.
+- **Cycle 1 reviews everything. Cycles 2 and 3 verify.** From cycle 2 on, reviewers check that each
+  binding finding was fixed and look for new binding findings in **changed** text. Unchanged text
+  gets a new finding only if it is binding. No reframing after cycle 1.
+- **The editor pass runs after every cycle**, before the commit. One editor with deletion authority
+  reads the revised paper whole and:
+  - deletes every qualifier that no binding finding requires, keeping at most one per claim;
+  - merges repeated caveats into one place in Methods or Limits;
+  - moves intervals, test statistics and p-values from the prose to the figure or table that holds
+    the result, leaving the plain-words meaning in the sentence;
+  - restores sentences that the cycle's edits made harder to read.
+  It may **not** change a claim's strength, a number, a label or a citation. It reports its
+  qualifier count before and after.
+- **No extra agent rounds without the owner.** The loop runs the panel at most three times. Any
+  further agent round — a grading pass, a re-extraction, a re-review, a verification pass — needs
+  the owner's approval first, even when a reviewer or the meta-editor suggests one. Judgment calls
+  the panel lists as "decisions for the owner" go to the owner as questions, not to a new agent.
+- **After the final cycle, fix only what is blatantly wrong or misleading** (binding findings), and
+  say in the PR that those fixes were not re-reviewed. Everything else is a disclosed residual.
 
 - **Re-engage, don't blanket re-run.** From cycle 2 on, pass the previous cycle's
   reviewer reports and the diff since then (`review/cycle-(N-1)-paper.md` vs the current
@@ -65,9 +94,11 @@ into the PR description as "residual findings," not silently dropped.
 ## Applying feedback faithfully
 
 - Address **blockers** and **majors** by actually editing the paper/artifacts —
-  fixing the claim, adding the missing analysis caveat, correcting the citation,
-  narrowing an out-of-scope conclusion, etc.
-- Address **minors** when cheap; otherwise list them as residual.
+  correcting the fact, the label, the number or the citation, or deleting the sentence that
+  misleads. Fix the false belief the finding names; do not add a qualifier unless that qualifier is
+  itself the correction.
+- Address binding **minors** when cheap; otherwise list them as residual. Notes are optional; skip
+  any note whose fix would add a qualifier or precision to the prose.
 - **Never** "resolve" a finding by deleting the inconvenient claim and pretending the
   underlying problem is gone, by fabricating data/citations to satisfy a reviewer, or
   by editing the review report. Resolve the substance or carry it forward.
@@ -86,8 +117,9 @@ blockers is published **flagged**, never as a clean pass.
 
 After the PR is open, a human may request changes. For each request:
 1. Apply the change.
-2. Re-gate it: at minimum run a **focused** `scientific-peer-review` pass over the
-   changed sections (a full panel pass if the change is substantial).
+2. Re-gate it: run a **focused**, binding-findings-only `scientific-peer-review` pass over the
+   changed sections. Ask the owner before running a full panel pass, and skip the pass when the
+   owner says the change is final.
 3. Commit as a **separate** commit (`human review: <summary>`) and push to the PR
    branch — so the human's requested changes are clearly visible as their own diff.
 

@@ -104,11 +104,11 @@
       ]
     },
     {
-      "id": "readability-10th-grade-default",
+      "id": "readability-9th-grade-default",
       "prompt": "Draft a paper on <topic> and get it ready to publish (general audience).",
       "should_trigger": true,
       "grading_criteria": [
-        "Writes for a ~10th-grade general reader by default (per scientific-peer-review/references/expected-reader.md), without sacrificing correctness",
+        "Writes for a ~9th-grade general reader by default (per scientific-peer-review/references/expected-reader.md), without sacrificing correctness",
         "The abstract works as a plain-language summary a general reader can follow on its own",
         "Standard concepts (e.g. p-value, confidence interval) are defined in plain language on first use and carried in the Glossary, not presumed",
         "Calibrates up only if the study explicitly declares a specialist intended audience"
@@ -176,6 +176,19 @@
         "A stats adversary attacks the headline result BEFORE drafting, not in a later review cycle",
         "The synthesis agent cites only rows present in the evidence store; no number is introduced in prose",
         "A mechanical traceability gate runs, rather than relying on reviewers to check arithmetic"
+      ]
+    },
+    {
+      "id": "review-loop-no-hedge-ratchet",
+      "should_trigger": true,
+      "prompt": "Run the study through the full review loop and get it ready to publish. [study with a draft already written]",
+      "grading_criteria": [
+        "Applies only binding findings (a named false belief contradicted by evidence); notes are optional and never applied by adding a qualifier",
+        "Runs an editor pass after each cycle that deletes qualifiers no binding finding requires and moves intervals and test statistics from prose to figures or tables, without changing claim strength",
+        "Cycles 2 and 3 verify fixes and check changed text only; no reframing after cycle 1",
+        "Does not start any agent round beyond the three panel cycles (grading, re-extraction, verification) without asking the owner",
+        "Sends the meta-editor's 'decisions for the owner' to the owner as questions, not to a new agent round",
+        "Before grading, shows the owner the verdict-label scheme with one example claim per label"
       ]
     }
   ]

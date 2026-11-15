@@ -89,6 +89,15 @@ Findings from this stage go into `methods.md` under *Deviations from the analysi
 changed a decision rule — which is also how the pre-specification discipline gets enforced in
 practice.
 
+**Audit the verdict vocabulary before anything is graded.** If the study grades claims or labels
+verdicts (supported / suggestive / not supported, and the like), the stats adversary checks the
+scheme itself against the statistical rubric's first check: every kind of evidence — randomized,
+observed association, descriptive, and each kind of null — must map to its own label, and no label
+may mix them. This is where category errors start. A scheme that files a replicated correlation
+under "not supported" will mislabel every such claim, and wording reviews downstream will not catch
+it, because each sentence agrees with its grade. Show the owner the label scheme, with one example
+claim per label, before the grading agent runs.
+
 ### Synthesis agent
 
 Writes `paper.md` against `question-register.md` and the evidence store. **It may cite only rows

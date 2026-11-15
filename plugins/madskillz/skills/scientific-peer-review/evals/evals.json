@@ -10,7 +10,7 @@
         "Skill triggers",
         "Asks for the draft if not actually provided",
         "Produces the correctness-tier reports (adversarial, reproducibility, consistency, statistical, ethics-integrity, citation-integrity, claims-ledger) and the readability-tier reports (plain-language, terminology-acronym, accessibility-background)",
-        "Each finding has severity + location + required change",
+        "Each binding finding has severity + location + the quoted sentence + the false belief + the contradicting evidence + a deletion or corrected fact; everything else is listed as a non-binding note",
         "Emits one ranked meta-editor revision plan",
         "Includes a coverage statement listing which checks ran"
       ]
@@ -21,6 +21,8 @@
       "should_trigger": true,
       "grading_criteria": [
         "Statistical reviewer checks test selection, assumptions, effect sizes + CIs, multiple-comparison correction, power",
+        "Statistical reviewer checks that each verdict label matches the kind of evidence (cause, link, description, null) before any wording question",
+        "Does not ask for confidence intervals or test statistics to be added to the prose",
         "Flags reported numbers as untraceable when no analysis outputs are supplied"
       ]
     },
@@ -81,11 +83,11 @@
       ]
     },
     {
-      "id": "readability-10th-grade-default",
+      "id": "readability-9th-grade-default",
       "prompt": "Review this paper for readability. [draft attached: a general-audience study that uses \"p-value\", \"confidence interval\", and \"regression\" without ever defining them, and makes no specialist-audience declaration]",
       "should_trigger": true,
       "grading_criteria": [
-        "Plain-language reviewer calibrates to the ~10th-grade general-reader default (per expected-reader.md), since no specialist audience is declared",
+        "Plain-language reviewer calibrates to the ~9th-grade general-reader default (per expected-reader.md), since no specialist audience is declared",
         "Flags the undefined standard concepts (p-value, confidence interval, regression) as needing a plain-language definition — does NOT treat them as presumable",
         "Findings stay no higher than major and defer to correctness; never blocker"
       ]
@@ -108,6 +110,27 @@
       "grading_criteria": [
         "Performs the review",
         "States that rewriting/revising is out of scope and points to applying the plan or a future writeup skill"
+      ]
+    },
+    {
+      "id": "binding-test-no-hedge-ratchet",
+      "prompt": "Review this draft. [draft attached: its sentences are true and supported but read strongly, e.g. 'Writing a full letter lifted mood more than a short list' backed by a randomized trial; Limits already says most outcomes are self-reported]",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Raises no binding finding against a true, supported sentence for reading strongly",
+        "Does not require a qualifier that repeats a caveat Limits already holds; at most lists it as a non-binding note",
+        "Meta-editor moves any finding that names no false belief into 'Moved to notes', with the reason",
+        "No required change adds a qualifier unless that qualifier corrects a named false belief"
+      ]
+    },
+    {
+      "id": "binding-test-understatement",
+      "prompt": "Review this draft. [draft attached: a grading table files three replicated correlational links under 'not supported', and one sentence calls an underpowered null 'shown not to work']",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Flags the correlations filed under 'not supported' as a binding finding (understatement): the label mixes 'link, cause not shown' with 'tested and failed'",
+        "Statistical reviewer audits the grading scheme itself, not only the sentences that use it",
+        "Flags 'shown not to work' from an underpowered null as binding; the fix corrects the fact ('not shown') rather than adding hedges"
       ]
     },
     {

@@ -34,6 +34,9 @@ Re-review = run it again. Writing/revising belongs to the author (or a future
 4. The review states its own coverage: which reviewers ran, which inputs were
    present, which checks were skipped.
 5. Integrity and correctness outrank presentation in every conflict.
+6. Hedging is not correctness. A finding binds only when the reader would believe something false
+   (`references/binding-findings.md`); understating is as false as overstating. A review never
+   makes a true sentence weaker.
 
 ## Step 1 — Gather inputs
 
@@ -54,8 +57,10 @@ available inputs. The panel has two tiers; the coverage statement names which ra
 
 **Correctness tier (always).** Note that every reviewer here except one audits *defensibility*.
 That is a one-sided objective with a dominant strategy — narrow until everything is defensible,
-because declining to answer is always more defensible than answering. **Responsiveness** is the
-counterweight: it is the reader's advocate and the only reviewer asking whether the paper answered
+because declining to answer is always more defensible than answering. Two things counter it. The
+**binding test** (`references/binding-findings.md`) makes every reviewer check understating as well
+as overstating, and turns anything that is not a false belief into a non-binding note.
+**Responsiveness** is the other counterweight: it is the reader's advocate and the only reviewer asking whether the paper answered
 the question it was asked. Dispatch it with `question-register.md`; if that file is missing, that is
 itself a blocker.
 
@@ -118,8 +123,9 @@ faked). Record the expert(s) consulted/minted and any halt in the coverage state
   When they don't, it flags references "verification pending" — never a silent
   pass.
 
-Dispatch each reviewer with its own rubric file **and** `references/review-report-format.md`, and
-have it return that shape — listing the inputs it had and any checks it skipped. Dispatch the
+Dispatch each reviewer with its own rubric file, `references/review-report-format.md` **and**
+`references/binding-findings.md`, and have it return that shape — listing the inputs it had and any
+checks it skipped. Dispatch the
 **readability-tier** reviewers (plain-language, terminology & acronym, accessibility / background)
 with `references/expected-reader.md` as well — it defines the reading level they judge against. The
 rubrics carry only their unique checks and severity rules; these shared contracts are stated once
