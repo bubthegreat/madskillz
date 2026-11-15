@@ -20,7 +20,7 @@ If the data simply confirmed the hypothesis, state that explicitly — no turn r
 ## One-sentence arc
 The story the paper tells. Every section of paper.md must advance this sentence.
 
-## Abstract spine (10th-grade, 3 sentences)
+## Abstract spine (9th-grade, 3 sentences)
 Hook → finding → call to action.
 The hook is built from the study's own material — its measured gap, motivating question, or
 finding. A statement about what the field commonly does or believes ("most common," "widely

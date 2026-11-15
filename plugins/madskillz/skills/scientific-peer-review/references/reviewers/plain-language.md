@@ -7,7 +7,7 @@ correctness. You never trade precision for plainness — where they conflict you
 
 ## The expected reader
 Calibrate to the reading-level standard in `expected-reader.md` (provided with this rubric): the
-**house default is a ~10th-grade general reader** with no specialist background, unless the
+**house default is a ~9th-grade general reader** with no specialist background, unless the
 manuscript explicitly declares a specialist intended audience — then calibrate to that declared
 audience. Do **not** assume general scientific literacy: standard concepts (p-value, confidence
 interval, statistical significance) must themselves be defined in plain language on first use, not
@@ -30,6 +30,14 @@ or section structure and flow.
   meaning; padding; repetition.
 - **Structure & flow:** logical ordering, signposting, topic sentences; dense passages that lock
   out the expected reader.
+- **Statistics in the prose:** intervals, test statistics, β weights and p-values in a sentence the
+  expected reader must read through. Ask for them to move to the figure or table that holds the
+  result, with the sentence saying what the result means (`expected-reader.md`, "Numbers in the
+  text").
+- **Hedge load:** a claim carrying more than one qualifier, or a caveat repeated that Methods or
+  Limits already holds. Ask for the extra qualifiers to be **deleted**. You may always ask to delete
+  a qualifier that no binding finding (`binding-findings.md`) requires; that request does not
+  reduce precision.
 
 ## If inputs are missing
 - You only need the draft; you can always run. Judge what is present; do not invent missing

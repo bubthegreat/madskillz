@@ -67,6 +67,9 @@ exactly one bucket:
 - Uncontroversial definitional prose ("feature drift means the input distribution changes
   over time"). A *contested or quantified* definition still needs a citation.
 - Style, phrasing, or reading level — the readability tier owns those.
+- A supported sentence that reads strongly. Support is the test, not tone: if the sentence points at
+  support that holds, it passes without a qualifier (`binding-findings.md`).
+- A missing qualifier on a supported claim whose caveat already lives in Methods or Limits.
 
 ## Output
 Return the standard report shape, plus a **claims ledger**: per audited section, the count of

@@ -19,7 +19,7 @@ skill that matches the request:
 Study design, analysis, and reproducibility packaging will be routed from here as
 they are added.
 
-Across the family, reader-facing output is written for a **~10th-grade general reader** by default —
+Across the family, reader-facing output is written for a **~9th-grade general reader** by default —
 broadly understandable without sacrificing correctness — and calibrates up only when a study is
 deliberately framed for a specialist audience (see
 `scientific-peer-review/references/expected-reader.md`).
