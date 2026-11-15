@@ -55,7 +55,7 @@ Accuracy comes from the right claim at the right strength, not from qualifiers. 
 - **Understating misleads as much as overstating.** A replicated link written as doubtful, or a
   small test's null written as "doesn't work," is an error, not caution.
 
-Reviewers judge this with the binding test in `binding-findings.md`.
+Reviewers judge this with the binding test in `binding-findings.md`. The owner's AI-tells, phrases that read as machine-written whatever the register (announced honesty, unearned importance, catchy formulations, em-dashes), are in `plugins/madskillz/writing/anti-ai-tells.md`; the writer reads that file before drafting.
 
 ## Override — a deliberately specialist audience
 
