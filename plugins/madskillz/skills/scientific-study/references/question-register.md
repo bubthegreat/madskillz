@@ -77,6 +77,27 @@ still needs to know what to ask instead.
 series on a stable instrument" is a real finding about the evidence base — but on its own it leaves
 the reader nowhere. Name the study that would settle it.
 
+## Owner review — before any evidence work
+
+The register is the owner's questions, so the owner checks it before the study spends anything on
+them. Right after the register is written, show the owner:
+
+- each question, with where it came from (the brief, a clarification, or an add-on the owner picked);
+- the approach chosen at the novelty gate, labelled as the approach;
+- the intended audience;
+- any option the owner was offered but did not pick, so a dropped topic is a visible choice.
+
+The owner approves, adds a question, or rewords one. **No extraction, search, or analysis agent
+launches before approval.** Record the outcome in the register:
+
+```markdown
+**Owner review:** approved 2026-11-15 (Q3 reworded; Q5 added)
+```
+
+After approval, a new question the owner raises is a new row marked `owner-added`. It never replaces
+an approved row. If evidence work started before the review, redirect or restart the affected agents
+when the owner changes the register, and say so.
+
 ## How it is enforced
 
 - The **responsiveness reviewer** (`scientific-peer-review/references/reviewers/responsiveness.md`)

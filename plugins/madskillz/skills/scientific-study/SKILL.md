@@ -77,6 +77,16 @@ field; it never replaces or narrows the questions. Every question later carries 
 `premise-rejected` is a legitimate and often superior result — but it owes the reader the replacement
 question. This register is what the **responsiveness** reviewer audits every cycle.
 
+**Owner review of the register — an explicit gate, before any evidence work.** Show the owner the
+register as written: each question with its source (the brief, a clarification, or an add-on the
+owner picked), the approach, the audience, and any option the owner was offered but did not pick.
+Ask the owner to approve it, add a question, or reword one (AskUserQuestion). **No extraction,
+search, or analysis agent launches until the owner approves.** Record the outcome in the register as
+one line — `**Owner review:** approved <YYYY-MM-DD>` (with any changes listed) — and commit it with
+the story spine. A question the owner adds later is a new row marked `owner-added`; it never replaces
+an approved row. If evidence work already started before the owner's review (for example, the review
+came late), say so, and redirect or restart the affected agents when the owner changes the register.
+
 Then establish the `<topic>` and a slugified `<research-short-name>` (propose a
 default, ask the user to confirm/override; validate as kebab-case). Resolve the repo
 and create the study branch **in an isolated per-study worktree** per
@@ -287,6 +297,9 @@ dialogue). The study may also **read** this transcript for refinement context wh
 ## Edge cases
 
 - No brief and no draft → ask what study to produce; never invent a topic.
+- Owner has not reviewed the question register → do not launch evidence work; show the register and
+  get approval first (Step 1). The owner changes a question after approval → add or reword the row as
+  the owner says, mark it `owner-added`, and redirect any agent working from the old register.
 - Novelty check finds the work is already well-established → confirm intent with the
   user before proceeding (Step 1); continue only as an acknowledged replication or
   after refining the question.
