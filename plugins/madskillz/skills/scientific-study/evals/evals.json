@@ -28,6 +28,18 @@
       ]
     },
     {
+      "id": "register-owner-review-gate",
+      "prompt": "Do a research study on why some teams recover from outages faster than others, and what managers can do about it.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Writes question-register.md with the brief's questions verbatim and the approach in its own field",
+        "Shows the owner the register (each question with its source, the approach, the audience, and any offered-but-unpicked option) and asks the owner to approve, add, or reword before any evidence work",
+        "Launches no extraction, search, or analysis agent before the owner approves the register",
+        "Records the outcome in the register as an '**Owner review:** approved <date>' line, listing any changes",
+        "A question the owner adds after approval is a new row marked owner-added, not a replacement for an approved row"
+      ]
+    },
+    {
       "id": "loop-blockers-capped",
       "prompt": "Produce a paper on <topic>; here's my draft with a known methodological hole. [draft attached]",
       "should_trigger": true,
