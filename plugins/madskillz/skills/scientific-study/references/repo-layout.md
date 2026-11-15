@@ -7,6 +7,8 @@ and opened as a PR (see `git-workflow.md`):
 <topic>/<research-short-name>/
   question-register.md # the brief's questions VERBATIM + each one's verdict — see question-register.md
   story-spine.md      # drafting artifact: hypothesis, what the data showed, the turn
+  follow-ups.md       # open questions the study found but could not settle: question, why open,
+                      #   what study would answer it. Non-binding caveats land here, not in the prose
   paper.md            # THE PAPER: <=4,300 body words, <=4 display items, <=50 refs,
                       #   <=200-word Summary, ending Data availability -> Code availability -> References
   methods.md          # <=3,000 words. NO figures, NO tables. Includes 'Deviations from the analysis plan'

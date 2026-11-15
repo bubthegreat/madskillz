@@ -213,7 +213,9 @@ Follow `references/review-loop.md`. For each cycle (max 3):
    a registered question the paper never addresses is a **blocker**, and a paper whose largest
    section serves no registered question is a **major**.
 2. **Edit the paper** to address the binding findings (blockers and majors, and binding minors
-   where cheap). Notes are optional and are never applied by adding a qualifier. Then run the
+   where cheap). Notes are optional and are never applied by adding a qualifier; a note that
+   names a real open question goes into `follow-ups.md` as a follow-up question, and the sentence
+   stays as it was (the Discussion's **Open questions** subsection lists the main ones). Then run the
    **editor pass** in `references/review-loop.md`: it deletes qualifiers no binding finding
    requires and moves statistics from the prose to figures and tables, without changing any
    claim's strength. Cycles 2 and 3 verify fixes and check changed text only. Do not start any

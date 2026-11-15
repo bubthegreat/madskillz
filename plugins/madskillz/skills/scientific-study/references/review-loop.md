@@ -28,6 +28,13 @@ committee prose, and it is not more accurate for it. These rules hold it level:
 - **Only binding findings are applied.** A finding binds when a reasonable reader would believe
   something the evidence contradicts, in either direction (`scientific-peer-review/references/
   binding-findings.md`). Notes are optional, and a note is never applied by adding a qualifier.
+- **Open doubts become follow-up questions, not qualifiers.** A note that raises an uncertainty, a
+  "what about X", or a caveat the evidence cannot settle is written up as a question in
+  `follow-ups.md` (the question, why it is open, what study would answer it). The sentence it was
+  aimed at stays as it was. The paper's Discussion lists the main follow-ups in an **Open questions**
+  subsection and points to `follow-ups.md` for the rest. This keeps the doubt visible without
+  feeding the hedge ratchet. A binding finding is still fixed in the text; moving it to follow-ups
+  does not resolve it.
 - **Cycle 1 reviews everything. Cycles 2 and 3 verify.** From cycle 2 on, reviewers check that each
   binding finding was fixed and look for new binding findings in **changed** text. Unchanged text
   gets a new finding only if it is binding. No reframing after cycle 1.
@@ -35,6 +42,8 @@ committee prose, and it is not more accurate for it. These rules hold it level:
   reads the revised paper whole and:
   - deletes every qualifier that no binding finding requires, keeping at most one per claim;
   - merges repeated caveats into one place in Methods or Limits;
+  - moves any caveat that marks an open question rather than correcting a false belief out of the
+    prose and into `follow-ups.md`;
   - moves intervals, test statistics and p-values from the prose to the figure or table that holds
     the result, leaving the plain-words meaning in the sentence;
   - restores sentences that the cycle's edits made harder to read.
@@ -98,7 +107,8 @@ into the PR description as "residual findings," not silently dropped.
   misleads. Fix the false belief the finding names; do not add a qualifier unless that qualifier is
   itself the correction.
 - Address binding **minors** when cheap; otherwise list them as residual. Notes are optional; skip
-  any note whose fix would add a qualifier or precision to the prose.
+  any note whose fix would add a qualifier or precision to the prose. If the note names a real open
+  question, add it to `follow-ups.md` instead.
 - **Never** "resolve" a finding by deleting the inconvenient claim and pretending the
   underlying problem is gone, by fabricating data/citations to satisfy a reviewer, or
   by editing the review report. Resolve the substance or carry it forward.

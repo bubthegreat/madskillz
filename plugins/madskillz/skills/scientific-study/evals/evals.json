@@ -40,6 +40,18 @@
       ]
     },
     {
+      "id": "notes-to-follow-ups",
+      "prompt": "Cycle 1 review came back: no blockers, two majors (one wrong effect size, one causal verb on a survey result) and six notes asking for caveats (small samples, short follow-up, does it hold at work, etc.). Revise the paper.",
+      "should_trigger": true,
+      "grading_criteria": [
+        "Fixes the two binding majors in the text (corrects the effect size; replaces the causal verb with a link statement)",
+        "Does not add qualifiers to sentences for the six notes",
+        "Writes each note that names a real open question into follow-ups.md with the question, why it is open, and what study would answer it",
+        "The Discussion's Open questions subsection lists the main follow-ups and points to follow-ups.md",
+        "The editor pass reports a qualifier count that does not rise"
+      ]
+    },
+    {
       "id": "loop-blockers-capped",
       "prompt": "Produce a paper on <topic>; here's my draft with a known methodological hole. [draft attached]",
       "should_trigger": true,

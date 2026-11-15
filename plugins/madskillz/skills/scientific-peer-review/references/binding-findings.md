@@ -37,7 +37,10 @@ The test runs in **both directions**. Understating is as binding as overstating:
 | one team's result called "established" | "not shown" written as "shown not to work" |
 | a wrong number, or a citation that does not say it | a precise null written as "unclear" |
 
-Everything that fails the test is a **note**: non-binding, and the writer may ignore it.
+Everything that fails the test is a **note**: non-binding, and the writer may ignore it. A note
+that raises a real open question ("does this hold past three months?", "what about teams?") should be
+phrased as that question, so the writer can add it to the study's `follow-ups.md` instead of adding a
+qualifier to the sentence.
 
 ## Writing a binding finding
 
