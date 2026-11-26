@@ -176,6 +176,11 @@ Run it in batches of 5-7 songs per call. Spot-check one song after a reload.
    first, so after generating, the album's clips are the first N buttons: click them by
    **position**, last to first, so track 1 lands first. Do not match by title: older test clips
    can share titles. Reload and check the song count and order.
+6. **Album description** (album page -> More actions -> Edit details; textarea
+   `Add a description`, max 2000 characters, count with code): keep any text the user already
+   wrote, then add what the album is and the story it follows, a one-line-per-track walkthrough,
+   a note on how the instruments follow the history, and a closing line encouraging listeners to
+   explore other cultures through their music. Save, reload, and confirm the text is there.
 
 **Never publish** songs or albums. The song page has a Publish dialog; if one opens, click
 Cancel. Close any tabs you opened.
