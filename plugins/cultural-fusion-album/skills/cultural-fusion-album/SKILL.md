@@ -169,8 +169,16 @@ window.__runCaps = async (jobs) => { // jobs = [[songId, caption], ...]
 
 Run it in batches of 5-7 songs per call. Spot-check one song after a reload.
 
-**Never publish.** The song page also has a Publish dialog; if one opens, click Cancel. Close
-any tabs you opened.
+5. **Album:** a workspace is only a folder. Suno **Albums** (`suno.com/album/<id>`) are a
+   separate object, and are what the user means by "the album." Ask whether one already exists
+   (or create one from Library); confirm whether to add both takes per track or one. On the album
+   page click **Add songs**; each row has a button labelled `Add <title>`. The list is newest
+   first, so after generating, the album's clips are the first N buttons: click them by
+   **position**, last to first, so track 1 lands first. Do not match by title: older test clips
+   can share titles. Reload and check the song count and order.
+
+**Never publish** songs or albums. The song page has a Publish dialog; if one opens, click
+Cancel. Close any tabs you opened.
 
 ## 5. Finish
 
