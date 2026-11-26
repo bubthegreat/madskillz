@@ -9,11 +9,17 @@ madskillz/
 ├── .claude-plugin/
 │   └── marketplace.json          # marketplace manifest, lists plugins
 ├── plugins/
-│   └── madskillz/                # single bundle plugin (split later if needed)
+│   ├── madskillz/                # main bundle plugin
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── skills/
+│   │       └── uv/               # Python packaging via uv
+│   └── cultural-fusion-album/    # optional: Suno concept albums (bundles the Suno MCP)
 │       ├── .claude-plugin/
 │       │   └── plugin.json
+│       ├── .mcp.json             # Suno MCP server, https://api.suno.com/mcp
 │       └── skills/
-│           └── uv/               # Python packaging via uv
+│           └── cultural-fusion-album/
 ├── rules/
 │   └── global.md                 # always-loaded rules, imported by ~/.claude/CLAUDE.md
 └── README.md
@@ -29,6 +35,18 @@ When the plugin grows commands, agents, or hooks, they go in
 /plugin marketplace add bubthegreat/madskillz
 /plugin install madskillz@madskillz
 ```
+
+Optional plugins:
+
+```
+/plugin install cultural-fusion-album@madskillz
+```
+
+`cultural-fusion-album` researches a culture's history, music and period-correct instruments,
+builds a concept album (fusion and/or traditional) with Suno prompts, original-language lyrics
+and notes, and creates it in Suno. It bundles the official Suno MCP
+(`https://api.suno.com/mcp`); after installing, run `/mcp` and sign in to Suno. Songs use your
+own Suno credits.
 
 Then make `~/.claude/CLAUDE.md` import the global rules:
 
