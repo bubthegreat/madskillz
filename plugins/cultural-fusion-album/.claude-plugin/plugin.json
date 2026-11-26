@@ -1,0 +1,10 @@
+{
+  "name": "cultural-fusion-album",
+  "description": "Research a culture's history, music and period instruments, build a concept album (fusion and/or traditional) with Suno prompts, original-language lyrics and notes, then create it in Suno via the official Suno MCP.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Bub Taylor",
+    "email": "bubthegreat@gmail.com"
+  },
+  "keywords": ["suno", "music", "album", "history", "culture", "fusion"]
+}

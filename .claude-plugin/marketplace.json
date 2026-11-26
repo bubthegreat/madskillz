@@ -9,6 +9,12 @@
       "description": "Personal skills bundle",
       "source": "./plugins/madskillz",
       "category": "productivity"
+    },
+    {
+      "name": "cultural-fusion-album",
+      "description": "Researched concept albums about a culture's history: period-correct instruments, original-language lyrics, Suno prompts and notes, created in Suno. Requires the Suno MCP (bundled).",
+      "source": "./plugins/cultural-fusion-album",
+      "category": "creativity"
     }
   ]
 }
